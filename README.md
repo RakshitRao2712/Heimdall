@@ -42,4 +42,4 @@ The current landing page does not perform lead searches. For future integration,
 
 For static production hosting, configure a reverse proxy separately if `/api` is needed; Vite's development proxy is not included in the build.
 
-The fullscreen navigation retains the supplied Northline demo copy and placeholder links. Replace these with real destinations before publishing as a production site.
+Heimdall navigation links to the page sections. Instagram, X, and LinkedIn icons are present with placeholder destinations until real profile URLs are supplied.

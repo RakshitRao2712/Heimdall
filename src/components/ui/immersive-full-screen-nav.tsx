@@ -1,6 +1,8 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
 "use client";
 
+import { ShinyButton } from "@/components/ui/shiny-button";
+
 import gsap from "gsap";
 import type { MouseEvent, ReactNode } from "react";
 import { useEffect, useRef, useState, type RefObject } from "react";
@@ -177,7 +179,7 @@ export interface FullscreenNavProps {
 
 function FullscreenNav({
   links,
-  brand = "Hyperiux",
+  brand = "Heimdall",
   brandHref = "/",
   clipOrigin = "bottom",
   overlayBg = "#000000",
@@ -331,6 +333,8 @@ function FullscreenNav({
           {brand}
         </a>
 
+        <div className="nav-header-actions">
+        <ShinyButton className="nav-start-button" onClick={() => { if (isOpen) onCloseMenu(); document.getElementById('features')?.scrollIntoView({ behavior: isReducedMotion ? 'instant' : 'smooth' }); }}>Get started</ShinyButton>
         <button
           ref={toggleButtonRef}
           onClick={onToggleMenu}
@@ -357,12 +361,13 @@ function FullscreenNav({
             }`}
           />
         </button>
+        </div>
       </header>
 
       <nav
         ref={overlayRef}
         style={{ clipPath: closedInitial, backgroundColor: overlayBg }}
-        className={`fixed inset-0 z-60 flex flex-col items-center justify-center gap-2 overflow-y-auto ${
+        className={`fixed inset-0 z-60 flex flex-col items-center justify-start overflow-y-auto ${
           isOpen ? "pointer-events-auto" : "pointer-events-none"
         }`}
         inert={!isOpen}
@@ -373,7 +378,7 @@ function FullscreenNav({
             fills it, but content taller than it (e.g. a lot of links at a
             small window height) can grow past 100vh instead of being
             clamped and clipped — the overflow-y-auto above then scrolls it. */}
-        <div ref={linksWrapperRef} className="flex min-h-screen w-screen flex-col items-center justify-center motion-reduce:opacity-100">
+        <div ref={linksWrapperRef} className="nav-overlay-wrapper flex min-h-screen w-full shrink-0 flex-col items-center motion-reduce:opacity-100">
           {children
             ? children(isOpen, onCloseMenu)
             : (links as FullscreenNavLink[]).map(({ label, href }) => (
@@ -474,9 +479,9 @@ function NavLinkHover({
   }
 
   return (
-    <a href={href} onClick={onClick} className="group/link-hover inline-block no-underline">
+    <a href={href} onClick={onClick} className="nav-hover-link group/link-hover inline-block no-underline">
       <span className="sr-only">{label}</span>
-      <span aria-hidden="true" className="relative inline-block overflow-hidden align-middle leading-[1.08]">
+      <span aria-hidden="true" className="nav-link-mask relative inline-block overflow-hidden align-middle leading-[1.08]">
         {[...label].map((char, index) => (
           <span
             key={index}
@@ -528,7 +533,7 @@ export interface CustomNavbarProps {
 function CustomNavbar({
   links = [],
   images = ["https://cdn.21st.dev/assets/mirror/ba/baa678cbac1a29e773743a10ff421b226cf0e9b5d786ebf34415063d6dabc02b.jpg", "https://cdn.21st.dev/assets/mirror/ef/ef696854debc5d2d40cbe03ea0c3a04e29689529cf2f4bfe90c1c5978f00579a.jpg"],
-  agencyName = "Hyperiux®",
+  agencyName = "Heimdall",
   socials = [
     { type: "instagram", href: "#" },
     { type: "facebook", href: "#" },
@@ -640,9 +645,9 @@ function CustomNavbar({
   }, [delay, imageDuration, imageStagger, imageStartScale, isOpen, linkDuration, linkOffsetY, linkStagger, socialDuration, socialOffsetY, socialStagger]);
 
   return (
-    <div style={{ backgroundColor: overlayBg }} className="flex min-h-screen w-full flex-col justify-between gap-10 px-28 py-10 pt-28 text-white max-[1025px]:px-6 max-[1025px]:py-20">
+    <div style={{ backgroundColor: overlayBg }} className="nav-panel text-white">
       {(agencyName || tagline) && (
-        <div className="flex flex-col gap-1">
+        <div className="nav-panel-intro">
           {agencyName && (
             <h2 ref={agencyRef} className="text-sm font-medium uppercase tracking-[0.2em] opacity-90">
               {agencyName}
@@ -656,23 +661,23 @@ function CustomNavbar({
         </div>
       )}
 
-      <div className="flex items-center justify-between gap-10 max-[1025px]:flex-col max-[1025px]:items-start max-[1025px]:gap-18">
-        <div className="flex flex-col gap-0">
+      <div className="nav-panel-body">
+        <div className="nav-panel-links">
           {links.map((link, index) => (
-            <div key={link.label} ref={setLinkRef(index)} className="z-60 text-[6vw] max-[1025px]:text-[7vw]" style={{ opacity: 0, transform: `translateY(${linkOffsetY}px)` }}>
+            <div key={link.label} ref={setLinkRef(index)} className="nav-panel-link" style={{ opacity: 0, transform: `translateY(${linkOffsetY}px)` }}>
               <NavLinkHover label={link.label} href={link.href} charStagger={linkCharStagger} reduced={isReducedMotion} onClick={onNavigate} />
             </div>
           ))}
         </div>
 
-        <div className="flex h-full flex-col items-end justify-center gap-40 py-5 max-[1025px]:w-full max-[1025px]:items-start max-[1025px]:gap-25 max-[1025px]:py-0">
-          <div className="flex items-end gap-8 max-[1025px]:w-full max-[1025px]:flex-col max-[1025px]:items-start max-[1025px]:gap-3">
+        <div className="nav-panel-art">
+          <div className="nav-panel-images">
             {images.slice(0, 4).map((src, index) => (
               <div
                 key={index}
                 ref={setImageRef(index)}
                 style={{ opacity: 0, transform: `scale(${IMAGE_INITIAL_SCALE})` }}
-                className="relative h-[18vw] w-[25vw] overflow-hidden rounded-xl max-[1025px]:h-[30vw] max-[1025px]:w-[60vw] max-[1025px]:rounded-md"
+                className="nav-panel-image relative overflow-hidden rounded-xl"
               >
                 <img src={src} alt={`Overlay image ${index + 1}`} className="absolute inset-0 h-full w-full object-cover transition duration-500 hover:scale-105 motion-reduce:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100" />
               </div>
@@ -702,7 +707,7 @@ function CustomNavbar({
 /* ------------------------------------------------------------------ */
 
 const NAV_CONFIG: Partial<FullscreenNavProps> = {
-  brand: "Hyperiux",
+  brand: "Heimdall",
   brandHref: "/",
   clipOrigin: "bottom",
   overlayBg: "#ff5f00",

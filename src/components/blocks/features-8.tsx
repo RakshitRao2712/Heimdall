@@ -3,7 +3,7 @@ import { Shield, Users } from 'lucide-react'
 
 export function Features() {
     return (
-        <section className="bg-gray-50 py-16 md:py-32 dark:bg-transparent">
+        <section id="features" aria-label="Heimdall features" className="bg-gray-50 py-16 md:py-32 dark:bg-transparent">
             <div className="mx-auto max-w-3xl lg:max-w-5xl px-6">
                 <div className="relative">
                     <div className="relative z-10 grid grid-cols-6 gap-3">
@@ -16,12 +16,12 @@ export function Features() {
                                             fill="currentColor"
                                         />
                                     </svg>
-                                    <span className="mx-auto block w-fit text-5xl font-semibold">100%</span>
+                                    <span className="mx-auto block w-fit text-5xl font-semibold">2</span>
                                 </div>
-                                <h2 className="mt-6 text-center text-3xl font-semibold">Customizable</h2>
+                                <h2 className="mt-6 text-center text-3xl font-semibold">Search modes</h2>
                             </CardContent>
                         </Card>
-                        <Card className="relative col-span-full overflow-hidden sm:col-span-3 lg:col-span-2">
+                        <Card id="google-maps" className="relative col-span-full overflow-hidden sm:col-span-3 lg:col-span-2">
                             <CardContent className="pt-6">
                                 <div className="relative mx-auto flex aspect-square size-32 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
                                     <svg className="m-auto h-fit w-24" viewBox="0 0 212 143" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,8 +49,8 @@ export function Features() {
                                     </svg>
                                 </div>
                                 <div className="relative z-10 mt-6 space-y-2 text-center">
-                                    <h2 className="group-hover:text-secondary-950 text-lg font-medium transition dark:text-white">Secure by default</h2>
-                                    <p className="text-foreground">Provident fugit and vero voluptate. magnam magni doloribus dolores voluptates a sapiente nisi.</p>
+                                    <h2 className="group-hover:text-secondary-950 text-lg font-medium transition dark:text-white">Google Maps leads</h2>
+                                    <p className="text-foreground">Find operational businesses without a website, with five or fewer reviews by default.</p>
                                 </div>
                             </CardContent>
                         </Card>
@@ -96,20 +96,20 @@ export function Features() {
                                     </svg>
                                 </div>
                                 <div className="relative z-10 mt-14 space-y-2 text-center">
-                                    <h2 className="text-lg font-medium transition">Faster than light</h2>
-                                    <p className="text-foreground">Provident fugit vero voluptate. magnam magni doloribus dolores voluptates inventore nisi.</p>
+                                    <h2 className="text-lg font-medium transition">Parallel website checks</h2>
+                                    <p className="text-foreground">Check websites with eight shared workers and avoid checking the same domain twice per search.</p>
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="relative col-span-full overflow-hidden lg:col-span-3">
+                        <Card id="copyright-search" className="relative col-span-full overflow-hidden lg:col-span-3">
                             <CardContent className="grid pt-6 sm:grid-cols-2">
                                 <div className="relative z-10 flex flex-col justify-between space-y-12 lg:space-y-6">
                                     <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
                                         <Shield className="m-auto size-5" strokeWidth={1} />
                                     </div>
                                     <div className="space-y-2">
-                                        <h2 className="group-hover:text-secondary-950 text-lg font-medium text-zinc-800 transition dark:text-white">Faster than light</h2>
-                                        <p className="text-foreground">Provident fugit vero voluptate. Voluptates a sapiente inventore nisi.</p>
+                                        <h2 className="group-hover:text-secondary-950 text-lg font-medium text-zinc-800 transition dark:text-white">Copyright search</h2>
+                                        <p className="text-foreground">Search visible copyright notices ending in 2023 or 2024 to discover potential redesign opportunities.</p>
                                     </div>
                                 </div>
                                 <div className="rounded-tl-(--radius) relative -mb-6 -mr-6 mt-6 h-fit border-l border-t p-6 py-6 sm:ml-6">
@@ -148,14 +148,14 @@ export function Features() {
                                         <Users className="m-auto size-6" strokeWidth={1} />
                                     </div>
                                     <div className="space-y-2">
-                                        <h2 className="text-lg font-medium transition">Keep your loved ones safe</h2>
-                                        <p className="text-foreground">Voluptate. magnam magni doloribus dolores voluptates a sapiente inventore nisi.</p>
+                                        <h2 className="text-lg font-medium transition">Find ways to connect</h2>
+                                        <p className="text-foreground">Collect public business phone numbers from websites, contact pages, and Google Places when available.</p>
                                     </div>
                                 </div>
                                 <div className="before:bg-(--color-border) relative mt-6 before:absolute before:inset-0 before:mx-auto before:w-px sm:-my-6 sm:-mr-6">
                                     <div className="relative flex h-full flex-col justify-center space-y-6 py-6">
                                         <div className="relative flex w-[calc(50%+0.875rem)] items-center justify-end gap-2">
-                                            <span className="block h-fit rounded border px-2 py-1 text-xs shadow-sm">Likeur</span>
+                                            <span className="block h-fit rounded border px-2 py-1 text-xs shadow-sm">Business</span>
                                             <div className="ring-background size-7 ring-4">
                                                 <img className="size-full rounded-full" src="https://cdn.21st.dev/assets/mirror/7f/7fc8766f3e4ba5e17744490c7137d3df2ffe93c5920a7f1bb062da3eafc579fa.png" alt="" />
                                             </div>
@@ -164,10 +164,10 @@ export function Features() {
                                             <div className="ring-background size-8 ring-4">
                                                 <img className="size-full rounded-full" src="https://cdn.21st.dev/assets/mirror/ce/ce1f33fc0a315956f2f302c924c96de81976ac8af8b37fc6912dd4089daa8ceb.png" alt="" />
                                             </div>
-                                            <span className="block h-fit rounded border px-2 py-1 text-xs shadow-sm">M. Irung</span>
+                                            <span className="block h-fit rounded border px-2 py-1 text-xs shadow-sm">Website</span>
                                         </div>
                                         <div className="relative flex w-[calc(50%+0.875rem)] items-center justify-end gap-2">
-                                            <span className="block h-fit rounded border px-2 py-1 text-xs shadow-sm">B. Ng</span>
+                                            <span className="block h-fit rounded border px-2 py-1 text-xs shadow-sm">Contact</span>
                                             <div className="ring-background size-7 ring-4">
                                                 <img className="size-full rounded-full" src="https://cdn.21st.dev/assets/mirror/0d/0d8330fb0fe691dbbda72406d32f05099bbaf215c8ed2423fee8cca6371b9b44.jpg" alt="" />
                                             </div>

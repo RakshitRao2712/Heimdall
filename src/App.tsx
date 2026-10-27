@@ -1,3 +1,6 @@
+import { ShinyButton } from "@/components/ui/shiny-button";
+import { CinematicFooter } from '@/components/ui/motion-footer';
+import InkOrbitFeatures from '@/components/ui/ink-orbit-features';
 import { Features } from '@/components/blocks/features-8';
 import ImmersiveFullscreenNav from '@/components/ui/immersive-full-screen-nav';
 import CurtainSplitHero from '@/components/ui/perspective-tunnel-hero';
@@ -19,30 +22,40 @@ const IMAGES = [
 
 export default function App() {
   return (
-    <main className="page">
-      <section className="first-hero">
+    <>
+    <main className="page relative z-10 bg-background">
+      <section id="home" className="first-hero">
       <ImmersiveFullscreenNav
-        navConfig={{ brand: "Northline", brandHref: "#", overlayBg: "#101014", clipOrigin: "left", headerClassName: "hero-nav-header" }}
+        navConfig={{ brand: "Heimdall", brandHref: "#home", overlayBg: "#101014", clipOrigin: "left", headerClassName: "hero-nav-header" }}
         navContent={{
-          agencyName: "Northline Studio",
-          tagline: "Brand and product design for early-stage teams.",
-          location: "Lisbon, Portugal",
-          links: [{ label: "Work", href: "#" }, { label: "Studio", href: "#" }, { label: "Journal", href: "#" }, { label: "Contact", href: "#" }],
+          agencyName: "Heimdall",
+          tagline: "Find local businesses. Discover website opportunities. Connect with your next customer.",
+          location: "Google Maps + Copyright Search",
+          links: [{ label: "Discover", href: "#home" }, { label: "How it works", href: "#how-it-works" }, { label: "Features", href: "#features" }, { label: "Explore the workflow", href: "#workflow" }],
           images: ["https://cdn.21st.dev/assets/mirror/ba/baa678cbac1a29e773743a10ff421b226cf0e9b5d786ebf34415063d6dabc02b.jpg", "https://cdn.21st.dev/assets/mirror/ef/ef696854debc5d2d40cbe03ea0c3a04e29689529cf2f4bfe90c1c5978f00579a.jpg"],
           socials: [{ type: "instagram", href: "#" }, { type: "twitter", href: "#" }, { type: "linkedin", href: "#" }],
         }}
       />
       <TiltedGridHero images={IMAGES} className="hero">
         <div className="hero-content">
-          <div className="hero-title"><h1>Every frame,<br />brought into focus.</h1></div>
-          <p>Images curve in from one edge, flatten out at the centre, then fade away round the other.</p>
+          <div className="hero-title"><h1>Your next customer,<br />waiting to be found.</h1></div>
+          <div className="hero-description">
+            <p>Discover businesses without websites and sites ready for a refresh. Two search modes. More opportunities to connect.</p>
+            <div className="hero-actions">
+            <ShinyButton onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}>Get started</ShinyButton>
+              <a className="hero-how-link" href="#how-it-works">How it works?</a>
+            </div>
+          </div>
         </div>
       </TiltedGridHero>
       </section>
-      <section className="tunnel-demo" aria-label="Perspective tunnel">
+      <section id="how-it-works" className="tunnel-demo" aria-label="How Heimdall works">
         <div className="tunnel-demo-inner"><CurtainSplitHero /></div>
       </section>
       <Features />
+      <div id="workflow" className="w-full"><InkOrbitFeatures theme="dark" /></div>
     </main>
+    <CinematicFooter />
+    </>
   );
 }
