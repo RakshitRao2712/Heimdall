@@ -1,6 +1,7 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
 "use client";
 
+import { useSession } from "@/auth/session";
 import { ShinyButton } from "@/components/ui/shiny-button";
 
 import gsap from "gsap";
@@ -195,6 +196,7 @@ function FullscreenNav({
   onClose,
   children,
 }: FullscreenNavProps) {
+  const { user } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const overlayRef = useRef<HTMLElement | null>(null);
   const linksWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -334,7 +336,7 @@ function FullscreenNav({
         </a>
 
         <div className="nav-header-actions">
-        <ShinyButton className="nav-start-button" onClick={() => { if (isOpen) onCloseMenu(); document.getElementById('features')?.scrollIntoView({ behavior: isReducedMotion ? 'instant' : 'smooth' }); }}>Get started</ShinyButton>
+        <ShinyButton className="nav-start-button" onClick={() => { if (isOpen) onCloseMenu(); window.location.assign(user ? '/dashboard' : '/login'); }}>{user ? 'Dashboard' : 'Get started'}</ShinyButton>
         <button
           ref={toggleButtonRef}
           onClick={onToggleMenu}

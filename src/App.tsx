@@ -1,3 +1,4 @@
+import { useSession } from "@/auth/session";
 import { ShinyButton } from "@/components/ui/shiny-button";
 import { CinematicFooter } from '@/components/ui/motion-footer';
 import InkOrbitFeatures from '@/components/ui/ink-orbit-features';
@@ -21,6 +22,7 @@ const IMAGES = [
 ];
 
 export default function App() {
+  const { user, loading } = useSession();
   return (
     <>
     <main className="page relative z-10 bg-background">
@@ -30,7 +32,7 @@ export default function App() {
         navContent={{
           agencyName: "Heimdall",
           tagline: "Find local businesses. Discover website opportunities. Connect with your next customer.",
-          location: "Google Maps + Copyright Search",
+          location: "Google Places + Copyright Search",
           links: [{ label: "Discover", href: "#home" }, { label: "How it works", href: "#how-it-works" }, { label: "Features", href: "#features" }, { label: "Explore the workflow", href: "#workflow" }],
           images: ["https://cdn.21st.dev/assets/mirror/ba/baa678cbac1a29e773743a10ff421b226cf0e9b5d786ebf34415063d6dabc02b.jpg", "https://cdn.21st.dev/assets/mirror/ef/ef696854debc5d2d40cbe03ea0c3a04e29689529cf2f4bfe90c1c5978f00579a.jpg"],
           socials: [{ type: "instagram", href: "#" }, { type: "twitter", href: "#" }, { type: "linkedin", href: "#" }],
@@ -42,7 +44,7 @@ export default function App() {
           <div className="hero-description">
             <p>Discover businesses without websites and sites ready for a refresh. Two search modes. More opportunities to connect.</p>
             <div className="hero-actions">
-            <ShinyButton onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}>Get started</ShinyButton>
+            <ShinyButton onClick={() => window.location.assign(user ? '/dashboard' : '/login')}>{loading ? 'Get started' : user ? 'Dashboard' : 'Get started'}</ShinyButton>
               <a className="hero-how-link" href="#how-it-works">How it works?</a>
             </div>
           </div>

@@ -2,3 +2,7 @@ node_modules/
 dist/
 .env
 *.local
+
+# Private local backend state and OS metadata
+.data/
+.DS_Store

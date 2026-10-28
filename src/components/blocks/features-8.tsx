@@ -49,7 +49,7 @@ export function Features() {
                                     </svg>
                                 </div>
                                 <div className="relative z-10 mt-6 space-y-2 text-center">
-                                    <h2 className="group-hover:text-secondary-950 text-lg font-medium transition dark:text-white">Google Maps leads</h2>
+                                    <h2 className="group-hover:text-secondary-950 text-lg font-medium transition dark:text-white">Google Places leads</h2>
                                     <p className="text-foreground">Find operational businesses without a website, with five or fewer reviews by default.</p>
                                 </div>
                             </CardContent>

@@ -93,7 +93,7 @@ const D_FEATURES: InkFeatures = {
   title: "Turn *Searches*\nInto Opportunities",
   collaboration: {
     title: "Discover local businesses",
-    description: "Enter a business type and location. Google Maps search surfaces operational businesses without a website.",
+    description: "Enter a business type and location. Google Places search surfaces operational businesses without a website.",
   },
   reports: {
     title: "Find website opportunities",
@@ -337,7 +337,7 @@ function FlowCard({ brand, features, uid, reduced, inView }: { brand: string; fe
   const team = [
     { x: 58, y: 38, name: "Business category" },
     { x: 104, y: 22, name: "Target location" },
-    { x: 150, y: 40, name: "Google Maps results" },
+    { x: 150, y: 40, name: "Google Places results" },
     { x: 46, y: 92, name: "Website search results" },
     { x: 146, y: 114, name: "Contact information" },
   ]

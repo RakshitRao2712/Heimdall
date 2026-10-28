@@ -217,7 +217,7 @@ MagneticButton.displayName = "MagneticButton";
 // -------------------------------------------------------------------------
 const MarqueeItem = () => (
   <div className="flex items-center space-x-12 px-6">
-    <span>Google Maps Leads</span> <span className="text-primary/60">✦</span>
+    <span>Google Places Leads</span> <span className="text-primary/60">✦</span>
     <span>Copyright Search</span> <span className="text-secondary/60">✦</span>
     <span>Parallel Website Checks</span> <span className="text-primary/60">✦</span>
     <span>Public Phone Numbers</span> <span className="text-secondary/60">✦</span>
@@ -335,7 +335,7 @@ export function CinematicFooter() {
               <div className="flex flex-wrap justify-center gap-4 w-full">
                 <MagneticButton as="a" href="#google-maps" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
                   <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
-                  Explore Google Maps
+                  Explore Google Places
                 </MagneticButton>
                 
                 <MagneticButton as="a" href="#copyright-search" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
