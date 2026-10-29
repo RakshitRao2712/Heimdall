@@ -3,6 +3,7 @@
 import {
     motion,
     useTransform,
+    useScroll,
     useReducedMotion,
     useMotionValue,
     useSpring,
@@ -142,6 +143,7 @@ function TunnelCard({ card, progress, pointer, total, stage }: TunnelCardProps) 
 }
 
 export default function PerspectiveTunnelHero() {
+    const scrollRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const reduce = useReducedMotion();
 
@@ -165,31 +167,17 @@ export default function PerspectiveTunnelHero() {
         return () => window.removeEventListener("resize", updateDimensions);
     }, []);
 
-    // Raw motion value controlled directly by mouse wheel / touch trackpad
-    const rawProgress = useMotionValue(0);
-    const smoothProgress = useSpring(rawProgress, {
+    // The document scroll drives the tunnel, including touch and keyboard scrolling.
+    const { scrollYProgress } = useScroll({
+        target: scrollRef,
+        offset: ["start start", "end end"],
+    });
+    const staticProgress = useMotionValue(0.45);
+    const smoothProgress = useSpring(reduce ? staticProgress : scrollYProgress, {
         stiffness: 80,
         damping: 30,
         restDelta: 0.0001,
     });
-
-    // Handle wheel scrolling locally inside the 100vh viewport container without page scroll
-    useEffect(() => {
-        const el = containerRef.current;
-        if (!el) return;
-
-        const handleWheel = (e: WheelEvent) => {
-            const current = rawProgress.get();
-            if ((current <= 0 && e.deltaY < 0) || (current >= 1 && e.deltaY > 0)) return;
-            e.preventDefault();
-            const delta = e.deltaY * 0.0008; // Adjust speed of tunnel travel here
-            const next = Math.min(1, Math.max(0, current + delta));
-            rawProgress.set(next);
-        };
-
-        el.addEventListener("wheel", handleWheel, { passive: false });
-        return () => el.removeEventListener("wheel", handleWheel);
-    }, [rawProgress]);
 
     const pointer = useCameraParallax(!reduce);
 
@@ -198,9 +186,10 @@ export default function PerspectiveTunnelHero() {
     const promptOpacity = useTransform(smoothProgress, [0, 0.12], [1, 0]);
 
     return (
+        <div ref={scrollRef} className="relative w-full" style={{ height: reduce ? "100svh" : "260svh" }}>
         <div
             ref={containerRef}
-            className="relative h-[100svh] w-full overflow-hidden bg-black dark:bg-black text-neutral-900 dark:text-white select-none flex items-center justify-center"
+            className="sticky top-0 h-[100svh] w-full overflow-hidden bg-transparent text-neutral-900 dark:text-white select-none flex items-center justify-center"
             style={{
                 perspective: stage.isMobile ? "900px" : "1200px",
                 transformStyle: "preserve-3d",
@@ -209,12 +198,12 @@ export default function PerspectiveTunnelHero() {
             {/* Central Anchor Typography */}
             <motion.div
                 style={{ scale: titleScale, opacity: titleOpacity }}
-                className="pointer-events-none z-0 flex flex-col items-center text-center px-6 max-w-xl"
+                className="pointer-events-none z-0 flex flex-col items-center text-center px-6 max-w-3xl"
             >
                 <p className="text-xs font-mono uppercase tracking-[0.4em] text-indigo-600 dark:text-indigo-400 mb-4">
                     Two ways to discover
                 </p>
-                <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-tighter leading-[0.9] bg-gradient-to-b from-neutral-950 via-neutral-800 to-neutral-400 dark:from-white dark:via-white dark:to-white/40 bg-clip-text text-transparent">
+                <h1 className="text-6xl sm:text-8xl md:text-[112px] font-bold tracking-tighter leading-[0.9] bg-gradient-to-b from-neutral-950 via-neutral-800 to-neutral-400 dark:from-white dark:via-white dark:to-white/40 bg-clip-text text-transparent">
                     FIND YOUR
                     <br />
                     NEXT LEAD.
@@ -249,6 +238,7 @@ export default function PerspectiveTunnelHero() {
                     />
                 ))}
             </div>
+        </div>
         </div>
     );
 }

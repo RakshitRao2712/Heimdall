@@ -223,6 +223,12 @@ function Brackets() {
 
 function Title({ text, className = "ib-h2", as = "h2" }: { text: string; className?: string; as?: "h2" | "h3" }) {
   const Tag = as
+  if (text === D_FEATURES.title) return (
+    <Tag className={className + " workflow-font-pair"}>
+      <span className="workflow-script">Turn searches</span>
+      <span className="workflow-anton">Into opportunities</span>
+    </Tag>
+  )
   return (
     <Tag className={className}>
       {parseTitle(text).map((line, i) => (
@@ -575,14 +581,14 @@ function InsightsCard({ copy, uid, reduced }: { copy: InkFeatures["insights"]; u
             <line key={g} x1="14" x2={W - 14} y1={H * g} y2={H * g} stroke="var(--ib-line)" />
           ))}
           <path d={area} fill={"url(#" + fill + ")"} />
-          <path d={line} fill="none" stroke="var(--ib-ink)" strokeWidth="1.4" pathLength={1} className="ib-line-draw" opacity=".85" />
+          <path d={line} fill="none" stroke="#ff499f" strokeWidth="1.4" pathLength={1} className="ib-line-draw" opacity=".85" />
           <line x1={points[split][0]} x2={points[split][0]} y1="10" y2={H - 14} stroke="var(--ib-line-strong)" strokeDasharray="2 3" />
           <text x={points[split][0] - 4} y={H - 18} textAnchor="end" fontSize="7" fill="var(--ib-faint)" fontFamily="var(--ib-mono)">
             ILLUSTRATION
           </text>
           {hover >= 0 && <line x1={p[0]} x2={p[0]} y1="8" y2={H - 14} stroke="var(--ib-ink)" strokeOpacity=".35" />}
-          {!reduced && hover < 0 && <circle cx={last[0]} cy={last[1]} r="7" fill="var(--ib-ink)" opacity=".15" className="ib-glow" />}
-          <circle cx={p[0]} cy={p[1]} r="3.2" fill="var(--ib-raise)" stroke="var(--ib-ink)" strokeWidth="1.5" />
+          {!reduced && hover < 0 && <circle cx={last[0]} cy={last[1]} r="7" fill="#ff499f" opacity=".15" className="ib-glow" />}
+          <circle cx={p[0]} cy={p[1]} r="3.2" fill="var(--ib-raise)" stroke="#ff499f" strokeWidth="1.5" />
           <g transform={"translate(" + clamp(p[0], 40, W - 40) + "," + (p[1] < 34 ? p[1] + 22 : p[1] - 12) + ")"}>
             <rect x="-30" y="-11" width="60" height="15" rx="2" fill="var(--ib-inv)" />
             <text x="0" y="-1" textAnchor="middle" fontSize="7.5" fill="var(--ib-inv-ink)" fontFamily="var(--ib-mono)">
@@ -612,7 +618,7 @@ const IB_CSS = `
 .ib-reveal[data-in="true"]{opacity:1;transform:none}
 .ib-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;margin-bottom:clamp(28px,4.5cqw,52px)}
 .ib-tag{display:inline-block;padding:4px 10px;font-size:11.5px;letter-spacing:.02em;color:var(--ib-soft);background:var(--ib-card);border:1px solid var(--ib-line)}
-.ib-h2{font-size:clamp(28px,4.4cqw,44px);line-height:1.08;letter-spacing:-.025em;font-weight:500}
+.ib-h2{font-size:clamp(36px,6cqw,64px);line-height:1.08;letter-spacing:-.025em;font-weight:500}
 .ib-h2>span{display:block}
 .ib-muted{color:var(--ib-faint)}
 .ib-frame{position:relative}
@@ -636,9 +642,9 @@ const IB_CSS = `
 .ib-wide-copy{display:grid;grid-template-columns:1fr;gap:16px}
 @container (min-width:560px){.ib-wide-copy{grid-template-columns:1fr 1fr}.ib-wide-copy>div:last-child{justify-self:end;text-align:left}}
 .ib-flow{stroke:var(--ib-line-strong);fill:none;stroke-width:1.2;transition:stroke .3s}
-.ib-flow-on{stroke:var(--ib-ink)}
+.ib-flow-on{stroke:#ff499f}
 .ib-dash{stroke-dasharray:3 4;animation:ib-dash 1.2s linear infinite}
-.ib-pkt{fill:var(--ib-ink)}
+.ib-pkt{fill:#ff499f}
 .ib-node{fill:var(--ib-raise);stroke:var(--ib-line-strong);transition:stroke .3s,transform .3s}
 .ib-av{cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1);transform-box:fill-box;transform-origin:center}
 .ib-av:hover,.ib-av:focus-visible{transform:scale(1.18)}
@@ -650,7 +656,7 @@ const IB_CSS = `
 .ib-tool{cursor:pointer;transition:transform .3s cubic-bezier(.2,.8,.2,1);transform-box:fill-box;transform-origin:center}
 .ib-tool:hover,.ib-tool-on{transform:translateY(-2px)}
 .ib-tool rect{transition:stroke .3s}
-.ib-tool-on rect.ib-node{stroke:var(--ib-ink)}
+.ib-tool-on rect.ib-node{stroke:#ff499f}
 .ib-chart{cursor:crosshair}
 .ib-line-draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.8s cubic-bezier(.4,.1,.2,1)}
 [data-in="true"] .ib-line-draw{stroke-dashoffset:0}

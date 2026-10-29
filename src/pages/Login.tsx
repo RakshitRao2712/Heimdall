@@ -10,6 +10,7 @@ export default function Login() {
     setBusy(true); setError(''); setNotice('');
     try {
       const user = await authRequest(create ? 'register' : 'login', { email: data.get('email'), password: data.get('password'), rememberMe: data.has('rememberMe') });
+      try { sessionStorage.setItem('heimdall-login-intro', 'pending'); } catch { /* Sign-in still works without storage. */ }
       form.reset(); setUser(user); window.location.assign('/dashboard');
     } catch (e) { setError(e instanceof Error ? e.message : 'Sign-in failed. Please try again.'); }
     finally { setBusy(false); }

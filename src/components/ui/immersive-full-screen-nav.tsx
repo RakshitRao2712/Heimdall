@@ -329,10 +329,11 @@ function FullscreenNav({
       <header className={`${isOpen ? "fixed" : "absolute"} top-0 left-0 right-0 z-70 flex h-20 items-center justify-between px-8 ${headerClassName}`}>
         <a
           href={brandHref}
-          className="cursor-pointer text-lg font-semibold uppercase tracking-[0.15em] transition-colors duration-300 delay-700 motion-reduce:transition-none"
+          className="nav-brand cursor-pointer text-lg font-semibold uppercase tracking-[0.15em] transition-colors duration-300 delay-700 motion-reduce:transition-none"
           style={{ color: isOpen ? headerOpenColor : "#ffffff" }}
         >
-          {brand}
+          <img src="/images/heimdall-logo.svg" alt="" className="nav-brand-logo" />
+          <span>{brand}</span>
         </a>
 
         <div className="nav-header-actions">

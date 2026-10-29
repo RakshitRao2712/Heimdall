@@ -1,3 +1,4 @@
+import TextLoop from '@/components/ui/text-loop'
 import { Card, CardContent } from '@/components/ui/card'
 import { Shield, Users } from 'lucide-react'
 
@@ -5,6 +6,10 @@ export function Features() {
     return (
         <section id="features" aria-label="Heimdall features" className="bg-gray-50 py-16 md:py-32 dark:bg-transparent">
             <div className="mx-auto max-w-3xl lg:max-w-5xl px-6">
+                <header className="features-intro">
+                    <h2><TextLoop staticText="Built to" rotatingTexts={["discover.", "qualify.", "connect."]} /></h2>
+                    <p className="features-subheading">Two ways to find local businesses. Public contact details, focused filters, and saved lead files to turn your next search into an opportunity.</p>
+                </header>
                 <div className="relative">
                     <div className="relative z-10 grid grid-cols-6 gap-3">
                         <Card className="relative col-span-full flex overflow-hidden lg:col-span-2">
