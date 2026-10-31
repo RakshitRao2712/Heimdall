@@ -96,3 +96,32 @@ Lead files store independent snapshots of generated results, so they remain avai
 ## Bottom navigation
 
 The workspace uses the supplied Nimbus Liquid Navbar as a fixed bottom dock instead of a left sidebar. Dashboard, Leads, and Profile open their corresponding pages; Scrape opens an upward menu with Google Places and Website Copyright. The menu supports keyboard navigation, Escape, and outside-click dismissal. Profile shows account information, session API-key status, a key-management shortcut, and sign-out. Navigation stays visible on mobile, respects safe-area insets, and leaves room below page content. Sound is disabled, and the provided component includes a CSS fallback when WebGL is unavailable.
+
+### First-sign-in profile setup
+
+Authenticated dashboard visits load `/api/workspace/profile` before rendering the workspace. Accounts without a completed profile enter a setup form requiring first name and display name, with optional last name and website. Saving the profile plays the logo reveal, then opens the dashboard. Completion is stored per account in ignored `.data/profiles/<sha256-email>.json`, survives sessions and restarts, and can be updated from Profile. Photos remain browser-local. The bottom dock uses the saved display name. Login-triggered reveals happen after setup; refreshing the dashboard does not replay them.
+
+### Email verification for registration
+
+New accounts require a six-digit code delivered through Resend. `/api/auth/register` sends a code and returns an opaque challenge; it does not create or sign in an account. `/api/auth/register/verify` creates the account only after successful verification, then starts the normal setup → reveal → dashboard flow. Existing accounts can still sign in without re-registering.
+
+Configure `RESEND_API_KEY` and `HEIMDALL_MAIL_FROM` in the backend environment, or put them in the backend working directory's ignored `.env.local` as plain `KEY=value` entries (no quotes or `export`). The sender must be verified with Resend. Restart the backend after configuring them. Never use a `VITE_` prefix or put these credentials in frontend code. With no mail configuration, registration returns a clear service-unavailable error and creates no account.
+
+Codes expire after 10 minutes, permit five attempts, and can only be used once. Resend waits 60 seconds and each email address is limited to five sends per hour, alongside the authentication IP limit. Resending replaces the old challenge. Only code digests and BCrypt password hashes are held in server memory until verification; pending registrations clear on restart. Codes are never logged or returned to the browser. Profile text and account data persist separately.
+
+### Teams and shared lead work
+
+The bottom dock includes Teams. Account holders can create a team (becoming its leader) or join with a leader-provided, random join code. Only current team members can list/read that team's shared workspace or modify its data; leaders alone can view/replace join codes and remove members. Members can leave; the leader remains in the team. Replacing a code prevents future joins with the old code but does not remove current members.
+
+Any member can import a non-empty file from their own Leads library. The import is a shared snapshot with independent lead IDs; the private source file is unchanged and isn't synchronized after import. Team leads can be marked done or reopened. Status updates record the actor and time and reject stale versions. Notes are append-only, attributed to the authenticated author with the saved display name and timestamp; clients cannot choose the author. All members see notes and status updates through five-second polling. Membership summaries refresh every ten seconds.
+
+Teams are persisted atomically in ignored `.data/teams/<team-id>.json` files with owner-only file permissions, matching the existing single-backend storage design. Updates are synchronized within that process to preserve concurrent notes. Each account can join up to 20 teams, each team has up to 50 members, 50 imported folders and 2,000 leads, and each lead can have up to 100 notes of 2,000 characters. Join attempts are limited. No demo teams are automatically added. For multiple backend instances, replace the file store with shared transactional storage before scaling.
+
+Display names are unique across accounts, case-insensitively after Unicode normalization and whitespace normalization. Setup and Profile check availability while typing; the server rechecks atomically on save and returns 409 if another account already owns the name. An account can keep its current display name.
+
+### Google sign-in
+Create a Web application OAuth client in Google Cloud → Google Auth Platform. Configure branding/audience and add test users while in Testing mode. Add the exact redirect URI `http://127.0.0.1:5174/api/auth/google/callback`.
+
+Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in the backend `.env.local` (never frontend VITE variables). The currently running backend uses `/Users/Krish/Documents/Playground/leadScrapper-fast/.env.local`. Restart the backend after configuring. The login button becomes available when both credentials are present. Use `127.0.0.1:5174` consistently; localhost has separate session cookies.
+
+For deployment set `HEIMDALL_FRONTEND_URL` to the public HTTPS origin and `HEIMDALL_GOOGLE_REDIRECT_URI` to its `/api/auth/google/callback` URL, register that exact callback with Google, and proxy `/api` to the backend. Google scopes are only openid, email, profile; no Places or Gmail access. The backend validates OIDC and verified email, persists Google subject bindings, discards provider tokens after login, and uses the existing workspace session/onboarding. Password accounts keep their password; Google can automatically link authoritative Gmail/Workspace addresses. Existing third-party email accounts require password sign-in rather than automatic linking. Google-only accounts get an unknowable random password hash.

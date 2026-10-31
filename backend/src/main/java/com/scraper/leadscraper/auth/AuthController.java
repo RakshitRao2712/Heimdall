@@ -20,15 +20,23 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/api/auth")
 public class AuthController {
     public record Credentials(String email, String password, boolean rememberMe) { }
+    public record OtpInput(String challengeId, String code) { }
+    public record ResendInput(String challengeId) { }
+    private final RegistrationOtp registration;
     private final AccountStore accounts;
     private final PasswordEncoder encoder;
     private final HttpSessionSecurityContextRepository contexts;
     private final String dummyHash;
     private record Attempts(long since, int count) { }
     private final Map<String, Attempts> attempts = new ConcurrentHashMap<>();
-    public AuthController(AccountStore accounts, PasswordEncoder encoder, HttpSessionSecurityContextRepository contexts) {
+    public AuthController(AccountStore accounts, PasswordEncoder encoder, HttpSessionSecurityContextRepository contexts, RegistrationOtp registration) {
+        this.registration = registration;
         this.accounts = accounts; this.encoder = encoder; this.contexts = contexts;
         dummyHash = encoder.encode(UUID.randomUUID().toString());
+    }
+    @ExceptionHandler(ResponseStatusException.class)
+    public org.springframework.http.ResponseEntity<Map<String, String>> authError(ResponseStatusException error) {
+        return org.springframework.http.ResponseEntity.status(error.getStatusCode()).body(Map.of("detail", error.getReason() == null ? "Unable to complete this request." : error.getReason()));
     }
     @GetMapping("/csrf") public Map<String, String> csrf(CsrfToken token) { return Map.of("token", token.getToken(), "headerName", token.getHeaderName()); }
     @GetMapping("/me") public Map<String, String> me(Principal principal) { return Map.of("email", principal.getName()); }
@@ -54,10 +62,19 @@ public class AuthController {
         SecurityContextHolder.setContext(context); contexts.saveContext(context, request, response);
         return Map.of("email", email);
     }
-    @PostMapping("/register") public Map<String, String> register(@RequestBody Credentials credentials, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @PostMapping("/register") public RegistrationOtp.Challenge register(@RequestBody Credentials credentials, HttpServletRequest request) throws IOException {
         throttle(request); String email = validate(credentials);
-        if (!accounts.create(email, encoder.encode(credentials.password()))) throw new ResponseStatusException(HttpStatus.CONFLICT, "Unable to create this account; try signing in");
-        return session(email, credentials.rememberMe(), request, response);
+        if (accounts.hash(email) != null) throw new ResponseStatusException(HttpStatus.CONFLICT, "Unable to create this account. Try signing in.");
+        return registration.start(email, encoder.encode(credentials.password()), credentials.rememberMe());
+    }
+    @PostMapping("/register/resend") public RegistrationOtp.Challenge resend(@RequestBody ResendInput input, HttpServletRequest request) {
+        throttle(request); if (input.challengeId() == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start registration again.");
+        return registration.resend(input.challengeId());
+    }
+    @PostMapping("/register/verify") public Map<String, String> verify(@RequestBody OtpInput input, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        throttle(request); if (input.challengeId() == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start registration again.");
+        var verified = registration.verify(input.challengeId(), input.code());
+        return session(verified.email(), verified.rememberMe(), request, response);
     }
     @PostMapping("/login") public Map<String, String> login(@RequestBody Credentials credentials, HttpServletRequest request, HttpServletResponse response) throws IOException {
         throttle(request); String email = validate(credentials); String hash = accounts.hash(email);

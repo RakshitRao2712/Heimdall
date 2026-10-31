@@ -6,20 +6,8 @@ const IntroReadyContext = createContext(true);
 export const useIntroReady = () => useContext(IntroReadyContext);
 
 /** Reveal on homepage visits and once after successful authentication. */
-export function SiteIntro({ children }: { children: ReactNode }) {
-  const [visible, setVisible] = useState(() => {
-    const path = window.location.pathname;
-    if (path === '/') return true;
-    if (path !== '/dashboard') return false;
-    try { return sessionStorage.getItem('heimdall-login-intro') === 'pending'; }
-    catch { return false; }
-  });
-
-  useEffect(() => {
-    if (window.location.pathname === '/dashboard') {
-      try { sessionStorage.removeItem('heimdall-login-intro'); } catch { /* Storage may be unavailable. */ }
-    }
-  }, []);
+export function SiteIntro({ children, play = window.location.pathname === '/' }: { children: ReactNode; play?: boolean }) {
+  const [visible, setVisible] = useState(play);
   const reduce = useReducedMotion();
   const finish = useCallback(() => setVisible(false), []);
 

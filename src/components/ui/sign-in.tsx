@@ -77,7 +77,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
       <section className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           <div className="flex flex-col gap-6">
-            <h1 className="animate-element animate-delay-100 text-4xl md:text-5xl font-semibold leading-tight">{title}</h1>
+            <h1 className="auth-heading-pair animate-element animate-delay-100" aria-label={typeof title === 'string' ? title : undefined}><span className="auth-heading-script">{createAccount ? 'Start with' : 'Welcome to'}</span><span className="auth-heading-anton">Heimdall</span></h1>
             <p className="animate-element animate-delay-200 text-muted-foreground">{description}</p>
 
             {error && <p role="alert" className="rounded-lg border border-red-400/30 bg-red-400/10 p-3 text-sm text-red-200">{error}</p>}
@@ -107,11 +107,11 @@ export const SignInPage: React.FC<SignInPageProps> = ({
                   <input type="checkbox" name="rememberMe" className="custom-checkbox" />
                   <span className="text-foreground/90">Extended session (7 days)</span>
                 </label>
-                <a href="#" onClick={(e) => { e.preventDefault(); onResetPassword?.(); }} className="hover:underline text-violet-400 transition-colors">Reset password</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); onResetPassword?.(); }} className="hover:underline text-pink-400 transition-colors">Reset password</a>
               </div>
 
-              <button disabled={busy} type="submit" className="animate-element animate-delay-600 w-full rounded-2xl bg-primary py-4 font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
-                {busy ? "Please wait…" : createAccount ? "Create account" : "Sign in"}
+              <button disabled={busy} type="submit" className="auth-submit-button animate-element animate-delay-600 w-full rounded-2xl py-4 font-medium transition-colors">
+                {busy ? "Please wait…" : createAccount ? "Send verification code" : "Sign in"}
               </button>
             </form>
 
@@ -120,13 +120,13 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               <span className="px-4 text-sm text-muted-foreground bg-background absolute">Or continue with</span>
             </div>
 
-            <button type="button" disabled={!onGoogleSignIn || busy} title={!onGoogleSignIn ? "Google sign-in is not configured yet" : undefined} onClick={onGoogleSignIn} className="animate-element animate-delay-800 w-full flex items-center justify-center gap-3 border border-border rounded-2xl py-4 hover:bg-secondary transition-colors">
+            <button type="button" disabled={!onGoogleSignIn || busy} title={!onGoogleSignIn ? "Google sign-in is not configured yet" : undefined} onClick={onGoogleSignIn} className="auth-google-button animate-element animate-delay-800 w-full flex items-center justify-center gap-3 rounded-2xl py-4 transition-colors">
                 <GoogleIcon />
                 Continue with Google{!onGoogleSignIn && " (coming soon)"}
             </button>
 
             <p className="animate-element animate-delay-900 text-center text-sm text-muted-foreground">
-              {createAccount ? "Already have an account?" : "New to Heimdall?"} <a href="#" onClick={(e) => { e.preventDefault(); onCreateAccount?.(); }} className="text-violet-400 hover:underline transition-colors">{createAccount ? "Sign in" : "Create account"}</a>
+              {createAccount ? "Already have an account?" : "New to Heimdall?"} <a href="#" onClick={(e) => { e.preventDefault(); onCreateAccount?.(); }} className="text-pink-400 hover:underline transition-colors">{createAccount ? "Sign in" : "Create account"}</a>
             </p>
           </div>
         </div>
