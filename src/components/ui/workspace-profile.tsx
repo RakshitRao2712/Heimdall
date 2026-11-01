@@ -1,3 +1,4 @@
+import { PremiumBadge, PurchaseButton } from "./premium-access";
 import { DisplayNameStatus, useDisplayNameAvailability } from '@/components/ui/display-name-availability';
 import { useSession, workspaceMutation, type AccountProfile } from '@/auth/session';
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
@@ -61,7 +62,7 @@ export function WorkspaceProfile({ email, keyConfigured, keyLoading, searches, l
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not save your profile. Please retry.'); }
     finally { setSaving(false); }
   }
-  return <section className="profile-settings" aria-label="Profile settings">
+  return <section className="profile-settings" aria-label="Profile settings"><div className="profile-premium-status"><PremiumBadge/><PurchaseButton/></div>
     <form onSubmit={save}>
       <div className={`profile-cover ${draft.cover ? 'has-image' : ''}`}>
         {draft.cover && <img src={draft.cover} alt="Your profile cover" />}
@@ -89,7 +90,7 @@ export function WorkspaceProfile({ email, keyConfigured, keyLoading, searches, l
         </div>
         <div className="profile-account-details">
           <div><span>Google Places connection</span><strong>{keyLoading ? 'Checking…' : keyConfigured ? 'Connected for this session' : 'No key connected'}</strong></div>
-          <button className="workspace-button" type="button" onClick={onManageKey}><KeyRound size={14} />Manage API key</button>
+          <button className="workspace-button" type="button" onClick={onManageKey}><KeyRound size={14} />Manage Google key</button><a className="workspace-button" href="/dashboard?method=copyright">Manage Brave key</a>
         </div>
         <p className="profile-storage-note">Personal workspace · {searches} saved searches. Profile details and lead files save to your account. Cover and profile photos stay in this browser.</p>
         {error && <p role="alert" className="profile-form-error">{error}</p>}

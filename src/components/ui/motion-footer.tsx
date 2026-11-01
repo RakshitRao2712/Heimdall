@@ -1,3 +1,4 @@
+import { PolicyLinks, SocialLinks } from "@/components/policy-links";
 "use client";
 
 import * as React from "react";
@@ -359,6 +360,7 @@ export function CinematicFooter() {
             </div>
           </div>
 
+          <p className="footer-billing-disclosure">₹100 covers Heimdall Premium access only. Google Places and Brave Search API fees are billed separately by each provider according to your usage.</p>
           {/* 3. Bottom Bar / Credits */}
           <div className="relative z-20 w-full pb-8 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
             
@@ -367,6 +369,7 @@ export function CinematicFooter() {
               © 2026 Heimdall. All rights reserved.
             </div>
 
+            <PolicyLinks/><SocialLinks/>
             {/* Back to top */}
             <MagneticButton
               as="button"

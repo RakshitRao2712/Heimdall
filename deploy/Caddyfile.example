@@ -1,0 +1,17 @@
+# Replace with the real domain. Serve generated route HTML before the SPA.
+your-domain.example {
+    encode zstd gzip
+    handle /api/* {
+        reverse_proxy backend:8080
+    }
+    handle {
+        root * /srv/heimdall/dist
+        try_files {path}/index.html {path} =404
+        file_server
+    }
+    handle_errors {
+        root * /srv/heimdall/dist
+        rewrite * /404.html
+        file_server
+    }
+}

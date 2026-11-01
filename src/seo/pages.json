@@ -1,0 +1,173 @@
+{
+  "/": {
+    "title": "Heimdall | Find Local Business Leads & Website Opportunities",
+    "description": "Find businesses without websites with Google Places and discover website redesign leads with copyright search. Organize leads and collaborate with your team.",
+    "heading": "Your next customer, waiting to be found.",
+    "sections": [
+      [
+        "Discover local business leads",
+        "Search by business type and location using your own Google Places API key. Find businesses without a listed website and review public contact details."
+      ],
+      [
+        "Find website redesign opportunities",
+        "Website Copyright search checks public websites for older copyright notices and business phone numbers. Copyright dates are prospecting signals, not proof of website age."
+      ],
+      [
+        "Organize leads and work together",
+        "Save named lead files, export CSV results, and share folders with your team. Mark leads complete and leave notes with author attribution."
+      ],
+      [
+        "\u20b9100 Premium lifetime access",
+        "One payment unlocks both discovery methods for the operating lifetime of Heimdall. Google Places and Brave Search API fees are not included: Each API provider bills your account separately according to usage."
+      ]
+    ]
+  },
+  "/pricing": {
+    "title": "Heimdall Pricing | \u20b9100 Premium Lifetime Access",
+    "description": "Get Heimdall Premium lifetime access for \u20b9100 once. Unlock both lead discovery methods. Google Places and Brave Search API fees are separate and billed by each provider.",
+    "heading": "One payment. Full access.",
+    "sections": [
+      [
+        "\u20b9100 once for Premium",
+        "Premium includes Google Places and Website Copyright discovery, named lead files, CSV exports, and team collaboration."
+      ],
+      [
+        "Google API usage is separate",
+        "Use your own Google Places key. The \u20b9100 purchase does not include Google Places and Brave Search API fees. Google bills your Google Cloud account according to usage."
+      ],
+      [
+        "Refunds and support",
+        "Contact support about your purchase. Approved refunds are processed within 7 days; bank credit timing can vary."
+      ]
+    ]
+  },
+  "/how-it-works": {
+    "title": "How Heimdall Works | Business Lead Discovery & Teams",
+    "description": "Learn how to find local business leads with Google Places or copyright search, review phone numbers, save lead files, and collaborate with your team.",
+    "heading": "Find new leads.",
+    "sections": [
+      [
+        "Choose a discovery method",
+        "Use Google Places to discover businesses without websites, or Website Copyright to identify potential redesign opportunities."
+      ],
+      [
+        "Review and save results",
+        "Review public business details, filter results, save a named lead file, and export CSV."
+      ],
+      [
+        "Collaborate with your team",
+        "Import lead folders into Teams, add notes, and track which leads have been handled."
+      ]
+    ]
+  },
+  "/google-places-setup": {
+    "title": "Connect Google Places API to Heimdall | Setup Guide",
+    "description": "Set up Google Cloud billing, enable Places API (New), create and restrict your API key, and connect it to Heimdall. Understand separate Google usage charges.",
+    "heading": "Connect Google Places.",
+    "sections": [
+      [
+        "Create your Google Cloud project",
+        "Select or create a project in Google Cloud Console and link a billing account."
+      ],
+      [
+        "Enable Places API (New)",
+        "Enable Places API (New), create an API key, and restrict it to the required API and your server's outbound IP where appropriate."
+      ],
+      [
+        "Connect your key",
+        "Sign in to Heimdall, open Scrape \u2192 Google Places, and connect your key. The key stays in your backend session until sign-out or session expiry."
+      ],
+      [
+        "Monitor usage and billing",
+        "Google Places usage is billed separately by Google according to your usage. The \u20b9100 Heimdall purchase does not cover Google and Brave API fees."
+      ]
+    ]
+  },
+  "/contact": {
+    "title": "Contact Heimdall | Account, Payment & Product Support",
+    "description": "Contact Heimdall for help with your account, lead discovery, Premium payments, refunds, or privacy requests.",
+    "heading": "Let\u2019s talk.",
+    "sections": [
+      [
+        "Email support",
+        "Contact Rakshit Rao at kirankrish2019@gmail.com for account, product, payment, refund, and privacy questions. Include your payment ID for payment questions; never send passwords or API secrets."
+      ]
+    ]
+  },
+  "/privacy": {
+    "title": "Heimdall Privacy Policy | Accounts, Leads & Payment Data",
+    "description": "Read how Heimdall handles account information, searches, lead files, team notes, browser storage, API keys, and payment identifiers.",
+    "heading": "Your data, clearly explained.",
+    "sections": [
+      [
+        "Your workspace information",
+        "Heimdall stores account and profile details, searches, saved lead files, team information, and purchase records to operate your workspace."
+      ],
+      [
+        "Sessions and service providers",
+        "Google Places keys stay in server sessions. Google handles sign-in and Places requests, Razorpay processes payments, and Resend delivers verification emails when configured."
+      ],
+      [
+        "Privacy requests",
+        "Contact kirankrish2019@gmail.com to request access, correction, or deletion. Shared team and transaction records may need to be retained as described in the policy."
+      ]
+    ]
+  },
+  "/terms": {
+    "title": "Heimdall Terms & Conditions | Premium Access & Usage",
+    "description": "Read Heimdall\u2019s terms for Premium lifetime access, responsible lead discovery, third-party usage fees, service availability, payments, and refunds.",
+    "heading": "A clear agreement.",
+    "sections": [
+      [
+        "Premium access",
+        "\u20b9100 buys Premium access for the operating lifetime of the Heimdall product. Access starts after verification of a captured payment."
+      ],
+      [
+        "Separate Google fees",
+        "Google Places API usage charges are billed separately by Google. The \u20b9100 Heimdall price does not include those fees."
+      ],
+      [
+        "Responsible use",
+        "Use public business data lawfully and respect privacy, marketing requirements, and provider rules. Results and uninterrupted availability are not guaranteed."
+      ]
+    ]
+  },
+  "/refund": {
+    "title": "Heimdall Refund Policy | Requests & 7-Day Processing",
+    "description": "Request help with a Heimdall payment or refund. Approved refunds are processed within 7 days to the original payment method; bank credit timing may vary.",
+    "heading": "Fair and straightforward.",
+    "sections": [
+      [
+        "Request a refund",
+        "Email kirankrish2019@gmail.com with your account email, payment ID, date, and reason."
+      ],
+      [
+        "Processing timeline",
+        "Approved refunds are processed within 7 days to the original payment method. Normal bank credit can take 5\u20137 working days after initiation."
+      ],
+      [
+        "Separate Google charges",
+        "Heimdall refunds only cover payments to Heimdall. Google Places API charges are separate and handled by Google."
+      ]
+    ]
+  },
+  "/brave-search-setup": {
+    "title": "Connect Brave Search API to Heimdall | Setup Guide",
+    "description": "Create a Brave Search API account, activate a Search plan, generate your key, and connect Website Copyright discovery. API usage fees are separate.",
+    "heading": "Connect Brave Search.",
+    "sections": [
+      [
+        "Create your account and plan",
+        "Register in the Brave Search API dashboard and activate a plan with Web Search. Review current usage billing."
+      ],
+      [
+        "Connect your own key",
+        "Create an API key, sign in to Heimdall, and open Scrape \u2192 Website Copyright. Your key stays in your server session until sign-out or expiry."
+      ],
+      [
+        "Separate API usage fees",
+        "The \u20b9100 Heimdall purchase does not include Brave Search or Google Places API usage charges."
+      ]
+    ]
+  }
+}

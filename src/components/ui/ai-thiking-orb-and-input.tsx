@@ -17,6 +17,7 @@ const COPY = {
 type Phase = "idle" | "launch" | "assemble" | "think" | "resolve" | "condense" | "unfold" | "answered" | "reset";
 
 export interface MorphOrbProps {
+  onCancel?: () => void;
   onSubmit?: (text: string) => Promise<string> | string;
   disabled?: boolean;
   validate?: () => boolean;
@@ -221,13 +222,13 @@ function sleep(ms: number, sig: AbortSignal) {
 }
 
 function abortable<V>(p: Promise<V>, sig: AbortSignal) {
-  return new Promise<V | undefined>((res) => {
+  return new Promise<V | undefined>((res, reject) => {
     if (sig.aborted) return res(undefined);
     const onAbort = () => res(undefined);
     sig.addEventListener("abort", onAbort, { once: true });
     p.then(
       (v) => { sig.removeEventListener("abort", onAbort); res(v); },
-      () => { sig.removeEventListener("abort", onAbort); res(undefined); }
+      (error) => { sig.removeEventListener("abort", onAbort); reject(error); }
     );
   });
 }
@@ -640,7 +641,7 @@ function createRuntime(env: Env): Runtime {
       const t0 = performance.now();
       const pending = Promise.resolve()
         .then(() => cfg.onSubmit(text))
-        .then((b) => (typeof b === "string" && b.trim() ? b : COPY.answerBody), () => COPY.answerBody);
+        .then((b) => (typeof b === "string" && b.trim() ? b : COPY.answerBody));
       const got = await abortable(pending, sig);
       if (sig.aborted) throw ABORT;
       const body = got ?? COPY.answerBody;
@@ -738,6 +739,7 @@ function createRuntime(env: Env): Runtime {
   };
 
   function hard() {
+    env.ui.live("Ready for a new search.");
     epoch++;
     current?.abort(); current = null;
     idleCtl?.abort(); idleCtl = null;
@@ -878,6 +880,7 @@ export default function MorphOrb(props: MorphOrbProps) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && phaseRef.current !== "idle" && phaseRef.current !== "reset") {
         e.preventDefault();
+        propsRef.current.onCancel?.();
         rt.escape();
       }
     };
@@ -1005,7 +1008,7 @@ export default function MorphOrb(props: MorphOrbProps) {
               className="mo-field"
               type="text"
               value={value}
-              maxLength={200}
+              maxLength={500}
               placeholder={COPY.placeholder}
               aria-label="Business type and location"
               disabled={props.disabled}

@@ -16,6 +16,7 @@ export type NimbusFx = "plane" | "drop" | "spin" | "glow" | "wave" | "pop" | "no
 
 export type LiquidNavItem = {
   label: string
+  secondaryLabel?: string
   hasPopup?: boolean
   expanded?: boolean
   controls?: string
@@ -568,7 +569,7 @@ export function LiquidNavbar({
                 {it.icon}
               </span>
             )}
-            <span className="nimbus-label">{it.label}</span>
+            <span className="nimbus-label dock-profile-name">{it.label}{it.secondaryLabel && <small>{it.secondaryLabel}</small>}</span>
           </>
         )
         return it.href ? (

@@ -1,6 +1,8 @@
+import { SeoMetadata } from "./seo/metadata";
 import { SiteIntro } from './components/ui/site-intro';
 import { lazy, Suspense, useEffect, useState } from 'react';
 const Onboarding = lazy(() => import('./pages/Onboarding'));
+const PolicyPage = lazy(() => import('./pages/PolicyPage'));
 const InfoPage = lazy(() => import('./pages/InfoPage'));
 const Home = lazy(() => import('./App'));
 const Login = lazy(() => import('./pages/Login'));
@@ -19,11 +21,13 @@ function DashboardEntry() {
 }
 function Route() {
   const { user, loading } = useSession(); const path = window.location.pathname;
-  if (['/pricing', '/how-it-works', '/google-places-setup'].includes(path)) return <InfoPage path={path} />;
-  if (path !== '/login' && path !== '/dashboard') return <Home />;
+  if (['/contact', '/privacy', '/terms', '/refund'].includes(path)) return <PolicyPage path={path} />;
+  if (['/pricing', '/how-it-works', '/google-places-setup', '/brave-search-setup'].includes(path)) return <InfoPage path={path} />;
+  if (path === '/') return <Home />;
+  if (path !== '/login' && path !== '/dashboard') return <main className="info-main"><h1>Page not found</h1><p>This page does not exist.</p><a href="/">Back to Heimdall</a></main>;
   if (loading) return <div className="route-loading" role="status">Opening your Heimdall workspace…</div>;
   if (path === '/dashboard' && !user) { window.location.replace('/login'); return null; }
   if (path === '/login' && user) { if (new URLSearchParams(window.location.search).get('google') === 'success') { try { sessionStorage.setItem('heimdall-login-intro', 'pending'); } catch { /* Optional intro. */ } } window.location.replace('/dashboard'); return null; }
   return path === '/login' ? <Login /> : <DashboardEntry />;
 }
-export default function App() { return <SessionProvider><SiteIntro><Suspense fallback={<div className="route-loading" role="status">Loading Heimdall…</div>}><Route /></Suspense></SiteIntro></SessionProvider>; }
+export default function App() { return <SessionProvider><SeoMetadata/><SiteIntro><Suspense fallback={<div className="route-loading" role="status">Loading Heimdall…</div>}><Route /></Suspense></SiteIntro></SessionProvider>; }

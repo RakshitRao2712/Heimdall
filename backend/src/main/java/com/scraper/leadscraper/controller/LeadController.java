@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import jakarta.servlet.http.HttpSession;
 import com.scraper.leadscraper.auth.PlacesKeyController;
+import com.scraper.leadscraper.auth.BraveKeyController;
 
 @RestController
 public class LeadController {
@@ -38,7 +39,7 @@ public class LeadController {
     @GetMapping("/api/lead/google-search")
     public List<GoogleSearchLead> getGoogleSearchLeads(
             @RequestParam(defaultValue = "plumbers in Chicago") String query,
-            @RequestParam(defaultValue = "1") int pages) {
-        return googleSearchScraperService.searchAndExtractLeads(query, pages);
+            @RequestParam(defaultValue = "1") int pages, HttpSession session) {
+        return googleSearchScraperService.searchAndExtractLeads(query, pages, BraveKeyController.requireKey(session));
     }
 }

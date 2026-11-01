@@ -4,6 +4,7 @@ export const publicLinks = [
   { label: 'Pricing', href: '/pricing' },
   { label: 'How It Works', href: '/how-it-works' },
   { label: 'Google Places Setup', href: '/google-places-setup' },
+  { label: 'Brave Search Setup', href: '/brave-search-setup' },
 ];
 
 export function SiteNav() {
@@ -18,7 +19,7 @@ export function SiteNav() {
         'https://cdn.21st.dev/assets/mirror/ba/baa678cbac1a29e773743a10ff421b226cf0e9b5d786ebf34415063d6dabc02b.jpg',
         'https://cdn.21st.dev/assets/mirror/ef/ef696854debc5d2d40cbe03ea0c3a04e29689529cf2f4bfe90c1c5978f00579a.jpg',
       ],
-      socials: [{ type: 'instagram', href: '#' }, { type: 'twitter', href: '#' }, { type: 'linkedin', href: '#' }],
+      socials: [{ type: 'email', href: 'mailto:kirankrish2019@gmail.com' }, { type: 'linkedin', href: '#' }],
     }}
   />;
 }

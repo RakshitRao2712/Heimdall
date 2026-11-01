@@ -27,10 +27,12 @@ public class ScraperService {
     private int maxReviewsForNewBusiness;
 
     private final ObjectMapper objectMapper;
+    private final HttpClient client;
 
-    public ScraperService(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+    @org.springframework.beans.factory.annotation.Autowired
+    public ScraperService(ObjectMapper objectMapper) { this(objectMapper, HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).build()); }
+    ScraperService(ObjectMapper objectMapper, HttpClient client) { this.objectMapper = objectMapper; this.client = client; maxReviewsForNewBusiness = 5; }
+    @jakarta.annotation.PreDestroy public void close() { client.close(); }
 
     public List<PlaceResponse.Place> getLeadsWithoutWebsite(String query, String apiKey) {
         if (query == null || query.isBlank() || query.length() > 500) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Supply a query of 1–500 characters");
@@ -38,7 +40,6 @@ public class ScraperService {
 
         try {
             String jsonPayload = objectMapper.writeValueAsString(Map.of("textQuery", query.trim()));
-            HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://places.googleapis.com/v1/places:searchText"))
                     .timeout(Duration.ofSeconds(45))
@@ -52,8 +53,8 @@ public class ScraperService {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             log.info("Google Places API response status: {}", response.statusCode());
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                String message = response.statusCode() == 403 || response.statusCode() == 401
-                    ? "Google Places rejected the API key. Check API access, billing, and key restrictions on the backend."
+                String message = response.statusCode() == 400 || response.statusCode() == 403 || response.statusCode() == 401
+                    ? "Google Places rejected the API key. Check API access, billing, and key restrictions in your Google Cloud project."
                     : response.statusCode() == 429 ? "Google Places quota exceeded. Try again later."
                     : "Google Places could not complete the search. Try again later.";
                 throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, message);
@@ -67,9 +68,10 @@ public class ScraperService {
             // Stream and filter for missing websites, operational status, and recently
             // added (proxy: low review count)
             return placeResponse.places().stream()
-                    .filter(place -> place.websiteUri() == null || place.websiteUri().isEmpty())
+                    .filter(java.util.Objects::nonNull)
+                    .filter(place -> place.websiteUri() == null || place.websiteUri().isBlank())
                     .filter(place -> "OPERATIONAL".equals(place.businessStatus()))
-                    .filter(place -> place.userRatingCount() == null
+                    .filter(place -> maxReviewsForNewBusiness < 0 || place.userRatingCount() == null
                             || place.userRatingCount() <= maxReviewsForNewBusiness)
                     .toList();
 

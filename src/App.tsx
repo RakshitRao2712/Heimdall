@@ -35,7 +35,7 @@ export default function App() {
         <div className="hero-content">
           <div className="hero-title"><h1 className="hero-font-pair"><span className="hero-script">Your next</span><span className="hero-anton">customer,</span><span className="hero-heading-tail">waiting to be found.</span></h1></div>
           <div className="hero-description">
-            <p>Discover businesses without websites and sites ready for a refresh. Two search modes. More opportunities to connect.</p>
+            <p>Find local business leads with Google Places and discover website redesign opportunities with copyright search. Save leads, collect public phone numbers, and work with your team.</p>
             <div className="hero-actions">
             <ShinyButton onClick={() => window.location.assign(user ? '/dashboard' : '/login')}>{loading ? 'Get started' : user ? 'Dashboard' : 'Get started'}</ShinyButton>
               <a className="hero-how-link" href="/how-it-works">How it works?</a>

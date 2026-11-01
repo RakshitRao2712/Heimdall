@@ -51,6 +51,7 @@ public class GoogleSearchScraperService {
             "theinfatuation.com", "wikipedia.org", "timeout.com", "thrillist.com", "michelin.com",
             "resy.com", "yellowpages.com", "menupix.com", "seamless.com");
 
+    @Value("${heimdall.search.provider:brave}") private String searchProvider = "brave";
     private final int maxResults;
     private final Duration timeout;
     private final HttpClient client;
@@ -85,8 +86,16 @@ public class GoogleSearchScraperService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Supply a query of 1–500 characters and pages between 1 and 10");
         }
+        return extractResults(scrapeGoogleSearchResults(query.trim(), pages));
+    }
+
+    public List<GoogleSearchLead> searchAndExtractLeads(String query, int pages, String apiKey) {
+        if (query == null || query.isBlank() || query.length() > 500 || pages < 1 || pages > 10) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Supply a query of 1–500 characters and pages between 1 and 10");
+        return extractResults(braveResults(query.trim(), pages, apiKey));
+    }
+
+    private List<GoogleSearchLead> extractResults(List<GoogleSearchResult> results) {
         long started = System.nanoTime();
-        List<GoogleSearchResult> results = scrapeGoogleSearchResults(query.trim(), pages);
         List<Future<GoogleSearchLead>> tasks = new ArrayList<>();
         try {
             for (GoogleSearchResult result : results) {
@@ -113,17 +122,18 @@ public class GoogleSearchScraperService {
     }
 
     protected List<GoogleSearchResult> scrapeGoogleSearchResults(String query, int pages) {
+        if (!"browser".equals(searchProvider)) throw new ResponseStatusException(HttpStatus.PRECONDITION_REQUIRED, "Connect your Brave Search API key before searching.");
         if (!browserSlot.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Google search busy; retry shortly");
         }
         WebDriver driver = null;
         try {
-            WebDriverManager.chromedriver().setup();
+            WebDriverManager.chromedriver().timeout(30).setup();
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless=new", "--disable-gpu", "--disable-dev-shm-usage",
                     "--window-size=1920,1080", "--blink-settings=imagesEnabled=false");
             options.setPageLoadStrategy(org.openqa.selenium.PageLoadStrategy.EAGER);
-            driver = new ChromeDriver(options);
+            driver = new ChromeDriver(org.openqa.selenium.chrome.ChromeDriverService.createDefaultService(), options, org.openqa.selenium.remote.http.ClientConfig.defaultConfig().connectionTimeout(Duration.ofSeconds(15)).readTimeout(Duration.ofSeconds(25)));
             driver.manage().timeouts().pageLoadTimeout(timeout);
             // No implicit waits: a missing heading or consent dialog must not cost four seconds.
             driver.manage().timeouts().implicitlyWait(Duration.ZERO);
@@ -168,6 +178,24 @@ public class GoogleSearchScraperService {
             try { if (driver != null) driver.quit(); }
             finally { browserSlot.release(); }
         }
+    }
+
+    private List<GoogleSearchResult> braveResults(String query, int pages, String braveKey) {
+        if (braveKey == null || braveKey.isBlank()) throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Connect your Brave Search API key before searching.");
+        try {
+            Map<String, GoogleSearchResult> results = new LinkedHashMap<>();
+            for (int page=0; page<pages && results.size()<maxResults; page++) {
+                var request = HttpRequest.newBuilder(URI.create("https://api.search.brave.com/res/v1/web/search?q=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&count=20&offset=" + page)).timeout(Duration.ofSeconds(20)).header("Accept", "application/json").header("X-Subscription-Token", braveKey).GET().build();
+                var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode()!=200) throw new ResponseStatusException(response.statusCode()==429 ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.BAD_GATEWAY, response.statusCode()==429 ? "Brave Search quota or rate limit reached. Check your Brave plan and retry later." : response.statusCode()==401 || response.statusCode()==403 ? "Brave Search rejected your key. Check the key and active Search plan, then reconnect it." : "Brave Search could not complete the request. Retry later.");
+                var json = new tools.jackson.databind.ObjectMapper().readTree(response.body());
+                for (var item : json.path("web").path("results")) {
+                    try { URI uri = URI.create(item.path("url").asText()); if (!isWebsite(uri)||excluded(uri.getHost())) continue; results.putIfAbsent(siteKey(uri),new GoogleSearchResult(uri.toString(),item.path("title").asText(),item.path("description").asText())); if(results.size()>=maxResults)break; } catch(IllegalArgumentException ignored) { }
+                }
+                if (!json.path("query").path("more_results_available").asBoolean(false)) break;
+            }
+            return new ArrayList<>(results.values());
+        } catch(ResponseStatusException e) {throw e;} catch(InterruptedException e) {Thread.currentThread().interrupt();throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Search interrupted");} catch(Exception e) {throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"Cannot reach search provider. Retry later.");}
     }
 
     static boolean isBlocked(String url, String html) {

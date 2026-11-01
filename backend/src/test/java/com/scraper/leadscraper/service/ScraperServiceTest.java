@@ -1,0 +1,17 @@
+package com.scraper.leadscraper.service;
+import org.junit.jupiter.api.Test;
+import tools.jackson.databind.ObjectMapper;
+import java.net.http.*;
+import java.io.IOException;
+import org.springframework.web.server.ResponseStatusException;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+class ScraperServiceTest {
+ @SuppressWarnings("unchecked") HttpResponse<String> response(int status,String body){var r=(HttpResponse<String>)mock(HttpResponse.class);when(r.statusCode()).thenReturn(status);when(r.body()).thenReturn(body);return r;}
+ @Test void validatesBeforeCallingGoogle()throws Exception{var c=mock(HttpClient.class);var s=new ScraperService(new ObjectMapper(),c);for(String q:new String[]{""," ","x".repeat(501)})assertThrows(ResponseStatusException.class,()->s.getLeadsWithoutWebsite(q,"key"));assertThrows(ResponseStatusException.class,()->s.getLeadsWithoutWebsite("cafes",null));verifyNoInteractions(c);}
+ @Test void filtersClosedBusinessesWebsitesAndHighReviews()throws Exception{var c=mock(HttpClient.class);doReturn(response(200,"{\"places\":[null,{\"businessStatus\":\"OPERATIONAL\",\"userRatingCount\":5},{\"businessStatus\":\"CLOSED_PERMANENTLY\"},{\"businessStatus\":\"OPERATIONAL\",\"websiteUri\":\"https://example.com\"},{\"businessStatus\":\"OPERATIONAL\",\"userRatingCount\":6}]}")).when(c).send(any(HttpRequest.class),any(HttpResponse.BodyHandler.class));assertEquals(1,new ScraperService(new ObjectMapper(),c).getLeadsWithoutWebsite("cafes","key").size());}
+ @Test void emptyResponseIsValidButMalformedResponseIsNot()throws Exception{var c=mock(HttpClient.class);doReturn(response(200,"{}"),response(200,"invalid json")).when(c).send(any(HttpRequest.class),any(HttpResponse.BodyHandler.class));var s=new ScraperService(new ObjectMapper(),c);assertTrue(s.getLeadsWithoutWebsite("cafes","key").isEmpty());assertEquals(502,assertThrows(ResponseStatusException.class,()->s.getLeadsWithoutWebsite("cafes","key")).getStatusCode().value());}
+ @Test void providerErrorsAreReportedWithoutLeakingTheKey()throws Exception{for(int status:new int[]{400,401,403,429,500}){var c=mock(HttpClient.class);doReturn(response(status,"provider detail with secret-key")).when(c).send(any(HttpRequest.class),any(HttpResponse.BodyHandler.class));var e=assertThrows(ResponseStatusException.class,()->new ScraperService(new ObjectMapper(),c).getLeadsWithoutWebsite("cafes","secret-key"));assertEquals(502,e.getStatusCode().value());assertFalse(e.getReason().contains("secret-key"));assertTrue(e.getReason().contains(status==429?"quota":status<429?"API key":"could not"));}}
+ @Test void networkFailureBecomesActionableError()throws Exception{var c=mock(HttpClient.class);when(c.send(any(HttpRequest.class),any(HttpResponse.BodyHandler.class))).thenThrow(new IOException("offline"));assertEquals(502,assertThrows(ResponseStatusException.class,()->new ScraperService(new ObjectMapper(),c).getLeadsWithoutWebsite("cafes","key")).getStatusCode().value());}
+ @Test void unlimitedReviewsRetainsEstablishedBusinessesWithoutWebsites()throws Exception{var c=mock(HttpClient.class);doReturn(response(200,"{\"places\":[{\"businessStatus\":\"OPERATIONAL\",\"userRatingCount\":250}]}" )).when(c).send(any(HttpRequest.class),any(HttpResponse.BodyHandler.class));var service=new ScraperService(new ObjectMapper(),c);org.springframework.test.util.ReflectionTestUtils.setField(service,"maxReviewsForNewBusiness",-1);assertEquals(1,service.getLeadsWithoutWebsite("barbers","key").size());}
+}
