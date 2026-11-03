@@ -55,9 +55,9 @@ cd backend
 
 Create an account from the sign-in page. Passwords require at least 10 characters and at most 72 UTF-8 bytes. The backend stores BCrypt hashes in ignored `.data/accounts.properties`, uses HTTP-only session cookies and CSRF protection, and protects all lead endpoints. Session idle time is eight hours, or seven days with the extended-session option; browser cookie persistence is still browser-controlled. Sessions are in memory and are cleared when the backend restarts. Account hashes persist.
 
-The dashboard supports both lead endpoints, counts returned leads and phone entries, filtering, and CSV export. Cancelling stops the browser request, not necessarily work already underway on the backend. Google sign-in is a disabled visual placeholder as requested. Self-service password reset and email verification are not implemented. No demo testimonials are presented as verified customer reviews, and credentials are never logged by the frontend.
+The dashboard supports both discovery methods, counts returned matches and phone entries, filtering, saved folders, teams, and CSV export. Continuous searches try related queries up to a user-chosen request budget. Cancel stops further backend requests and retains partial results; an in-flight call can finish. Google sign-in and email OTP registration are implemented when the corresponding provider credentials are configured. Self-service password reset is not available. No demo testimonials are presented as verified customer reviews. Provider content rights remain a launch blocker documented in docs/seo-and-launch-audit.md.
 
-The local account store is intended for a single backend instance. Before production deployment, use HTTPS with `server.servlet.session.cookie.secure=true`, durable protected account storage, and operational account recovery. Serve `/login` and `/dashboard` with the SPA fallback and proxy `/api` to the backend. The included backend must be deployed together with this frontend.
+The local account store is intended for a single backend instance. Before production deployment, use HTTPS with `server.servlet.session.cookie.secure=true`, durable protected account storage, and operational account recovery. Serve generated per-route HTML including `/login` and `/dashboard`, return HTTP 404 for unknown routes, and proxy `/api` to the backend. The included backend must be deployed together with this frontend.
 
 ## Integrated App1 workspace
 
@@ -138,3 +138,14 @@ After deployment: verify redirects to one HTTPS hostname, verify real 404 status
 
 ### Search provider update
 Website Copyright uses each signed-in user’s own Brave Search API key. Connect it in Scrape → Website Copyright; setup instructions are at `/brave-search-setup`. Keys are kept only in the backend session, never returned to the client or persisted, and cleared on sign-out/session expiry. Both workspace and legacy search routes require the session key and Premium access. No shared environment key is used. Google Places and Brave Search usage are billed separately by each provider and excluded from ₹100. Live Brave testing requires a user-supplied active key.
+
+### Target-based discovery
+Both methods offer 10, 25, or 50 matching leads. They paginate each provider query, then automatically try related queries and area modifiers while preserving the original search text and all qualification filters. Matches are deduplicated across queries (place IDs for Google; website domains for Brave). They no longer stop after the first 60 Google candidates or first Brave query, and the expanded run has no fixed three-minute cutoff.
+
+Users choose an explicit API request budget of 10, 25, 50 (default), or 100 requests. Each provider call can incur usage fees. Searches stop at the target, cancellation, provider failure, exhaustion of all query variants, or that budget. Reaching a specific count cannot be guaranteed if there are insufficient qualifying businesses. Live progress includes the active query, request count, candidates checked, matches, and final stop reason. `POST /api/workspace/search/cancel` uses CSRF protection and stops further backend requests; in-flight requests may finish before cancellation takes effect. Partial results are saved to search history. Only one search runs per signed-in session at a time.
+
+### SEO and launch-risk review
+See [the audit](docs/seo-and-launch-audit.md) before public launch. Full Google result storage, exports and team copies are enabled at the owner’s request pending provider/legal review. Broader provider-use permissions remain a documented launch-review requirement. No legal compliance or lawsuit immunity is claimed. Run `npm run build` and `npm run seo:check`; configure the real `VITE_SITE_URL` only when ready to deploy. No domain means intentional staging noindex.
+
+### Security hardening (2 November 2026)
+See [the security review](docs/security-review.md) for findings, regression evidence, request limits and production settings. Searches now require CSRF-protected POST requests; previous GET search integrations must be updated. Activate `SPRING_PROFILES_ACTIVE=production` only behind the documented same-host HTTPS reverse proxy.

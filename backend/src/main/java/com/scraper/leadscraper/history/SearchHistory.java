@@ -12,8 +12,18 @@ import java.util.*;
 
 @Service
 public class SearchHistory {
-    public record Lead(String name, String website, List<String> phones, String address, String year, Integer reviews) { }
-    public record Run(String id, String method, String query, String createdAt, long elapsedMs, List<Lead> leads) { }
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)
+    public record Lead(String name, String website, List<String> phones, String address, String year, Integer reviews, List<String> socials) {
+        public Lead(String name, String website, List<String> phones, String address, String year, Integer reviews) {
+            this(name, website, phones, address, year, reviews, List.of());
+        }
+        public Lead {
+            socials = socials == null ? List.of() : List.copyOf(socials);
+        }
+    }
+    public record Run(String id, String method, String query, String createdAt, long elapsedMs, List<Lead> leads, com.scraper.leadscraper.service.SearchProgress progress) {
+        public Run(String id,String method,String query,String createdAt,long elapsedMs,List<Lead> leads) {this(id,method,query,createdAt,elapsedMs,leads,null);}
+    }
     private final Path directory;
     private final ObjectMapper mapper;
     public SearchHistory(@Value("${heimdall.history.directory:.data/searches}") String directory, ObjectMapper mapper) {
@@ -30,9 +40,15 @@ public class SearchHistory {
         catch (Exception e) { throw new IllegalStateException("Cannot read search history", e); }
     }
     public synchronized Run save(String email, String method, String query, long elapsedMs, List<Lead> leads) {
-        Run run = new Run(UUID.randomUUID().toString(), method, query.trim(), Instant.now().toString(), elapsedMs, List.copyOf(leads));
+        return save(email,method,query,elapsedMs,leads,null);
+    }
+    public synchronized Run save(String email,String method,String query,long elapsedMs,List<Lead> leads,com.scraper.leadscraper.service.SearchProgress progress) {
+        Run run = new Run(UUID.randomUUID().toString(), method, query.trim(), Instant.now().toString(), elapsedMs, List.copyOf(leads),progress);
         List<Run> runs = new ArrayList<>(); runs.add(run); runs.addAll(list(email));
         if (runs.size() > 50) runs = new ArrayList<>(runs.subList(0, 50));
+        write(email,runs);return run;
+    }
+    private void write(String email,List<Run> runs) {
         Path temporary = null;
         try {
             Files.createDirectories(directory);
@@ -40,7 +56,6 @@ public class SearchHistory {
             try { Files.setPosixFilePermissions(temporary, PosixFilePermissions.fromString("rw-------")); } catch (UnsupportedOperationException ignored) { }
             Files.write(temporary, mapper.writeValueAsBytes(runs));
             Files.move(temporary, file(email), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-            return run;
         } catch (Exception e) { throw new IllegalStateException("Cannot save search history", e); }
         finally { if (temporary != null) try { Files.deleteIfExists(temporary); } catch (Exception ignored) { } }
     }

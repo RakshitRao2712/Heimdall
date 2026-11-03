@@ -93,16 +93,16 @@ const D_FEATURES: InkFeatures = {
   title: "Turn *Searches*\nInto Opportunities",
   collaboration: {
     title: "Discover local businesses",
-    description: "Enter a business type and location. Google Places search surfaces operational businesses without a website.",
+    description: "Enter a business type and location. Google Places search surfaces operational businesses without a website listed in their Places record.",
   },
   reports: {
     title: "Find website opportunities",
-    description: "Copyright search checks websites for notices ending in 2023 or 2024 and extracts public phone numbers.",
+    description: "Filter Foursquare listings by website, business phone, and social profile.",
   },
   integrations: {
     title: "Two complementary searches",
-    description: "Google Places supplies business details. Browser search discovers websites, then parallel checks look for copyright notices and contacts.",
-    tools: ["Maps", "Websites", "Copyright", "Phones"],
+    description: "Google Places supplies business details. Foursquare lists available business phone numbers, websites, and social profiles.",
+    tools: ["Maps", "Websites", "Socials", "Phones"],
   },
   insights: {
     title: "Focused website checks",
@@ -243,10 +243,9 @@ function Title({ text, className = "ib-h2", as = "h2" }: { text: string; classNa
 }
 
 function Mark({ size = 18 }: { size?: number }) {
-  // the brand glyph: a folded N
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3 21V3h4.2l9.6 12.2V3H21v18h-4.2L7.2 8.8V21z" fill="currentColor" />
+      <image href="/images/heimdall-logo.svg" width="24" height="24" />
     </svg>
   )
 }

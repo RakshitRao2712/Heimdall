@@ -22,7 +22,8 @@ function DashboardEntry() {
 function Route() {
   const { user, loading } = useSession(); const path = window.location.pathname;
   if (['/contact', '/privacy', '/terms', '/refund'].includes(path)) return <PolicyPage path={path} />;
-  if (['/pricing', '/how-it-works', '/google-places-setup', '/brave-search-setup'].includes(path)) return <InfoPage path={path} />;
+  if (path === '/brave-search-setup' || path === '/serpapi-setup') return <InfoPage path='/foursquare-setup' />;
+  if (['/pricing', '/how-it-works', '/google-places-setup', '/foursquare-setup'].includes(path)) return <InfoPage path={path} />;
   if (path === '/') return <Home />;
   if (path !== '/login' && path !== '/dashboard') return <main className="info-main"><h1>Page not found</h1><p>This page does not exist.</p><a href="/">Back to Heimdall</a></main>;
   if (loading) return <div className="route-loading" role="status">Opening your Heimdall workspace…</div>;

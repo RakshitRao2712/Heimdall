@@ -1,7 +1,7 @@
 {
   "/": {
     "title": "Heimdall | Find Local Business Leads & Website Opportunities",
-    "description": "Find businesses without websites with Google Places and discover website redesign leads with copyright search. Organize leads and collaborate with your team.",
+    "description": "Find businesses without websites with Google Places and discover business contacts with Foursquare. Organize leads and collaborate with your team.",
     "heading": "Your next customer, waiting to be found.",
     "sections": [
       [
@@ -9,31 +9,31 @@
         "Search by business type and location using your own Google Places API key. Find businesses without a listed website and review public contact details."
       ],
       [
-        "Find website redesign opportunities",
-        "Website Copyright search checks public websites for older copyright notices and business phone numbers. Copyright dates are prospecting signals, not proof of website age."
+        "Discover business contacts with Foursquare",
+        "Foursquare lists available business websites, phone numbers, and social profiles."
       ],
       [
         "Organize leads and work together",
         "Save named lead files, export CSV results, and share folders with your team. Mark leads complete and leave notes with author attribution."
       ],
       [
-        "\u20b9100 Premium lifetime access",
-        "One payment unlocks both discovery methods for the operating lifetime of Heimdall. Google Places and Brave Search API fees are not included: Each API provider bills your account separately according to usage."
+        "₹100 Premium lifetime access",
+        "One payment unlocks both discovery methods for the operating lifetime of Heimdall. Google Places and Foursquare API fees are not included: Each API provider bills your account separately according to usage."
       ]
     ]
   },
   "/pricing": {
-    "title": "Heimdall Pricing | \u20b9100 Premium Lifetime Access",
-    "description": "Get Heimdall Premium lifetime access for \u20b9100 once. Unlock both lead discovery methods. Google Places and Brave Search API fees are separate and billed by each provider.",
+    "title": "Heimdall Pricing | ₹100 Premium Lifetime Access",
+    "description": "Heimdall Premium is ₹100 once for the product’s operating lifetime. Google Places and Foursquare API usage fees are separate. Review terms and refunds.",
     "heading": "One payment. Full access.",
     "sections": [
       [
-        "\u20b9100 once for Premium",
-        "Premium includes Google Places and Website Copyright discovery, named lead files, CSV exports, and team collaboration."
+        "₹100 once for Premium",
+        "Premium includes Google Places and Foursquare discovery, named lead files, CSV exports, and team collaboration. Lifetime means the operating lifetime of the product; availability and a lead count are not guaranteed."
       ],
       [
-        "Google API usage is separate",
-        "Use your own Google Places key. The \u20b9100 purchase does not include Google Places and Brave Search API fees. Google bills your Google Cloud account according to usage."
+        "API usage is separate",
+        "Use your own Google Places and Foursquare keys. Each provider bills your account separately under its current pricing. ₹100 does not include either provider’s usage fees."
       ],
       [
         "Refunds and support",
@@ -42,21 +42,33 @@
     ]
   },
   "/how-it-works": {
-    "title": "How Heimdall Works | Business Lead Discovery & Teams",
-    "description": "Learn how to find local business leads with Google Places or copyright search, review phone numbers, save lead files, and collaborate with your team.",
+    "title": "How Heimdall Works | Lead Targets, Search & Teams",
+    "description": "Learn how Heimdall searches toward 10, 25 or 50 matches with API request budgets, related queries, deduplication, cancellation and reviewable results.",
     "heading": "Find new leads.",
     "sections": [
       [
-        "Choose a discovery method",
-        "Use Google Places to discover businesses without websites, or Website Copyright to identify potential redesign opportunities."
+        "Connect your own provider key",
+        "Use Google Places for operational businesses without a listed website, or Foursquare to find business websites, phones, and social profiles. Provider fees are separate from ₹100."
       ],
       [
-        "Review and save results",
-        "Review public business details, filter results, save a named lead file, and export CSV."
+        "Set a lead target and request budget",
+        "Choose a target of 10, 25 or 50 matches and an independent request budget of 10, 25, 50 or 100 API calls (default 50). A target is not a guaranteed count."
       ],
       [
-        "Collaborate with your team",
-        "Import lead folders into Teams, add notes, and track which leads have been handled."
+        "Continue across related searches",
+        "Heimdall fetches more pages and tries related category and area variations. It deduplicates Places IDs or website domains across the run while preserving filters. Relevance still needs review."
+      ],
+      [
+        "Follow live progress and cancel",
+        "See checked candidates, provider requests and matches. Runs stop at the target, budget, cancellation, provider failure or exhaustion of query variations. An in-flight request may finish after cancellation; partial results are saved."
+      ],
+      [
+        "Review match quality and permissions",
+        "Phone numbers may be duplicated, malformed or unrelated. Public availability is not marketing consent."
+      ],
+      [
+        "Save eligible results and work together",
+        "Named files, CSV exports and team copies require permission under source terms and applicable law. Saved files and exports include returned business details; provider permissions remain a launch-review requirement."
       ]
     ]
   },
@@ -75,18 +87,26 @@
       ],
       [
         "Connect your key",
-        "Sign in to Heimdall, open Scrape \u2192 Google Places, and connect your key. The key stays in your backend session until sign-out or session expiry."
+        "Sign in to Heimdall, open Scrape → Google Places, and connect your key. The key stays in your backend session until sign-out or session expiry."
       ],
       [
         "Monitor usage and billing",
-        "Google Places usage is billed separately by Google according to your usage. The \u20b9100 Heimdall purchase does not cover Google and Brave API fees."
+        "Google Places usage is billed separately by Google according to your usage. The ₹100 Heimdall purchase does not cover Google and Brave API fees."
+      ],
+      [
+        "Provider policy review",
+        "Google restricts storage and export of Places content. Full-result storage, CSV export and team sharing remain subject to provider review before launch."
+      ],
+      [
+        "Free API requests",
+        "Google’s global pricing includes 1,000 free Text Search Enterprise requests each month. India-eligible accounts have separate allowances. Google bills the account linked to your key."
       ]
     ]
   },
   "/contact": {
     "title": "Contact Heimdall | Account, Payment & Product Support",
     "description": "Contact Heimdall for help with your account, lead discovery, Premium payments, refunds, or privacy requests.",
-    "heading": "Let\u2019s talk.",
+    "heading": "Let’s talk.",
     "sections": [
       [
         "Email support",
@@ -104,8 +124,8 @@
         "Heimdall stores account and profile details, searches, saved lead files, team information, and purchase records to operate your workspace."
       ],
       [
-        "Sessions and service providers",
-        "Google Places keys stay in server sessions. Google handles sign-in and Places requests, Razorpay processes payments, and Resend delivers verification emails when configured."
+        "Sessions and providers",
+        "Google Places and Foursquare keys stay in backend sessions until sign-out or expiry. Queries go to the selected provider. Google sign-in, Razorpay payments, Resend email, and externally hosted assets have their own privacy policies."
       ],
       [
         "Privacy requests",
@@ -115,20 +135,24 @@
   },
   "/terms": {
     "title": "Heimdall Terms & Conditions | Premium Access & Usage",
-    "description": "Read Heimdall\u2019s terms for Premium lifetime access, responsible lead discovery, third-party usage fees, service availability, payments, and refunds.",
+    "description": "Read Heimdall’s terms for Premium lifetime access, responsible lead discovery, third-party usage fees, service availability, payments, and refunds.",
     "heading": "A clear agreement.",
     "sections": [
       [
         "Premium access",
-        "\u20b9100 buys Premium access for the operating lifetime of the Heimdall product. Access starts after verification of a captured payment."
+        "₹100 buys Premium access for the operating lifetime of the Heimdall product. Access starts after verification of a captured payment."
       ],
       [
-        "Separate Google fees",
-        "Google Places API usage charges are billed separately by Google. The \u20b9100 Heimdall price does not include those fees."
+        "Separate API fees",
+        "Google Places and Foursquare bill your own provider account separately. ₹100 covers Heimdall access only and excludes these usage charges."
       ],
       [
         "Responsible use",
         "Use public business data lawfully and respect privacy, marketing requirements, and provider rules. Results and uninterrupted availability are not guaranteed."
+      ],
+      [
+        "Provider permissions and launch review",
+        "API ownership does not grant unrestricted storage, export, resale or sharing rights. Full Google result storage, export and sharing remain subject to provider restrictions. The broader lead-discovery use remains subject to provider review. Heimdall is independent, not endorsed by these providers."
       ]
     ]
   },
@@ -143,30 +167,30 @@
       ],
       [
         "Processing timeline",
-        "Approved refunds are processed within 7 days to the original payment method. Normal bank credit can take 5\u20137 working days after initiation."
+        "Approved refunds are processed within 7 days to the original payment method. Normal bank credit can take 5–7 working days after initiation."
       ],
       [
-        "Separate Google charges",
-        "Heimdall refunds only cover payments to Heimdall. Google Places API charges are separate and handled by Google."
+        "Separate provider charges",
+        "Heimdall refunds only cover payments made to Heimdall. Google Places and Foursquare API charges are billed separately by those providers."
       ]
     ]
   },
-  "/brave-search-setup": {
-    "title": "Connect Brave Search API to Heimdall | Setup Guide",
-    "description": "Create a Brave Search API account, activate a Search plan, generate your key, and connect Website Copyright discovery. API usage fees are separate.",
-    "heading": "Connect Brave Search.",
+  "/foursquare-setup": {
+    "title": "Connect Foursquare Places | Heimdall",
+    "description": "Create a Foursquare Places key, connect it to Heimdall, and search local businesses. See free calls and separate provider billing.",
+    "heading": "Connect Foursquare",
     "sections": [
       [
-        "Create your account and plan",
-        "Register in the Brave Search API dashboard and activate a plan with Web Search. Review current usage billing."
+        "Create a Service API key",
+        "Create a Places project in the Foursquare developer console and generate a Service API key."
       ],
       [
-        "Connect your own key",
-        "Create an API key, sign in to Heimdall, and open Scrape \u2192 Website Copyright. Your key stays in your server session until sign-out or expiry."
+        "Connect in Heimdall",
+        "Choose Foursquare Business Discovery in Scrape and paste your key."
       ],
       [
-        "Separate API usage fees",
-        "The \u20b9100 Heimdall purchase does not include Brave Search or Google Places API usage charges."
+        "Free API calls",
+        "Foursquare publishes 500 free Pro calls. Your provider bills your own account for usage charges."
       ]
     ]
   }

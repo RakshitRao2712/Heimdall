@@ -4,7 +4,7 @@ import com.scraper.leadscraper.dto.GoogleSearchLead;
 import com.scraper.leadscraper.dto.PlaceResponse.Place;
 import com.scraper.leadscraper.service.GoogleSearchScraperService;
 import com.scraper.leadscraper.service.ScraperService;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +25,7 @@ public class LeadController {
         this.googleSearchScraperService = googleSearchScraperService;
     }
 
-    @GetMapping("/api/lead")
+    @PostMapping("/api/lead")
     public List<Place> getLeads(@RequestParam(defaultValue = "family restaurants in Peoria IL") String query, HttpSession session) {
         return scraperService.getLeadsWithoutWebsite(query, PlacesKeyController.requireKey(session));
     }
@@ -36,7 +36,7 @@ public class LeadController {
      *
      * Example: GET /api/lead/google-search?query=plumbers+in+Chicago&pages=2
      */
-    @GetMapping("/api/lead/google-search")
+    @PostMapping("/api/lead/google-search")
     public List<GoogleSearchLead> getGoogleSearchLeads(
             @RequestParam(defaultValue = "plumbers in Chicago") String query,
             @RequestParam(defaultValue = "1") int pages, HttpSession session) {

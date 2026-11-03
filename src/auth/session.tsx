@@ -44,21 +44,21 @@ export async function authRequest(path: string, data?: unknown) {
   return response.status === 204 ? null : response.json();
 }
 
-export async function placesKeyRequest(method: 'POST' | 'DELETE', apiKey?: string, provider: 'places' | 'brave' = 'places') {
+export async function placesKeyRequest(method: 'POST' | 'DELETE', apiKey?: string, provider: 'places' | 'brave' | 'serp' | 'yelp' | 'foursquare' = 'places') {
   const csrf = await fetch('/api/auth/csrf', { credentials: 'same-origin', cache: 'no-store' });
   if (!csrf.ok) throw new Error('Cannot reach the backend. Please try again.');
   const { token, headerName } = await csrf.json();
   const response = await fetch(`/api/workspace/${provider}-key`, { method, credentials: 'same-origin', headers: { 'Content-Type': 'application/json', [headerName]: token }, body: method === 'POST' ? JSON.stringify({ apiKey }) : undefined });
   if (response.status === 401) { window.location.replace('/login'); throw new Error('Please sign in again.'); }
-  if (!response.ok) throw new Error(response.status === 400 ? `Enter a valid ${provider === 'places' ? 'Google Places' : 'Brave Search'} API key.` : response.status === 403 ? 'Session expired. Please retry.' : 'Could not update your API key. Check the backend and retry.');
+  if (!response.ok) throw new Error(response.status === 400 ? `Enter a valid ${provider === 'places' ? 'Google Places' : provider === 'foursquare' ? 'Foursquare' : provider === 'yelp' ? 'Yelp' : provider === 'serp' ? 'SerpApi' : 'Brave Search'} API key.` : response.status === 403 ? 'Session expired. Please retry.' : 'Could not update your API key. Check the backend and retry.');
   return response.json() as Promise<{ configured: boolean }>;
 }
 
-export async function workspaceMutation<T>(path: string, method: 'POST' | 'PATCH', data: unknown): Promise<T> {
-  const csrf = await fetch('/api/auth/csrf', { credentials: 'same-origin', cache: 'no-store' });
+export async function workspaceMutation<T>(path: string, method: 'POST' | 'PATCH' | 'DELETE', data?: unknown, signal?: AbortSignal): Promise<T> {
+  const csrf = await fetch('/api/auth/csrf', { credentials: 'same-origin', cache: 'no-store', signal });
   if (!csrf.ok) throw new Error('Cannot reach the backend. Please try again.');
   const { token, headerName } = await csrf.json();
-  const response = await fetch(`/api/workspace/${path}`, { method, credentials: 'same-origin', headers: { 'Content-Type': 'application/json', [headerName]: token }, body: JSON.stringify(data) });
+  const response = await fetch(`/api/workspace/${path}`, { method, signal, credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', [headerName]: token }, body: JSON.stringify(data) });
   if (response.status === 401) { window.location.replace('/login'); throw new Error('Please sign in again.'); }
   if (!response.ok) { let message = ''; try { const body = await response.json(); message = body.detail || body.message || ''; } catch {} throw new Error(message || 'Could not save your changes. Please try again.'); }
   return response.status === 204 ? undefined as T : response.json() as Promise<T>;

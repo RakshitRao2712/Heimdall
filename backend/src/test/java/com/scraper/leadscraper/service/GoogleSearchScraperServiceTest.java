@@ -121,5 +121,10 @@ class GoogleSearchScraperServiceTest {
 
     private static class TestService extends GoogleSearchScraperService implements AutoCloseable {
         TestService(int maxResults, int concurrency) { super(maxResults, 2, concurrency); }
+        // Local fixture transport is test-only; production SafeWebsiteFetcher rejects loopback.
+        @Override protected org.jsoup.nodes.Document fetch(java.net.URI uri) throws InterruptedException {
+            if(!"127.0.0.1".equals(uri.getHost()))return super.fetch(uri);
+            try{return Jsoup.connect(uri.toString()).timeout(2000).get();}catch(java.io.IOException e){return null;}
+        }
     }
 }

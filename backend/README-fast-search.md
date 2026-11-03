@@ -50,7 +50,7 @@ Run account persistence tests with `./mvnw -Dtest=AccountStoreTest test`.
 
 ## Heimdall workspace endpoints
 
-Authenticated workspace searches use `GET /api/workspace/search/maps?query=...` and `GET /api/workspace/search/copyright?query=...&pages=2`. Both return a saved run with `id`, `method`, `query`, `createdAt`, `elapsedMs`, and normalized `leads`. `GET /api/workspace/history` returns only the current account's latest 50 successful runs. The original `/api/lead` endpoints remain available to signed-in callers.
+Authenticated workspace searches use `POST /api/workspace/search/maps?query=...&target=10` and `POST /api/workspace/search/copyright?query=...&target=10&minYear=2023&maxYear=2024` (send a valid CSRF token). Both return a saved run with `id`, `method`, `query`, `createdAt`, `elapsedMs`, and normalized `leads`. `GET /api/workspace/history` returns only the current account's latest 50 successful runs. The original `/api/lead` endpoints also require POST, CSRF and Premium access. GET does not execute a search.
 
 Runs persist in ignored `.data/searches/` (override `heimdall.history.directory`). Storage is per account and intended for one backend instance. Failed searches are not saved as successes. If a client disconnects, in-flight searches may still complete and save their results. Network/provider failures are returned as errors; Maps authentication and quota errors do not count as zero leads.
 
@@ -67,3 +67,5 @@ There is no configured/shared Google Places key fallback. Both `/api/lead` and `
 ## Named lead files
 
 `GET /api/workspace/files` lists the current account's named files. POST with `{ "name": "Chicago plumbers", "runId": "..." }` copies a non-empty generated search owned by that account into a new file. `PATCH /api/workspace/files/{id}` with `{ "name": "New name" }` renames an owned file. Writes require CSRF tokens. Files persist under `.data/lead-files/` (override `heimdall.files.directory`), independently of recent-search retention, with a limit of 100 files per account. File names are labels, never filesystem paths. `LeadFilesTest` verifies persistence, ownership checks, renaming, and retention beyond source history.
+
+See [security review](../docs/security-review.md) for current authentication, request limits, website-fetch protections and production setup.

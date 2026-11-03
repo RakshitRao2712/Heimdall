@@ -12,15 +12,15 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 const IMAGES = [
-    { src: "/images/discovery/places.svg", title: "Google Places" },
-    { src: "/images/discovery/no-website.svg", title: "No Website" },
-    { src: "/images/discovery/copyright.svg", title: "Copyright Search" },
-    { src: "/images/discovery/years.svg", title: "2023 / 2024" },
-    { src: "/images/discovery/phones.svg", title: "Public Phone Numbers" },
-    { src: "/images/discovery/businesses.svg", title: "Local Businesses" },
-    { src: "/images/discovery/parallel.svg", title: "Parallel Checks" },
-    { src: "/images/discovery/opportunities.svg", title: "Website Opportunities" },
-    { src: "/images/discovery/customer.svg", title: "Your Next Customer" },
+    { src: "/images/discovery/cafe.jpg", title: "Neighborhood Café" },
+    { src: "/images/discovery/bakery.jpg", title: "Artisan Bakery" },
+    { src: "/images/discovery/restaurant.jpg", title: "Independent Restaurant" },
+    { src: "/images/discovery/flowers.jpg", title: "Local Florist" },
+    { src: "/images/discovery/coffee.jpg", title: "Specialty Coffee" },
+    { src: "/images/discovery/dining.jpg", title: "Dining Room" },
+    { src: "/images/discovery/counter.jpg", title: "Café Counter" },
+    { src: "/images/discovery/studio.jpg", title: "Creative Studio" },
+    { src: "/images/discovery/market.jpg", title: "Fresh Market" },
 ];
 
 
@@ -209,7 +209,7 @@ export default function PerspectiveTunnelHero() {
                     NEXT LEAD.
                 </h1>
                 <p className="mt-4 max-w-[36ch] text-sm sm:text-base font-light text-neutral-600 dark:text-neutral-400">
-                    Find businesses on Google Places or search websites for older copyright notices and public phone numbers.
+                    Find businesses on Google Places or discover business websites, phones, and social profiles with Foursquare.
                 </p>
             </motion.div>
 

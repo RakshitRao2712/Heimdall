@@ -122,3 +122,17 @@ body{background-color:#080808;background-image:var(--heimdall-grid),var(--heimda
 .hero-description{transform:translateY(40px)}
 .first-hero{padding-bottom:72px}
 @media(max-width:640px){.hero-description{transform:translateY(34px)}.first-hero{padding-bottom:62px}}
+
+.workflow-faq{margin-top:40px;max-width:860px}.workflow-faq h2{font-size:clamp(24px,4vw,36px);margin-bottom:20px}.workflow-faq details{border-bottom:1px solid #ffffff16;padding:18px 0}.workflow-faq summary{cursor:pointer;color:#eee;font-weight:600;line-height:1.5}.workflow-faq summary:focus-visible{outline:2px solid #ff409c;outline-offset:6px;border-radius:4px}.workflow-faq p{color:#a8a2ae;line-height:1.8;margin:12px 0}
+
+.lifetime-provider-links{display:flex;align-items:center;flex-wrap:wrap;column-gap:26px;row-gap:12px}.lifetime-provider-links>a{display:inline-flex;align-items:center;gap:7px}
+
+.lifetime-button.lifetime-button--active:disabled {
+  background: linear-gradient(135deg, #132c22, #0d1a14);
+  border-color: #64dfa373;
+  color: #b8f7d2;
+  box-shadow: 0 0 24px #45dc8830, inset 0 0 18px #45dc8812;
+  opacity: 1;
+  cursor: default;
+  transform: none;
+}

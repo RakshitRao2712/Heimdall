@@ -1,3 +1,5 @@
+> Historical test notes: later live pagination/continuous-search results supersede the limits and outcomes below. See `seo-and-launch-audit.md` and the current README for current behavior and launch blockers.
+
 # Search QA — 1 November 2026
 
 ## Live UI checks

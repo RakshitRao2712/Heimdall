@@ -4,7 +4,7 @@ export const publicLinks = [
   { label: 'Pricing', href: '/pricing' },
   { label: 'How It Works', href: '/how-it-works' },
   { label: 'Google Places Setup', href: '/google-places-setup' },
-  { label: 'Brave Search Setup', href: '/brave-search-setup' },
+  { label: 'Foursquare Setup', href: '/foursquare-setup' },
 ];
 
 export function SiteNav() {

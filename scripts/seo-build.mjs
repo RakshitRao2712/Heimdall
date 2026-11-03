@@ -9,7 +9,7 @@ const template=await readFile('dist/index.html','utf8');
 const nav=Object.entries(pages).map(([p,v])=>`<a href="${p}">${esc(p==='/'?'Home':v.title.split('|')[0].trim())}</a>`).join(' ');
 for(const path of [...Object.keys(pages),'/login','/dashboard','/404']){
  const info=pages[path];const title=info?.title||(path==='/login'?'Sign In | Heimdall':path==='/dashboard'?'Dashboard | Heimdall':'Page Not Found | Heimdall');
- const description=info?.description||'Sign in to your private Heimdall workspace.';
+ const description=info?.description||(path==='/404'?'This page could not be found. Return to Heimdall’s home page.':'Sign in to your private Heimdall workspace.');
  const indexable=!!origin&&!!info;
  const url=origin?origin+(path==='/'?'':path):'';
  const graph=origin&&info?{'@context':'https://schema.org','@graph':[{'@type':'Organization','@id':origin+'/#organization',name:'Heimdall',url:origin,logo:origin+'/images/heimdall-logo.svg'},{'@type':'WebSite','@id':origin+'/#website',url:origin,name:'Heimdall',publisher:{'@id':origin+'/#organization'}},{'@type':'WebPage','@id':url+'#page',url,name:title,description,isPartOf:{'@id':origin+'/#website'}},...(path!=='/'?[{'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:origin},{'@type':'ListItem',position:2,name:title.split('|')[0].trim(),item:url}]}]:[])]}:null;

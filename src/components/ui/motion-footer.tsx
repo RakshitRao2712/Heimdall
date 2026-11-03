@@ -219,8 +219,8 @@ MagneticButton.displayName = "MagneticButton";
 const MarqueeItem = () => (
   <div className="flex items-center space-x-12 px-6">
     <span>Google Places Leads</span> <span className="text-primary/60">✦</span>
-    <span>Copyright Search</span> <span className="text-secondary/60">✦</span>
-    <span>Parallel Website Checks</span> <span className="text-primary/60">✦</span>
+    <span>Foursquare Discovery</span> <span className="text-secondary/60">✦</span>
+    <span>Business Websites</span> <span className="text-primary/60">✦</span>
     <span>Public Phone Numbers</span> <span className="text-secondary/60">✦</span>
     <span>Local Business Discovery</span> <span className="text-primary/60">✦</span>
   </div>
@@ -334,14 +334,14 @@ export function CinematicFooter() {
             <div ref={linksRef} className="flex flex-col items-center gap-6 w-full">
               {/* App Store Links (Primary) */}
               <div className="flex flex-wrap justify-center gap-4 w-full">
-                <MagneticButton as="a" href="#google-maps" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
+                <MagneticButton as="a" href="/google-places-setup" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
                   <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
                   Explore Google Places
                 </MagneticButton>
                 
-                <MagneticButton as="a" href="#copyright-search" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
+                <MagneticButton as="a" href="/foursquare-setup" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
                   <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z"/></svg>
-                  Explore Copyright Search
+                  Explore Foursquare
                 </MagneticButton>
               </div>
 
@@ -360,7 +360,7 @@ export function CinematicFooter() {
             </div>
           </div>
 
-          <p className="footer-billing-disclosure">₹100 covers Heimdall Premium access only. Google Places and Brave Search API fees are billed separately by each provider according to your usage.</p>
+          <p className="footer-billing-disclosure">₹100 covers Heimdall Premium access only. Google Places and Foursquare API fees are billed separately by each provider according to your usage.</p>
           {/* 3. Bottom Bar / Credits */}
           <div className="relative z-20 w-full pb-8 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
             

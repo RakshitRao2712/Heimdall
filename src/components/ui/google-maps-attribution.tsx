@@ -1,0 +1,1 @@
+export function GoogleMapsAttribution(){return <div className="google-maps-attribution"><img src="/images/google-maps-attribution.png" alt="Google Maps" height={18} style={{height:18,width:'auto'}}/><span>Data provided by Google Maps</span></div>;}

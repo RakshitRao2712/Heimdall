@@ -59,4 +59,17 @@ class RegistrationOtpTest {
   assertEquals(503,assertThrows(ResponseStatusException.class,()->service.start("no-mail@example.com","hash",false)).getStatusCode().value());
   assertNull(accounts.hash("no-mail@example.com"));
  }
+ @Test void accountLoginThrottleAppliesAcrossDifferentIps()throws Exception{
+  var accounts=new AccountStore(directory.resolve("accounts").toString());var encoder=new BCryptPasswordEncoder(4);accounts.create("target@example.com",encoder.encode("Correct-password!"));
+  var auth=new AuthController(accounts,encoder,new HttpSessionSecurityContextRepository(),new RegistrationOtp(accounts,(email,code)->{},new TestClock()));
+  for(int i=0;i<11;i++){var request=new MockHttpServletRequest();request.setRemoteAddr("192.0.2."+i);var e=assertThrows(ResponseStatusException.class,()->auth.login(new AuthController.Credentials("target@example.com","Incorrect-password!",false),request,new MockHttpServletResponse()));assertEquals(i<10?401:429,e.getStatusCode().value());}
+ }
+
+ @Test void registrationDoesNotRevealExistingAccountBeforeEmailVerification()throws Exception{
+  var accounts=new AccountStore(directory.resolve("accounts").toString());var encoder=new BCryptPasswordEncoder(4);accounts.create("existing@example.com",encoder.encode("Original-password!"));String[] code={null};
+  var service=new RegistrationOtp(accounts,(email,value)->code[0]=value,new TestClock());var auth=new AuthController(accounts,encoder,new HttpSessionSecurityContextRepository(),service);var request=new MockHttpServletRequest();request.setRemoteAddr("127.0.0.1");
+  var challenge=auth.register(new AuthController.Credentials("existing@example.com","New-test-password!",false),request);assertNotNull(challenge.challengeId());
+  assertEquals(409,assertThrows(ResponseStatusException.class,()->service.verify(challenge.challengeId(),code[0])).getStatusCode().value());assertTrue(encoder.matches("Original-password!",accounts.hash("existing@example.com")));
+ }
+
 }

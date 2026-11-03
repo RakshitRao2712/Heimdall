@@ -1,8 +1,8 @@
-import { PremiumBadge, PurchaseButton } from "./premium-access";
+import { usePremium } from "./premium-access";
 import { DisplayNameStatus, useDisplayNameAvailability } from '@/components/ui/display-name-availability';
 import { useSession, workspaceMutation, type AccountProfile } from '@/auth/session';
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
-import { BadgeCheck, ImagePlus, KeyRound, LogOut, Trash2, X } from 'lucide-react';
+import { BadgeCheck, Crown, ArrowUpRight, ImagePlus, KeyRound, LogOut, Trash2, X } from 'lucide-react';
 
 type Profile = { firstName: string; lastName: string; username: string; website: string; cover: string; avatar: string };
 const empty: Profile = { firstName: '', lastName: '', username: '', website: '', cover: '', avatar: '' };
@@ -18,6 +18,7 @@ export function WorkspaceProfile({ email, keyConfigured, keyLoading, searches, l
   loggingOut: boolean; onManageKey: () => void; onLogout: () => void;
 }) {
   const { profile, setProfile } = useSession();
+  const { premium, loading: premiumLoading } = usePremium();
   const [saving, setSaving] = useState(false);
   const storageKey = `heimdall-profile:${email}`;
   const [saved, setSaved] = useState(() => ({ ...readProfile(storageKey), ...(profile ? { firstName: profile.firstName, lastName: profile.lastName, username: profile.username, website: profile.website } : {}) }));
@@ -62,7 +63,7 @@ export function WorkspaceProfile({ email, keyConfigured, keyLoading, searches, l
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not save your profile. Please retry.'); }
     finally { setSaving(false); }
   }
-  return <section className="profile-settings" aria-label="Profile settings"><div className="profile-premium-status"><PremiumBadge/><PurchaseButton/></div>
+  return <section className="profile-settings" aria-label="Profile settings">
     <form onSubmit={save}>
       <div className={`profile-cover ${draft.cover ? 'has-image' : ''}`}>
         {draft.cover && <img src={draft.cover} alt="Your profile cover" />}
@@ -79,6 +80,7 @@ export function WorkspaceProfile({ email, keyConfigured, keyLoading, searches, l
             {draft.avatar ? <img src={draft.avatar} alt="" /> : <span>{initials}</span>}
             <span className="profile-photo-edit"><ImagePlus size={22} /></span>
           </button>
+          <div className="profile-membership" aria-live="polite">{premiumLoading ? <span className="profile-plan-badge profile-plan-loading">Checking plan…</span> : <><span className={`profile-plan-badge ${premium ? 'is-premium' : 'is-free'}`}>{premium && <Crown size={13} aria-hidden="true"/>}{premium ? 'Premium' : 'Free'}</span>{!premium && <a className="profile-upgrade-link" href="/pricing">Buy Premium <ArrowUpRight size={13} aria-hidden="true"/></a>}</>}</div>
           {draft.avatar && <button className="profile-remove-photo" type="button" onClick={() => change('avatar', '')}><Trash2 size={14} aria-hidden="true" />Remove photo</button>}
         </div>
         <div className="profile-fields">
@@ -89,8 +91,8 @@ export function WorkspaceProfile({ email, keyConfigured, keyLoading, searches, l
           <label className="profile-wide">Email address<span className="profile-email"><input aria-label="Email address" type="email" value={email} readOnly /><BadgeCheck size={20} aria-label="Signed in" /></span></label>
         </div>
         <div className="profile-account-details">
-          <div><span>Google Places connection</span><strong>{keyLoading ? 'Checking…' : keyConfigured ? 'Connected for this session' : 'No key connected'}</strong></div>
-          <button className="workspace-button" type="button" onClick={onManageKey}><KeyRound size={14} />Manage Google key</button><a className="workspace-button" href="/dashboard?method=copyright">Manage Brave key</a>
+          <div><span>API connections</span><strong>{keyLoading ? 'Checking Google Places…' : keyConfigured ? 'Google Places connected' : 'Google Places not connected'}</strong></div>
+          <div className="profile-connection-actions"><button className="workspace-button" type="button" onClick={onManageKey}><KeyRound size={14} aria-hidden="true"/>Manage Google key</button><a className="workspace-button" href="/dashboard?method=foursquare"><KeyRound size={14} aria-hidden="true"/>Manage Foursquare key</a></div>
         </div>
         <p className="profile-storage-note">Personal workspace · {searches} saved searches. Profile details and lead files save to your account. Cover and profile photos stay in this browser.</p>
         {error && <p role="alert" className="profile-form-error">{error}</p>}

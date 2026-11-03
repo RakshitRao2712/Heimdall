@@ -35,53 +35,57 @@ public class ScraperService {
     @jakarta.annotation.PreDestroy public void close() { client.close(); }
 
     public List<PlaceResponse.Place> getLeadsWithoutWebsite(String query, String apiKey) {
-        if (query == null || query.isBlank() || query.length() > 500) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Supply a query of 1–500 characters");
+        return search(query, apiKey, 10, p -> {}).leads();
+    }
+    public SearchProgress.Outcome<PlaceResponse.Place> search(String query, String apiKey, int target, java.util.function.Consumer<SearchProgress> progress) {
+        return searchInternal(query,apiKey,target,3,false,()->false,progress);
+    }
+    public SearchProgress.Outcome<PlaceResponse.Place> searchUntilTarget(String query,String apiKey,int target,int maxRequests,java.util.function.BooleanSupplier cancelled,java.util.function.Consumer<SearchProgress> progress) {
+        return searchInternal(query,apiKey,target,maxRequests,true,cancelled,progress);
+    }
+    private SearchProgress.Outcome<PlaceResponse.Place> searchInternal(String query,String apiKey,int target,int maxRequests,boolean expand,java.util.function.BooleanSupplier cancelled,java.util.function.Consumer<SearchProgress> progress) {
+        if(maxRequests<1||maxRequests>100)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Choose a request budget between 1 and 100");
+        if (query == null || query.isBlank() || query.length() > 500 || !List.of(10,25,50).contains(target)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Supply a query and a target of 10, 25, or 50");
         if (apiKey == null || apiKey.isBlank()) throw new ResponseStatusException(HttpStatus.PRECONDITION_REQUIRED, "Add your Google Places API key before searching.");
-
+        var leads = new java.util.LinkedHashMap<String,PlaceResponse.Place>();
+        var seenTokens = new java.util.HashSet<String>(); String token = ""; int checked=0, requests=0; String reason="Provider results exhausted";
         try {
-            String jsonPayload = objectMapper.writeValueAsString(Map.of("textQuery", query.trim()));
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://places.googleapis.com/v1/places:searchText"))
-                    .timeout(Duration.ofSeconds(45))
-                    .header("Content-Type", "application/json")
-                    .header("X-Goog-Api-Key", apiKey)
-                    .header("X-Goog-FieldMask",
-                            "places.displayName,places.websiteUri,places.formattedAddress,places.nationalPhoneNumber,places.businessStatus,places.userRatingCount")
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            log.info("Google Places API response status: {}", response.statusCode());
-            if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                String message = response.statusCode() == 400 || response.statusCode() == 403 || response.statusCode() == 401
-                    ? "Google Places rejected the API key. Check API access, billing, and key restrictions in your Google Cloud project."
-                    : response.statusCode() == 429 ? "Google Places quota exceeded. Try again later."
-                    : "Google Places could not complete the search. Try again later.";
-                throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, message);
+            var queries=expand?SearchQueries.variants(query):List.of(query.trim());
+            searchLoop: for(String expandedQuery:queries) {
+            token="";seenTokens.clear();
+            for (int page=0;page<3;page++) {
+                if(cancelled.getAsBoolean()){reason="Cancelled; partial results retained";break searchLoop;}
+                if(requests>=maxRequests){reason="Your API request budget was reached. Increase it to continue searching.";break searchLoop;}
+                var payload = new java.util.LinkedHashMap<String,Object>(); payload.put("textQuery",expandedQuery); payload.put("pageSize",20); if (!token.isBlank()) payload.put("pageToken",token);
+                requests++; progress.accept(new SearchProgress(target,checked,requests,leads.size(),"searching","Searching: " + expandedQuery + " · request " + requests));
+                var request = HttpRequest.newBuilder(URI.create("https://places.googleapis.com/v1/places:searchText")).timeout(Duration.ofSeconds(45))
+                    .header("Content-Type","application/json").header("X-Goog-Api-Key",apiKey)
+                    .header("X-Goog-FieldMask","nextPageToken,places.id,places.displayName,places.websiteUri,places.formattedAddress,places.nationalPhoneNumber,places.businessStatus,places.userRatingCount")
+                    .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(payload))).build();
+                var response=client.send(request,HttpResponse.BodyHandlers.ofString());
+                if(response.statusCode()<200||response.statusCode()>=300) throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,response.statusCode()==429?"Google Places quota exceeded. Try again later.":response.statusCode()<500?"Google Places rejected the API key. Check API access, billing, and key restrictions.":"Google Places could not complete the search. Try again later.");
+                var json=objectMapper.readTree(response.body());
+                for(var node:json.path("places")) {
+                    if(node.isNull()) continue; checked++;
+                    var place=objectMapper.treeToValue(node,PlaceResponse.Place.class);
+                    if ((place.websiteUri()==null||place.websiteUri().isBlank()) && "OPERATIONAL".equals(place.businessStatus()) && (maxReviewsForNewBusiness<0||place.userRatingCount()==null||place.userRatingCount()<=maxReviewsForNewBusiness)) {
+                        String id=node.path("id").asText(); if(id.isBlank()) id=((place.displayName()==null?"":place.displayName().text())+"|"+place.formattedAddress()+"|"+place.nationalPhoneNumber()).toLowerCase(java.util.Locale.ROOT);
+                        leads.putIfAbsent(id,place); if(leads.size()>=target) break;
+                    }
+                }
+                progress.accept(new SearchProgress(target,checked,requests,leads.size(),"searching","Filtering businesses without websites"));
+                if(leads.size()>=target) {reason="Target reached";break searchLoop;}
+                token=json.path("nextPageToken").asText(""); if(token.isBlank()) {reason="Provider results exhausted";break;} if(!seenTokens.add(token)) {reason="Provider returned a repeated page token; stopped to avoid duplicate charges.";break;}
+                reason="Google Places limit reached: 3 pages / up to 60 candidates. Try another location or category.";
             }
-
-            PlaceResponse placeResponse = objectMapper.readValue(response.body(), PlaceResponse.class);
-
-            if (placeResponse.places() == null)
-                return List.of();
-
-            // Stream and filter for missing websites, operational status, and recently
-            // added (proxy: low review count)
-            return placeResponse.places().stream()
-                    .filter(java.util.Objects::nonNull)
-                    .filter(place -> place.websiteUri() == null || place.websiteUri().isBlank())
-                    .filter(place -> "OPERATIONAL".equals(place.businessStatus()))
-                    .filter(place -> maxReviewsForNewBusiness < 0 || place.userRatingCount() == null
-                            || place.userRatingCount() <= maxReviewsForNewBusiness)
-                    .toList();
-
-        } catch (ResponseStatusException e) { throw e;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Search interrupted", e);
-        } catch (Exception e) {
-            log.error("Error fetching leads from Google Places API", e);
-            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Cannot reach Google Places. Check backend network access and retry.", e);
+            }
+            if(expand && leads.size()<target && requests<maxRequests && !cancelled.getAsBoolean()) reason="All available related searches exhausted; not enough qualifying businesses were found.";
+        } catch(Exception e) {
+            if(e instanceof InterruptedException) Thread.currentThread().interrupt();
+            if(leads.isEmpty()) { if(e instanceof ResponseStatusException status) throw status; throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"Cannot reach Google Places. Check network access and retry."); }
+            reason="Stopped early after a provider or network error; partial results retained.";
         }
+        var state=new SearchProgress(target,checked,requests,leads.size(),"complete",reason);progress.accept(state);
+        return new SearchProgress.Outcome<>(List.copyOf(leads.values()),state);
     }
 }

@@ -26,7 +26,7 @@ class WorkspaceControllerTest {
         when(copyright.searchAndExtractLeads("plumbers in Chicago", 2, "test-brave-key-1234567890123456")).thenReturn(List.of(new GoogleSearchLead("https://example.com", "Plumber", List.of("2345678901"), "2024", "Public business")));
         var first = controller.maps("cafes in Seattle", () -> "alice@example.com", session);
         var second = controller.copyright("plumbers in Chicago", 2, () -> "alice@example.com", braveSession());
-        assertEquals("maps", first.method()); assertEquals("Seattle", first.leads().getFirst().address());
+        assertEquals("maps", first.method()); assertEquals("Seattle", first.leads().getFirst().address()); assertEquals(List.of("1234567890"), first.leads().getFirst().phones());
         assertEquals("copyright", second.method()); assertEquals("2024", second.leads().getFirst().year());
         assertEquals(2, controller.history(() -> "alice@example.com").size());
         assertTrue(controller.history(() -> "bob@example.com").isEmpty());
@@ -48,5 +48,23 @@ class WorkspaceControllerTest {
         var controller = new WorkspaceController(new SearchHistory(directory.toString(), new ObjectMapper()), mock(ScraperService.class), copyright);
         var run = controller.copyright("rare business", 1, () -> "a@example.com", braveSession());
         assertTrue(run.leads().isEmpty());assertEquals(1, controller.history(() -> "a@example.com").size());assertTrue(controller.history(() -> "other@example.com").isEmpty());
+    }
+    @Test void targetEndpointSavesProgressAndUsesSessionKey() {
+        var maps=mock(ScraperService.class);var controller=new WorkspaceController(new SearchHistory(directory.toString(),new ObjectMapper()),maps,mock(GoogleSearchScraperService.class));
+        var session=new MockHttpSession();new PlacesKeyController().save(new PlacesKeyController.KeyInput("test-api-key-1234567890123456"),session);
+        var progress=new com.scraper.leadscraper.service.SearchProgress(50,60,3,0,"complete","Google Places limit reached");
+        when(maps.searchUntilTarget(eq("barbers"),eq("test-api-key-1234567890123456"),eq(50),eq(10),any(),any())).thenReturn(new com.scraper.leadscraper.service.SearchProgress.Outcome<>(List.of(),progress));
+        var run=controller.mapsUntilTarget("barbers",50,10,()->"alice@example.com",session);assertEquals(progress,run.progress());assertEquals(progress,controller.history(()->"alice@example.com").getFirst().progress());
+    }
+    @Test void serpSearchUsesSeparateSessionKeyAndPersistsProviderForFiles() {
+        var service=mock(GoogleSearchScraperService.class);var history=new SearchHistory(directory.toString(),new ObjectMapper());
+        var controller=new WorkspaceController(history,mock(ScraperService.class),service);var session=new MockHttpSession();
+        var keys=new com.scraper.leadscraper.auth.SerpKeyController();keys.save(new com.scraper.leadscraper.auth.SerpKeyController.KeyInput("serp-key-12345678901234567890"),session);
+        var state=new com.scraper.leadscraper.service.SearchProgress(10,1,1,1,"complete","Provider results exhausted");
+        var lead=new GoogleSearchLead("https://business.example","Business",List.of("1234567890"),"2024","");
+        when(service.searchSerpUntilTarget(eq("cafes"),eq(50),eq("serp-key-12345678901234567890"),eq(10),eq(2023),eq(2024),any(),any())).thenReturn(new com.scraper.leadscraper.service.SearchProgress.Outcome<>(List.of(lead),state));
+        var run=controller.serpTarget("cafes",50,10,2023,2024,()->"alice@example.com",session);
+        assertEquals("serp",run.method());assertEquals("Business",run.leads().getFirst().name());assertEquals(state,run.progress());assertTrue(history.list("bob@example.com").isEmpty());
+        var files=new LeadFiles(directory.resolve("files").toString(),new ObjectMapper(),history);assertEquals("serp",files.create("alice@example.com","Serp comparison",run.id()).method());
     }
 }

@@ -12,4 +12,6 @@ public class LeadFilesController {
     @GetMapping public List<LeadFiles.File> list(Principal user){return files.list(user.getName());}
     @PostMapping public LeadFiles.File create(@RequestBody Create input,Principal user){return files.create(user.getName(),input.name(),input.runId());}
     @PatchMapping("/{id}") public LeadFiles.File rename(@PathVariable String id,@RequestBody Rename input,Principal user){return files.rename(user.getName(),id,input.name());}
+    @DeleteMapping("/{id}") @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String id,Principal user){files.delete(user.getName(),id);}
 }

@@ -17,12 +17,12 @@ const COPY = {
 type Phase = "idle" | "launch" | "assemble" | "think" | "resolve" | "condense" | "unfold" | "answered" | "reset";
 
 export interface MorphOrbProps {
+  inputAccessory?: React.ReactNode;
+  accessoryWidth?: number;
   onCancel?: () => void;
   onSubmit?: (text: string) => Promise<string> | string;
   disabled?: boolean;
   validate?: () => boolean;
-  preview?: boolean;
-  onPreviewComplete?: () => void;
   suggestions?: string[];
   minThinkMs?: number;
   speed?: number;
@@ -32,7 +32,7 @@ export interface MorphOrbProps {
 const PILL_H = 60, BALL_SMALL = 60, ORB_D = 132, ORB_R = 66, CANVAS = 220;
 const CARD_H = 108;
 const FLY_D = 138;
-const pillW = () => Math.min(560, window.innerWidth - 32);
+const pillW = () => Math.min(560, window.innerWidth - (window.innerWidth <= 640 ? 230 : 320));
 const cardW = () => Math.min(320, window.innerWidth - 32);
 const homeDy = () => 110; // pill centre is 96px above the viewport bottom; stage centre is at top:46%
 
@@ -841,7 +841,6 @@ export default function MorphOrb(props: MorphOrbProps) {
   const speedRef = useRef(1);
   speedRef.current = Math.max(0.05, (props.speed ?? 1) * dbgSpeed);
   const phaseRef = useRef<Phase>("idle");
-  const previewRunning = useRef(false);
   const reducedRef = useRef(false);
   const rtRef = useRef<Runtime | null>(null);
   const lastTextRef = useRef("");
@@ -864,7 +863,7 @@ export default function MorphOrb(props: MorphOrbProps) {
       getSpeed: () => speedRef.current,
       isReduced: () => reducedRef.current,
       ui: {
-        setPhase: (p) => { phaseRef.current = p; setPhaseState(p); if (p === "answered" && previewRunning.current) { previewRunning.current = false; propsRef.current.onPreviewComplete?.(); } },
+        setPhase: (p) => { phaseRef.current = p; setPhaseState(p); },
         swapLabel: (name) => setLbl((l) => (l.cur === name ? l : { cur: name, prev: l.cur, n: l.n + 1 })),
         resetLabel: () => setLbl((l) => ({ cur: COPY.labels[0], prev: null, n: l.n + 1 })),
         setAnswer: (s) => setAnswer(s),
@@ -977,7 +976,8 @@ export default function MorphOrb(props: MorphOrbProps) {
     );
 
   return (
-    <div className="mo-root" data-phase={phase} ref={rootRef}>
+    <div className={`mo-root${props.inputAccessory ? " mo-has-accessory" : ""}`} style={{"--accessory-width": `${props.accessoryWidth ?? 114}px`} as React.CSSProperties} data-phase={phase} ref={rootRef}>
+      {props.inputAccessory && phase === "idle" && <div className="mo-external-accessory">{props.inputAccessory}</div>}
       {props.suggestions && phase === 'idle' && <div className="mo-suggestions"><p>What would you like to discover?</p><AnimatePresence mode="wait" initial={false}><motion.div className="mo-suggestion-options" key={randomSuggestions.join("|")} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedSuggestions ? 0 : 0.35 }}>{randomSuggestions.map(suggestion => <button type="button" key={suggestion} disabled={props.disabled} onClick={() => { setValue(suggestion); inputRef.current?.focus({ preventScroll: true }); }}>{suggestion}</button>)}</motion.div></AnimatePresence></div>}
       <div className="mo-bg" aria-hidden="true" />
       <div className="mo-halo" aria-hidden="true" />
@@ -1050,7 +1050,6 @@ export default function MorphOrb(props: MorphOrbProps) {
         <span key={"c" + lbl.n} className="mo-lab mo-in">{labelInner(lbl.cur)}</span>
       </div>
 
-      {props.preview && phase === 'idle' && <button type="button" className="mo-preview" disabled={props.disabled} onClick={() => { previewRunning.current = true; rtRef.current?.start('Animation preview', { onSubmit: () => new Promise<string>(resolve => window.setTimeout(() => resolve('3 example leads are ready below. Preview only.'), 3500)), minThink: 3500 }); }}>Preview search animation</button>}
       <button type="button" className="mo-reset" onClick={onReset}>{COPY.reset}</button>
 
       <div className="mo-live" ref={liveRef} role="status" aria-live="polite" />

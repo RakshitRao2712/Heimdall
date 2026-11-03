@@ -292,6 +292,7 @@ export function TiltedGridHero({
                   {img ? (
                     <img
                       src={img.src}
+                      decoding="async"
                       alt={k === 0 ? (img.alt ?? "") : ""}
                       draggable={false}
                       className="absolute top-0 max-w-none object-cover"

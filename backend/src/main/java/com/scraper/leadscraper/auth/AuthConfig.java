@@ -33,6 +33,14 @@ public class AuthConfig {
                         var user = (org.springframework.security.oauth2.core.oidc.user.OidcUser) authentication.getPrincipal();
                         authorizedClients.removeAuthorizedClient("google", authentication.getName());
                         String email = identities.signIn(user.getSubject(), user.getEmail(), Boolean.TRUE.equals(user.getEmailVerified()), user.getClaimAsString("hd"));
+                        // OAuth session fixation protection also applies to our custom success handler.
+                        var previousSession=request.getSession(false);
+                        if(previousSession!=null)previousSession.invalidate();
+                        request.getSession(true);
+                        request.getSession().removeAttribute(PlacesKeyController.class.getName()+".key");
+                        request.getSession().removeAttribute(BraveKeyController.class.getName()+".key");
+                        request.getSession().removeAttribute(SerpKeyController.class.getName()+".key");
+                        request.getSession().setAttribute("heimdall.authenticatedAt",System.currentTimeMillis());
                         request.getSession().setMaxInactiveInterval(28800);
                         var context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
                         context.setAuthentication(new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(email, null, java.util.List.of()));
@@ -48,6 +56,9 @@ public class AuthConfig {
                 }).failureHandler((request, response, failure) -> response.sendRedirect(frontend + "/login?google=error")));
         }
         return http
+            .addFilterBefore(new com.scraper.leadscraper.security.ApiProtectionFilter(), org.springframework.security.web.csrf.CsrfFilter.class)
+            .requestCache(c -> c.disable())
+            .headers(h -> h.referrerPolicy(p -> p.policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)))
             .securityContext(c -> c.securityContextRepository(repository))
             .authorizeHttpRequests(a -> a.requestMatchers("/api/auth/google/config", "/api/auth/google/authorize/**", "/api/auth/google/callback", "/api/auth/csrf", "/api/auth/login", "/api/auth/register", "/api/auth/register/verify", "/api/auth/register/resend", "/error").permitAll().anyRequest().authenticated())
             .exceptionHandling(e -> e.authenticationEntryPoint((request, response, exception) -> response.sendError(401)))

@@ -29,6 +29,7 @@ public class AuthController {
     private final String dummyHash;
     private record Attempts(long since, int count) { }
     private final Map<String, Attempts> attempts = new ConcurrentHashMap<>();
+    private final Map<String, Attempts> accountAttempts = new ConcurrentHashMap<>();
     public AuthController(AccountStore accounts, PasswordEncoder encoder, HttpSessionSecurityContextRepository contexts, RegistrationOtp registration) {
         this.registration = registration;
         this.accounts = accounts; this.encoder = encoder; this.contexts = contexts;
@@ -56,7 +57,7 @@ public class AuthController {
     }
     private Map<String, String> session(String email, boolean remember, HttpServletRequest request, HttpServletResponse response) {
         var existing = request.getSession(false); if (existing != null) existing.invalidate();
-        var session = request.getSession(true); session.setMaxInactiveInterval(remember ? 604800 : 28800);
+        var session = request.getSession(true); session.setAttribute("heimdall.authenticatedAt",System.currentTimeMillis()); session.setMaxInactiveInterval(remember ? 604800 : 28800);
         var context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(new UsernamePasswordAuthenticationToken(email, null, List.of()));
         SecurityContextHolder.setContext(context); contexts.saveContext(context, request, response);
@@ -64,7 +65,6 @@ public class AuthController {
     }
     @PostMapping("/register") public RegistrationOtp.Challenge register(@RequestBody Credentials credentials, HttpServletRequest request) throws IOException {
         throttle(request); String email = validate(credentials);
-        if (accounts.hash(email) != null) throw new ResponseStatusException(HttpStatus.CONFLICT, "Unable to create this account. Try signing in.");
         return registration.start(email, encoder.encode(credentials.password()), credentials.rememberMe());
     }
     @PostMapping("/register/resend") public RegistrationOtp.Challenge resend(@RequestBody ResendInput input, HttpServletRequest request) {
@@ -77,9 +77,15 @@ public class AuthController {
         return session(verified.email(), verified.rememberMe(), request, response);
     }
     @PostMapping("/login") public Map<String, String> login(@RequestBody Credentials credentials, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        throttle(request); String email = validate(credentials); String hash = accounts.hash(email);
+        throttle(request); String email = validate(credentials);
+        long now=System.currentTimeMillis();accountAttempts.entrySet().removeIf(e->now-e.getValue().since()>900_000);
+        if(accountAttempts.size()>=10000)throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Try again later");
+        Attempts next=accountAttempts.compute(email,(key,old)->old==null?new Attempts(now,1):new Attempts(old.since(),old.count()+1));
+        if(next.count()>10)throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Too many attempts; try again in 15 minutes");
+        String hash = accounts.hash(email);
         boolean matches = encoder.matches(credentials.password(), hash == null ? dummyHash : hash);
         if (!matches || hash == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email or password is incorrect");
+        accountAttempts.remove(email);
         return session(email, credentials.rememberMe(), request, response);
     }
 }
