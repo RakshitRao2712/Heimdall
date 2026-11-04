@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: heimdall-staging
+    runtime: docker
+    plan: free
+    autoDeployTrigger: "off"
+    healthCheckPath: /api/auth/google/config
