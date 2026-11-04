@@ -105,8 +105,8 @@ const D_FEATURES: InkFeatures = {
     tools: ["Maps", "Websites", "Socials", "Phones"],
   },
   insights: {
-    title: "Focused website checks",
-    description: "Up to 20 websites are checked per search by default. This diagram illustrates the workflow; it is not live search data.",
+    title: "Review your matches",
+    description: "Review listings and available contact details before outreach. The chart shows sample activity.",
     values: [22, 26, 24, 31, 29, 36, 34, 41, 39, 47, 52, 58],
     forecastFrom: 8,
   },

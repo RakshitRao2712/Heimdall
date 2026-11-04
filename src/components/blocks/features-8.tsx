@@ -55,7 +55,7 @@ export function Features() {
                                 </div>
                                 <div className="relative z-10 mt-6 space-y-2 text-center">
                                     <h2 className="group-hover:text-secondary-950 text-lg font-medium transition dark:text-white">Google Places leads</h2>
-                                    <p className="text-foreground">Find operational businesses without a website, with five or fewer reviews by default.</p>
+                                    <p className="text-foreground">Find operational businesses with no website listed in their Google Places record.</p>
                                 </div>
                             </CardContent>
                         </Card>
@@ -101,20 +101,20 @@ export function Features() {
                                     </svg>
                                 </div>
                                 <div className="relative z-10 mt-14 space-y-2 text-center">
-                                    <h2 className="text-lg font-medium transition">Parallel website checks</h2>
-                                    <p className="text-foreground">Check websites with eight shared workers and avoid checking the same domain twice per search.</p>
+                                    <h2 className="text-lg font-medium transition">Search by business and location</h2>
+                                    <p className="text-foreground">Start with a business category and city, such as restaurants in Boston. Review the matches before outreach.</p>
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card id="copyright-search" className="relative col-span-full overflow-hidden lg:col-span-3">
+                        <Card id="foursquare-discovery" className="relative col-span-full overflow-hidden lg:col-span-3">
                             <CardContent className="grid pt-6 sm:grid-cols-2">
                                 <div className="relative z-10 flex flex-col justify-between space-y-12 lg:space-y-6">
                                     <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
                                         <Shield className="m-auto size-5" strokeWidth={1} />
                                     </div>
                                     <div className="space-y-2">
-                                        <h2 className="group-hover:text-secondary-950 text-lg font-medium text-zinc-800 transition dark:text-white">Copyright search</h2>
-                                        <p className="text-foreground">Search visible copyright notices ending in 2023 or 2024 to discover potential redesign opportunities.</p>
+                                        <h2 className="group-hover:text-secondary-950 text-lg font-medium text-zinc-800 transition dark:text-white">Foursquare business discovery</h2>
+                                        <p className="text-foreground">Search by business type and city, then filter listings by website, phone number, or social profile.</p>
                                     </div>
                                 </div>
                                 <div className="rounded-tl-(--radius) relative -mb-6 -mr-6 mt-6 h-fit border-l border-t p-6 py-6 sm:ml-6">
@@ -154,7 +154,7 @@ export function Features() {
                                     </div>
                                     <div className="space-y-2">
                                         <h2 className="text-lg font-medium transition">Find ways to connect</h2>
-                                        <p className="text-foreground">Collect public business phone numbers from websites, contact pages, and Google Places when available.</p>
+                                        <p className="text-foreground">Collect public business phone numbers from Google Places and Foursquare when available.</p>
                                     </div>
                                 </div>
                                 <div className="before:bg-(--color-border) relative mt-6 before:absolute before:inset-0 before:mx-auto before:w-px sm:-my-6 sm:-mr-6">

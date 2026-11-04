@@ -162,3 +162,38 @@
   padding: 5px;
   border-radius: 7px;
 }
+
+.workspace-search-popup {
+  position: fixed;
+  right: 16px;
+  bottom: 96px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100vw - 32px);
+  padding: 14px 16px;
+  border: 1px solid #ffffff24;
+  border-radius: 16px;
+  background: #18171c;
+  color: #f4eff5;
+  box-shadow: 0 12px 40px #0008;
+  font-size: 13px;
+}
+.workspace-search-popup:empty { display: none; }
+.workspace-search-popup span { overflow-wrap: anywhere; }
+.workspace-search-popup button { flex-shrink: 0; cursor: pointer; }
+
+:is(.places-orb-search--maps, .places-orb-search--foursquare) .mo-root[data-phase="think"] .mo-mover {
+  position: fixed;
+  left: 50vw;
+  top: 50dvh;
+  transform: none !important;
+  z-index: 2;
+}
+:is(.places-orb-search--maps, .places-orb-search--foursquare) .mo-root[data-phase="think"] .mo-status {
+  position: fixed;
+  left: 50vw;
+  top: calc(50dvh + 116px);
+  z-index: 2;
+}

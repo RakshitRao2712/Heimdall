@@ -19,24 +19,27 @@ public final class FoursquareDiscovery {
 
     private FoursquareDiscovery() {}
 
-    public static SearchProgress.Outcome<SearchHistory.Lead> search(String query, String key,
+    public static SearchProgress.Outcome<SearchHistory.Lead> search(String query, String key, int target,
             BooleanSupplier cancelled, Consumer<SearchProgress> progress) {
+        if (target < 1 || target > LIMIT) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Choose a lead target between 1 and 50.");
+        }
         String[] parts = query.strip().split("(?i)\\s+in\\s+", 2);
         if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank() || query.length() > 500) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Enter a business type and location, such as restaurants in Boston.");
         }
-        if (cancelled.getAsBoolean()) return finish(List.of(), 0, 0, "Search cancelled.", progress);
+        if (cancelled.getAsBoolean()) return finish(target, List.of(), 0, 0, "Search cancelled.", progress);
         var uri = URI.create("https://places-api.foursquare.com/places/search?query=" + encode(parts[0])
-                + "&near=" + encode(parts[1]) + "&limit=" + LIMIT
+                + "&near=" + encode(parts[1]) + "&limit=" + target
                 + "&fields=fsq_place_id,name,location,tel,website,social_media");
         var request = HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(20))
                 .header("Authorization", "Bearer " + key)
                 .header("X-Places-Api-Version", "2025-06-17")
                 .header("Accept", "application/json").build();
-        progress.accept(new SearchProgress(LIMIT, 0, 1, 0, "searching", "Reading Foursquare listings."));
+        progress.accept(new SearchProgress(target, 0, 1, 0, "searching", "Reading Foursquare listings."));
         try {
             var response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-            if (cancelled.getAsBoolean()) return finish(List.of(), 0, 1, "Search cancelled.", progress);
+            if (cancelled.getAsBoolean()) return finish(target, List.of(), 0, 1, "Search cancelled.", progress);
             switch (response.statusCode()) {
                 case 200 -> { }
                 case 401, 403 -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Foursquare rejected the API key or plan.");
@@ -60,19 +63,19 @@ public final class FoursquareDiscovery {
                         phone.isBlank() ? List.of() : List.of(phone),
                         row.path("location").path("formatted_address").asText(""), "", null, links));
             }
-            return finish(List.copyOf(leads.values()), rows.size(), 1,
-                    rows.size() >= LIMIT ? "Reached Foursquare's 50-listing limit." : "Foursquare search complete.", progress);
+            return finish(target, List.copyOf(leads.values()), rows.size(), 1,
+                    leads.size() >= target ? "Lead target reached." : "Foursquare search complete.", progress);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return finish(List.of(), 0, 1, "Search interrupted.", progress);
+            return finish(target, List.of(), 0, 1, "Search interrupted.", progress);
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Could not read results from Foursquare.");
         }
     }
 
-    private static SearchProgress.Outcome<SearchHistory.Lead> finish(List<SearchHistory.Lead> leads,
+    private static SearchProgress.Outcome<SearchHistory.Lead> finish(int target, List<SearchHistory.Lead> leads,
             int checked, int requests, String reason, Consumer<SearchProgress> progress) {
-        var state = new SearchProgress(LIMIT, checked, requests, leads.size(), "complete", reason);
+        var state = new SearchProgress(target, checked, requests, leads.size(), "complete", reason);
         progress.accept(state);
         return new SearchProgress.Outcome<>(leads, state);
     }

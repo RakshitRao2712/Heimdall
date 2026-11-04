@@ -81,10 +81,10 @@ public class WorkspaceController {
     }
 
     @PostMapping("/search/foursquare")
-    public SearchHistory.Run foursquare(@RequestParam String query, Principal user, HttpSession session) {
+    public SearchHistory.Run foursquare(@RequestParam String query, @RequestParam(defaultValue = "50") int target, Principal user, HttpSession session) {
         String key = com.scraper.leadscraper.auth.FoursquareKeyController.requireKey(session);
         return execute("foursquare", query, user, session, () ->
-                com.scraper.leadscraper.service.FoursquareDiscovery.search(query, key, () -> cancelled(session),
+                com.scraper.leadscraper.service.FoursquareDiscovery.search(query, key, target, () -> cancelled(session),
                         progress -> session.setAttribute(PROGRESS, progress)));
     }
 

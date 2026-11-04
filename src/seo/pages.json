@@ -43,24 +43,24 @@
   },
   "/how-it-works": {
     "title": "How Heimdall Works | Lead Targets, Search & Teams",
-    "description": "Learn how Heimdall searches toward 10, 25 or 50 matches with API request budgets, related queries, deduplication, cancellation and reviewable results.",
-    "heading": "Find new leads.",
+    "description": "Compare Google Places and Foursquare lead discovery. See how to connect API keys, choose a lead target, review results, and work with your team.",
+    "heading": "How Heimdall finds local business leads",
     "sections": [
       [
         "Connect your own provider key",
         "Use Google Places for operational businesses without a listed website, or Foursquare to find business websites, phones, and social profiles. Provider fees are separate from ₹100."
       ],
       [
-        "Set a lead target and request budget",
-        "Choose a target of 10, 25 or 50 matches and an independent request budget of 10, 25, 50 or 100 API calls (default 50). A target is not a guaranteed count."
+        "Choose a lead target",
+        "Choose 10, 25, or 50 leads per search. The target sets an upper bound and actual results depend on the provider, category, and location."
       ],
       [
-        "Continue across related searches",
-        "Heimdall fetches more pages and tries related category and area variations. It deduplicates Places IDs or website domains across the run while preserving filters. Relevance still needs review."
+        "How Google Places expands a search",
+        "Heimdall can fetch more pages and try related category and area variations while deduplicating by place ID. Foursquare searches the chosen category and city in a single request."
       ],
       [
-        "Follow live progress and cancel",
-        "See checked candidates, provider requests and matches. Runs stop at the target, budget, cancellation, provider failure or exhaustion of query variations. An in-flight request may finish after cancellation; partial results are saved."
+        "Follow search progress",
+        "Switch between dashboard screens while your search runs. When results are ready, a notification shows the count and opens the results."
       ],
       [
         "Review match quality and permissions",
@@ -69,6 +69,28 @@
       [
         "Save eligible results and work together",
         "Named files, CSV exports and team copies require permission under source terms and applicable law. Saved files and exports include returned business details; provider permissions remain a launch-review requirement."
+      ]
+    ],
+    "faq": [
+      [
+        "What is Heimdall?",
+        "Heimdall is a local business lead discovery workspace. Search by business type and location, review public business contact information, and organize eligible results in shared lead folders."
+      ],
+      [
+        "What is the difference between Google Places and Foursquare?",
+        "Google Places finds operational businesses with no website listed in their Google record. Foursquare finds local businesses and shows websites, phone numbers, and social profiles when available."
+      ],
+      [
+        "Will I always get 50 leads?",
+        "No. You can choose 10, 25, or 50 as a target. Google Places may search related categories and areas. Foursquare requests up to the selected number in a single search. Either can return fewer matches."
+      ],
+      [
+        "What does ₹100 include?",
+        "The one-time payment covers current Premium features for the operating lifetime of Heimdall. Connect your own provider keys. Google Places and Foursquare bill API usage separately."
+      ],
+      [
+        "Can I use any result for marketing?",
+        "A public listing does not establish consent to contact a business. Check the provider terms and the rules for your outreach channel and recipient."
       ]
     ]
   },
@@ -91,7 +113,7 @@
       ],
       [
         "Monitor usage and billing",
-        "Google Places usage is billed separately by Google according to your usage. The ₹100 Heimdall purchase does not cover Google and Brave API fees."
+        "Google Places usage is billed separately by Google according to your usage. The ₹100 Heimdall purchase does not cover Google Places and Foursquare API fees."
       ],
       [
         "Provider policy review",

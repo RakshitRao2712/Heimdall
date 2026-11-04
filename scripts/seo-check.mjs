@@ -11,6 +11,7 @@ for(const [path,page] of Object.entries(pages)){
  assert(!descriptions.has(page.description),`${path}: duplicate description`);descriptions.add(page.description);
  assert(page.title.length<=65&&page.description.length<=165,`${path}: metadata too long`);
  assert(html.includes('<html lang="en"'),`${path}: document language`);
+ for(const [question] of page.faq??[])assert(html.includes(`<summary>${question}</summary>`),`${path}: missing initial FAQ question`);
  const canonical=html.match(/<link rel="canonical" href="([^"]+)"/);
  if(canonical){const url=new URL(canonical[1]);origin=url.origin;assert.equal(url.pathname,path);assert(!url.search&&!url.hash);assert(html.includes('index,follow,max-image-preview:large'));assert(html.includes('og:image'));assert(html.includes('twitter:card'));const schema=JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)[1]);assert(schema['@graph'].some(v=>v['@type']==='WebPage'));assert(!schema['@graph'].some(v=>v.aggregateRating||v.review),'No invented reviews');}
  else assert(html.includes('noindex,follow'),`${path}: unconfigured sites must not index`);
@@ -20,6 +21,6 @@ const sitemap=await readFile('dist/sitemap.xml','utf8');const robots=await readF
 assert(!sitemap.includes('/dashboard')&&!sitemap.includes('/login')&&!sitemap.includes('/api/'),'Private routes in sitemap');
 assert.equal((sitemap.match(/<loc>/g)||[]).length,origin?Object.keys(pages).length:0);
 if(origin)assert(robots.includes(`Sitemap: ${origin}/sitemap.xml`));else assert(robots.includes('Disallow: /'));
-for(const path of ['/login','/dashboard','/404']){const html=await readFile(`dist${path}/index.html`,'utf8');assert(html.includes('noindex,follow'),`${path}: private/error index protection`);}
+for(const path of ['/login','/dashboard','/404']){const html=await readFile(`dist${path}/index.html`,'utf8');assert(html.includes('noindex,follow'),`${path}: private/error index protection`);assert(!html.includes('rel="canonical"'),`${path}: private/error canonical`);}
 await access('dist/images/heimdall-social.png');await access('dist/images/heimdall-logo.svg');
 console.log(`SEO checks passed: ${Object.keys(pages).length} public routes, unique metadata, initial headings, links, schema, assets, sitemap and noindex rules. ${origin?'Origin: '+origin:'Staging indexing intentionally disabled.'}`);

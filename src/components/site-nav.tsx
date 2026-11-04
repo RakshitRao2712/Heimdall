@@ -13,7 +13,7 @@ export function SiteNav() {
     navContent={{
       agencyName: 'Heimdall',
       tagline: 'Find local businesses. Discover website opportunities. Connect with your next customer.',
-      location: 'Google Places + Copyright Search',
+      location: 'Google Places + Foursquare',
       links: publicLinks,
       images: [
         'https://cdn.21st.dev/assets/mirror/ba/baa678cbac1a29e773743a10ff421b226cf0e9b5d786ebf34415063d6dabc02b.jpg',

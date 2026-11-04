@@ -2,7 +2,7 @@ import { usePremium } from "./premium-access";
 import { DisplayNameStatus, useDisplayNameAvailability } from '@/components/ui/display-name-availability';
 import { useSession, workspaceMutation, type AccountProfile } from '@/auth/session';
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
-import { BadgeCheck, Crown, ArrowUpRight, ImagePlus, KeyRound, LogOut, Trash2, X } from 'lucide-react';
+import { BadgeCheck, Crown, ArrowUpRight, ImagePlus, KeyRound, LogOut, X } from 'lucide-react';
 
 type Profile = { firstName: string; lastName: string; username: string; website: string; cover: string; avatar: string };
 const empty: Profile = { firstName: '', lastName: '', username: '', website: '', cover: '', avatar: '' };
@@ -81,7 +81,6 @@ export function WorkspaceProfile({ email, keyConfigured, keyLoading, searches, l
             <span className="profile-photo-edit"><ImagePlus size={22} /></span>
           </button>
           <div className="profile-membership" aria-live="polite">{premiumLoading ? <span className="profile-plan-badge profile-plan-loading">Checking plan…</span> : <><span className={`profile-plan-badge ${premium ? 'is-premium' : 'is-free'}`}>{premium && <Crown size={13} aria-hidden="true"/>}{premium ? 'Premium' : 'Free'}</span>{!premium && <a className="profile-upgrade-link" href="/pricing">Buy Premium <ArrowUpRight size={13} aria-hidden="true"/></a>}</>}</div>
-          {draft.avatar && <button className="profile-remove-photo" type="button" onClick={() => change('avatar', '')}><Trash2 size={14} aria-hidden="true" />Remove photo</button>}
         </div>
         <div className="profile-fields">
           <label>First name<input required autoComplete="given-name" maxLength={60} value={draft.firstName} onChange={e => change('firstName', e.target.value)} placeholder="Your first name" /></label>

@@ -48,3 +48,16 @@
 .mo-external-accessory{left:calc(50% - var(--accessory-width,114px)/2 - 6px + min(280px, (100vw - 320px)/2) + 12px)}
 
 @media(max-width:640px){.mo-has-accessory{--accessory-width:184px!important}.search-side-controls{gap:6px}.search-side-controls .search-lead-target{width:78px;flex-basis:78px;padding:8px}.search-copyright-range{width:100px;flex-basis:100px;padding:8px 5px}.search-copyright-range input{width:34px;font-size:10px}.search-lead-target>svg{right:7px}.search-lead-target select{font-size:10px}.mo-external-accessory{left:calc(50% - var(--accessory-width)/2 - 6px + min(280px, (100vw - 230px)/2) + 12px)}.mo-field{font-size:11px}.mo-spark{display:none}}
+
+/* Center each Places search input and place its target beside the pill. */
+:is(.places-orb-search--maps, .places-orb-search--foursquare) .mo-has-accessory .mo-mover {
+  left: 50%;
+}
+:is(.places-orb-search--maps, .places-orb-search--foursquare) .mo-external-accessory {
+  left: calc(50% + min(280px, (100vw - 320px) / 2) + 12px);
+}
+@media (max-width: 640px) {
+  :is(.places-orb-search--maps, .places-orb-search--foursquare) .mo-external-accessory {
+    left: calc(50% + min(280px, (100vw - 230px) / 2) + 8px);
+  }
+}
