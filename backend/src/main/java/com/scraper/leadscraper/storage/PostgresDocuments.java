@@ -29,6 +29,7 @@ public class PostgresDocuments {
         credentials.setProperty("user", user);
         credentials.setProperty("password", password);
         credentials.setProperty("sslmode", "verify-full");
+        credentials.setProperty("sslfactory", "org.postgresql.ssl.DefaultJavaSSLFactory");
         credentials.setProperty("connectTimeout", "10");
         credentials.setProperty("socketTimeout", "20");
         try (var connection = connect(); var statement = connection.createStatement()) {
@@ -41,7 +42,8 @@ public class PostgresDocuments {
                 )
                 """);
         } catch (SQLException e) {
-            throw new IllegalStateException("Could not initialize Heimdall PostgreSQL storage.");
+            throw new IllegalStateException("Could not initialize Heimdall PostgreSQL storage (SQL state: "
+                    + e.getSQLState() + ").");
         }
     }
 
