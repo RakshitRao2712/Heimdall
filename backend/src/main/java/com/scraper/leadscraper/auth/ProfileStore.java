@@ -1,5 +1,8 @@
 package com.scraper.leadscraper.auth;
 
+import com.scraper.leadscraper.storage.PostgresDocuments;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,13 @@ import java.text.Normalizer;
 
 @Service
 public class ProfileStore {
+    private PostgresDocuments documents;
+
+    @Autowired(required = false)
+    void usePostgres(PostgresDocuments documents) {
+        this.documents = documents;
+    }
+
     public record Profile(String firstName, String lastName, String username, String website, boolean completed) { }
     private final Path directory;
     private final ObjectMapper mapper;
@@ -27,7 +37,12 @@ public class ProfileStore {
         catch (Exception e) { throw new IllegalStateException(e); }
     }
     public synchronized Profile get(String email) {
-        try { return Files.exists(path(email)) ? mapper.readValue(Files.readAllBytes(path(email)), Profile.class) : new Profile("", "", "", "", false); }
+        try {
+            Path file = path(email);
+            byte[] data = documents == null ? (Files.exists(file) ? Files.readAllBytes(file) : null)
+                    : documents.read("profiles", file.getFileName().toString());
+            return data == null ? new Profile("", "", "", "", false) : mapper.readValue(data, Profile.class);
+        }
         catch (Exception e) { throw new IllegalStateException("Cannot load your profile", e); }
     }
     private String text(String value, String field, boolean required, int max) {
@@ -43,6 +58,19 @@ public class ProfileStore {
     private String nameKey(String input) { return displayName(input).toLowerCase(Locale.ROOT); }
     public synchronized boolean available(String email, String input) {
         String key = nameKey(input);
+        if (documents != null) {
+            try {
+                String current = path(email).getFileName().toString();
+                for (var document : documents.list("profiles")) {
+                    if (document.id().equals(current)) continue;
+                    Profile other = mapper.readValue(document.payload(), Profile.class);
+                    if (other.username() != null && !other.username().isBlank() && nameKey(other.username()).equals(key)) return false;
+                }
+                return true;
+            } catch (java.io.IOException e) {
+                throw new IllegalStateException("Cannot check display name availability", e);
+            }
+        }
         if (!Files.exists(directory)) return true;
         try (var paths = Files.list(directory)) {
             for (Path file : paths.filter(value -> value.getFileName().toString().matches("[0-9a-f]{64}\\.json")).toList()) {
@@ -66,6 +94,10 @@ public class ProfileStore {
         Profile profile = new Profile(first, last, username, website, true);
         Path temporary = null;
         try {
+            if (documents != null) {
+                documents.write("profiles", path(email).getFileName().toString(), mapper.writeValueAsBytes(profile));
+                return profile;
+            }
             Files.createDirectories(directory);
             temporary = Files.createTempFile(directory, "profile-", ".tmp");
             try { Files.setPosixFilePermissions(temporary, PosixFilePermissions.fromString("rw-------")); } catch (UnsupportedOperationException ignored) { }

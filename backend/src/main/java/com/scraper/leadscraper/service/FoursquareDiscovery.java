@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.function.*;
 
 public final class FoursquareDiscovery {
-    private static final HttpClient CLIENT = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+    private static final HttpClient CLIENT = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NEVER).connectTimeout(Duration.ofSeconds(10)).build();
     private static final ObjectMapper JSON = new ObjectMapper();
     private static final int LIMIT = 50;
 

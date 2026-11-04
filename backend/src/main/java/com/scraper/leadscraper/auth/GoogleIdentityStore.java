@@ -1,4 +1,7 @@
 package com.scraper.leadscraper.auth;
+
+import com.scraper.leadscraper.storage.PostgresDocuments;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,6 +11,13 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.*;
 @Service
 public class GoogleIdentityStore {
+    private PostgresDocuments documents;
+
+    @Autowired(required = false)
+    void usePostgres(PostgresDocuments documents) {
+        this.documents = documents;
+    }
+
     private final Path file;
     private final AccountStore accounts;
     private final PasswordEncoder encoder;
@@ -16,8 +26,8 @@ public class GoogleIdentityStore {
     }
     public synchronized String signIn(String subject, String email, boolean verified, String hostedDomain) throws IOException {
         if (subject == null || subject.isBlank() || !verified || email == null || !email.matches("[^\\s@]+@[^\\s@]+\\.[^\\s@]+")) throw new IllegalArgumentException("Verified Google identity required");
-        Properties identities = new Properties();
-        if (Files.exists(file)) try (var input = Files.newInputStream(file)) { identities.load(input); }
+        Properties identities = documents == null ? new Properties() : documents.readProperties("accounts", "google-identities");
+        if (documents == null && Files.exists(file)) try (var input = Files.newInputStream(file)) { identities.load(input); }
         String bound = identities.getProperty(subject);
         if (bound != null) return bound;
         email = email.trim().toLowerCase(Locale.ROOT);
@@ -25,6 +35,10 @@ public class GoogleIdentityStore {
         if (accounts.hash(email) != null && !email.endsWith("@gmail.com") && (hostedDomain == null || hostedDomain.isBlank())) throw new IllegalArgumentException("Use your password to sign in");
         accounts.create(email, encoder.encode(UUID.randomUUID().toString()));
         identities.setProperty(subject, email);
+        if (documents != null) {
+            documents.writeProperties("accounts", "google-identities", identities);
+            return email;
+        }
         Files.createDirectories(file.getParent());
         Path temporary = Files.createTempFile(file.getParent(), "google-identities-", ".tmp");
         try {

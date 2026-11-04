@@ -48,7 +48,7 @@ export async function placesKeyRequest(method: 'POST' | 'DELETE', apiKey?: strin
   const csrf = await fetch('/api/auth/csrf', { credentials: 'same-origin', cache: 'no-store' });
   if (!csrf.ok) throw new Error('Cannot reach the backend. Please try again.');
   const { token, headerName } = await csrf.json();
-  const response = await fetch(`/api/workspace/${provider}-key`, { method, credentials: 'same-origin', headers: { 'Content-Type': 'application/json', [headerName]: token }, body: method === 'POST' ? JSON.stringify({ apiKey }) : undefined });
+  const response = await fetch(`/api/workspace/${provider}-key`, { method, credentials: 'same-origin', cache: 'no-store', redirect: 'error', headers: { 'Content-Type': 'application/json', [headerName]: token }, body: method === 'POST' ? JSON.stringify({ apiKey }) : undefined });
   if (response.status === 401) { window.location.replace('/login'); throw new Error('Please sign in again.'); }
   if (!response.ok) throw new Error(response.status === 400 ? `Enter a valid ${provider === 'places' ? 'Google Places' : provider === 'foursquare' ? 'Foursquare' : provider === 'yelp' ? 'Yelp' : provider === 'serp' ? 'SerpApi' : 'Brave Search'} API key.` : response.status === 403 ? 'Session expired. Please retry.' : 'Could not update your API key. Check the backend and retry.');
   return response.json() as Promise<{ configured: boolean }>;

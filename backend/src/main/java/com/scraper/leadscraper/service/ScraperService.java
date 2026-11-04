@@ -30,7 +30,7 @@ public class ScraperService {
     private final HttpClient client;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public ScraperService(ObjectMapper objectMapper) { this(objectMapper, HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).build()); }
+    public ScraperService(ObjectMapper objectMapper) { this(objectMapper, HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NEVER).connectTimeout(Duration.ofSeconds(15)).build()); }
     ScraperService(ObjectMapper objectMapper, HttpClient client) { this.objectMapper = objectMapper; this.client = client; maxReviewsForNewBusiness = 5; }
     @jakarta.annotation.PreDestroy public void close() { client.close(); }
 

@@ -1,5 +1,8 @@
 package com.scraper.leadscraper.history;
 
+import com.scraper.leadscraper.storage.PostgresDocuments;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
@@ -12,6 +15,13 @@ import java.util.*;
 
 @Service
 public class SearchHistory {
+    private PostgresDocuments documents;
+
+    @Autowired(required = false)
+    void usePostgres(PostgresDocuments documents) {
+        this.documents = documents;
+    }
+
     @com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)
     public record Lead(String name, String website, List<String> phones, String address, String year, Integer reviews, List<String> socials) {
         public Lead(String name, String website, List<String> phones, String address, String year, Integer reviews) {
@@ -35,8 +45,11 @@ public class SearchHistory {
     }
     public synchronized List<Run> list(String email) {
         Path file = file(email);
-        if (!Files.exists(file)) return List.of();
-        try { return List.of(mapper.readValue(Files.readAllBytes(file), Run[].class)); }
+        try {
+            byte[] data = documents == null ? (Files.exists(file) ? Files.readAllBytes(file) : null)
+                    : documents.read("searches", file.getFileName().toString());
+            return data == null ? List.of() : List.of(mapper.readValue(data, Run[].class));
+        }
         catch (Exception e) { throw new IllegalStateException("Cannot read search history", e); }
     }
     public synchronized Run save(String email, String method, String query, long elapsedMs, List<Lead> leads) {
@@ -51,6 +64,10 @@ public class SearchHistory {
     private void write(String email,List<Run> runs) {
         Path temporary = null;
         try {
+            if (documents != null) {
+                documents.write("searches", file(email).getFileName().toString(), mapper.writeValueAsBytes(runs));
+                return;
+            }
             Files.createDirectories(directory);
             temporary = Files.createTempFile(directory, "search-", ".tmp");
             try { Files.setPosixFilePermissions(temporary, PosixFilePermissions.fromString("rw-------")); } catch (UnsupportedOperationException ignored) { }

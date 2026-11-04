@@ -11,14 +11,13 @@ import java.util.Map;
 @RequestMapping("/api/workspace/foursquare-key")
 public class FoursquareKeyController {
     private static final String ATTRIBUTE = FoursquareKeyController.class.getName() + ".key";
-    public record KeyInput(String apiKey) { }
     public static String requireKey(HttpSession session) {
         Object value = session.getAttribute(ATTRIBUTE);
         if (!(value instanceof String key) || key.isBlank()) throw new ResponseStatusException(HttpStatus.PRECONDITION_REQUIRED, "Add your Foursquare API key before searching.");
         return key;
     }
     @GetMapping public Map<String, Boolean> status(HttpSession session) { return Map.of("configured", session.getAttribute(ATTRIBUTE) instanceof String); }
-    @PostMapping public Map<String, Boolean> save(@RequestBody KeyInput input, HttpSession session) {
+    @PostMapping public Map<String, Boolean> save(@RequestBody ProviderKeyInput input, HttpSession session) {
         String key = input.apiKey() == null ? "" : input.apiKey().trim();
         if (!key.matches("[A-Za-z0-9_-]{20,200}")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Enter a valid Foursquare API key.");
         session.setAttribute(ATTRIBUTE, key);

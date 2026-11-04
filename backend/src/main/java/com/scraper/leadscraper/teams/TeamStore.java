@@ -1,5 +1,8 @@
 package com.scraper.leadscraper.teams;
 
+import com.scraper.leadscraper.storage.PostgresDocuments;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.scraper.leadscraper.auth.ProfileStore;
 import com.scraper.leadscraper.history.LeadFiles;
 import com.scraper.leadscraper.history.SearchHistory;
@@ -17,6 +20,13 @@ import java.util.*;
 /** Durable, single-instance team store. Every read and write checks current membership. */
 @Service
 public class TeamStore {
+    private PostgresDocuments documents;
+
+    @Autowired(required = false)
+    void usePostgres(PostgresDocuments documents) {
+        this.documents = documents;
+    }
+
     public record Actor(String email, String name) { }
     public record Member(Actor user, String joinedAt) { }
     public record Note(String id, String text, Actor author, String createdAt) { }
@@ -39,10 +49,25 @@ public class TeamStore {
     }
     private boolean contains(Team team, String email) { return team.members.stream().anyMatch(member -> member.user.email.equals(email)); }
     private Team read(String teamId) {
-        Path file = directory.resolve(id(teamId) + ".json"); if (!Files.exists(file)) throw missing();
+        Path file = directory.resolve(id(teamId) + ".json");
+        if (documents != null) {
+            byte[] data;
+            try { data = documents.read("teams", teamId); }
+            catch (java.io.IOException e) { throw new IllegalStateException("Cannot load this team", e); }
+            if (data == null) throw missing();
+            return mapper.readValue(data, Team.class);
+        }
+        if (!Files.exists(file)) throw missing();
         try { return mapper.readValue(Files.readAllBytes(file), Team.class); } catch (Exception e) { throw new IllegalStateException("Cannot load this team", e); }
     }
     private List<Team> all() {
+        if (documents != null) {
+            try {
+                return documents.list("teams").stream().map(document -> mapper.readValue(document.payload(), Team.class)).toList();
+            } catch (java.io.IOException e) {
+                throw new IllegalStateException("Cannot load teams", e);
+            }
+        }
         if (!Files.exists(directory)) return List.of();
         try (var paths = Files.list(directory)) {
             return paths.filter(path -> path.getFileName().toString().matches("[0-9a-f-]{36}\\.json")).map(path -> read(path.getFileName().toString().replace(".json", ""))).toList();
@@ -53,6 +78,10 @@ public class TeamStore {
     private void write(Team team) {
         Path temporary = null;
         try {
+            if (documents != null) {
+                documents.write("teams", team.id, mapper.writeValueAsBytes(team));
+                return;
+            }
             Files.createDirectories(directory); temporary = Files.createTempFile(directory, "team-", ".tmp");
             try { Files.setPosixFilePermissions(temporary, PosixFilePermissions.fromString("rw-------")); } catch (UnsupportedOperationException ignored) { }
             Files.write(temporary, mapper.writeValueAsBytes(team));

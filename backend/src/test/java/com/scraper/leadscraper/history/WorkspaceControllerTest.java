@@ -1,6 +1,7 @@
 package com.scraper.leadscraper.history;
 import com.scraper.leadscraper.dto.GoogleSearchLead;
 import com.scraper.leadscraper.auth.PlacesKeyController;
+import com.scraper.leadscraper.auth.ProviderKeyInput;
 import com.scraper.leadscraper.auth.BraveKeyController;
 import org.springframework.mock.web.MockHttpSession;
 import com.scraper.leadscraper.dto.PlaceResponse;
@@ -21,7 +22,7 @@ class WorkspaceControllerTest {
         var history = new SearchHistory(directory.toString(), new ObjectMapper());
         var controller = new WorkspaceController(history, maps, copyright);
         var session = new MockHttpSession();
-        new PlacesKeyController().save(new PlacesKeyController.KeyInput("test-api-key-1234567890123456"), session);
+        new PlacesKeyController().save(new ProviderKeyInput("test-api-key-1234567890123456"), session);
         when(maps.getLeadsWithoutWebsite("cafes in Seattle", "test-api-key-1234567890123456")).thenReturn(List.of(new PlaceResponse.Place(new PlaceResponse.Place.DisplayName("Cafe"), null, "Seattle", "1234567890", "OPERATIONAL", 2)));
         when(copyright.searchAndExtractLeads("plumbers in Chicago", 2, "test-brave-key-1234567890123456")).thenReturn(List.of(new GoogleSearchLead("https://example.com", "Plumber", List.of("2345678901"), "2024", "Public business")));
         var first = controller.maps("cafes in Seattle", () -> "alice@example.com", session);
@@ -51,7 +52,7 @@ class WorkspaceControllerTest {
     }
     @Test void targetEndpointSavesProgressAndUsesSessionKey() {
         var maps=mock(ScraperService.class);var controller=new WorkspaceController(new SearchHistory(directory.toString(),new ObjectMapper()),maps,mock(GoogleSearchScraperService.class));
-        var session=new MockHttpSession();new PlacesKeyController().save(new PlacesKeyController.KeyInput("test-api-key-1234567890123456"),session);
+        var session=new MockHttpSession();new PlacesKeyController().save(new ProviderKeyInput("test-api-key-1234567890123456"),session);
         var progress=new com.scraper.leadscraper.service.SearchProgress(50,60,3,0,"complete","Google Places limit reached");
         when(maps.searchUntilTarget(eq("barbers"),eq("test-api-key-1234567890123456"),eq(50),eq(10),any(),any())).thenReturn(new com.scraper.leadscraper.service.SearchProgress.Outcome<>(List.of(),progress));
         var run=controller.mapsUntilTarget("barbers",50,10,()->"alice@example.com",session);assertEquals(progress,run.progress());assertEquals(progress,controller.history(()->"alice@example.com").getFirst().progress());

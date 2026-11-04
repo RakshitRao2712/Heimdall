@@ -5,3 +5,12 @@ services:
     plan: free
     autoDeployTrigger: "off"
     healthCheckPath: /api/auth/google/config
+    envVars:
+      - key: HEIMDALL_STORAGE_POSTGRES_ENABLED
+        value: "true"
+      - key: HEIMDALL_JDBC_URL
+        sync: false
+      - key: HEIMDALL_DB_USER
+        sync: false
+      - key: HEIMDALL_DB_PASSWORD
+        sync: false
