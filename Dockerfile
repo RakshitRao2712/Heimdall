@@ -19,7 +19,9 @@ RUN ./mvnw -B -DskipTests package
 FROM caddy:2 AS proxy
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=proxy /usr/bin/caddy /usr/bin/caddy
+# Render provides an unprivileged port. Install the binary without file capabilities.
+RUN --mount=type=bind,from=proxy,source=/usr/bin/caddy,target=/tmp/caddy \
+    install -m 0755 /tmp/caddy /usr/bin/caddy
 COPY --from=frontend /build/dist /srv/heimdall/dist
 COPY --from=backend /build/target/*.jar /app/heimdall.jar
 COPY deploy/Caddyfile.render /etc/caddy/Caddyfile
