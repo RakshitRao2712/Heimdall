@@ -44,7 +44,7 @@ public class RegistrationOtp {
             long now = clock.millis(); cleanup(now);
             Sends previous = sends.get(email);
             if (previous != null && (now - previous.last < 60_000 || previous.count >= 5))
-                throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, previous.count >= 5 ? "Too many verification emails. Try again in an hour." : "Wait 60 seconds before requesting another code.");
+                throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, previous.count >= 5 ? "Too many verification emails. Try again in an hour." : "Wait 60 seconds before retrying email verification. If the code-entry screen did not appear, the previous request did not complete.");
             if (pending.size() >= 10_000 || sends.size() >= 10_000) throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Registration is busy. Please try again later.");
             sends.put(email, new Sends(previous == null ? now : previous.since, now, previous == null ? 1 : previous.count + 1));
         }
