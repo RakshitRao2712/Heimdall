@@ -136,3 +136,14 @@ body{background-color:#080808;background-image:var(--heimdall-grid),var(--heimda
   cursor: default;
   transform: none;
 }
+
+.workspace-connection{position:fixed;inset:0;z-index:100;min-height:100svh;overflow:auto;background:#080808;color:#e9e9ed;font-style:normal}
+.connection-reveal{position:absolute!important;inset:0;width:100%;height:100%;cursor:default!important}
+.connection-progress{position:absolute;top:calc(50% + 160px);left:50%;transform:translateX(-50%);width:min(300px,85vw);text-align:center}
+.connection-progress>p{font-size:13px;letter-spacing:.09em;color:#a9a5af;margin:18px 0;font-style:normal}
+.connection-track{height:3px;width:180px;background:#29252d;border-radius:8px;overflow:hidden;margin:0 auto}
+.connection-track span{display:block;width:40%;height:100%;background:#ff409f;animation:connection-travel 1.8s ease-in-out infinite}
+.connection-retry{font-size:12px;color:#98939e}.connection-retry button{border:1px solid #4c3743;border-radius:24px;padding:10px 16px;background:#20151d;color:#fff;cursor:pointer}.connection-retry a{display:block;color:#aaa;margin-top:14px}
+@keyframes connection-travel{0%{transform:translateX(-110%)}100%{transform:translateX(360%)}}
+@media(prefers-reduced-motion:reduce){.connection-track span{animation:none;width:100%;opacity:.65}}
+@media(max-height:550px){.connection-progress{top:calc(50% + 110px)}}

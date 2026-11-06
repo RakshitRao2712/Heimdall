@@ -1,3 +1,4 @@
+import { WorkspaceConnection } from './components/workspace-connection';
 import { SeoMetadata } from "./seo/metadata";
 import { SiteIntro } from './components/ui/site-intro';
 import { lazy, Suspense, useEffect, useState } from 'react';
@@ -15,18 +16,19 @@ function DashboardEntry() {
   });
   useEffect(() => { try { sessionStorage.removeItem('heimdall-login-intro'); } catch { /* Optional transition marker. */ } }, []);
   if (profileError) return <main className="onboarding-page"><div className="onboarding-card"><p role="alert">{profileError}</p><button className="onboarding-continue" onClick={retryProfile}>Retry</button></div></main>;
-  if (!profile) return <div className="route-loading" role="status">Opening your Heimdall workspace…</div>;
+  if (!profile) return <WorkspaceConnection />;
   if (!profile.completed) return <Onboarding onComplete={() => setReveal(true)} />;
   return <SiteIntro play={reveal}><Dashboard /></SiteIntro>;
 }
 function Route() {
   const { user, loading } = useSession(); const path = window.location.pathname;
+  if (import.meta.env.DEV && path === '/connection-preview') return <WorkspaceConnection />;
   if (['/contact', '/privacy', '/terms', '/refund'].includes(path)) return <PolicyPage path={path} />;
   if (path === '/brave-search-setup' || path === '/serpapi-setup') return <InfoPage path='/foursquare-setup' />;
   if (['/pricing', '/how-it-works', '/google-places-setup', '/foursquare-setup'].includes(path)) return <InfoPage path={path} />;
   if (path === '/') return <Home />;
   if (path !== '/login' && path !== '/dashboard') return <main className="info-main"><h1>Page not found</h1><p>This page does not exist.</p><a href="/">Back to Heimdall</a></main>;
-  if (loading) return <div className="route-loading" role="status">Opening your Heimdall workspace…</div>;
+  if (loading) return <WorkspaceConnection />;
   if (path === '/dashboard' && !user) { window.location.replace('/login'); return null; }
   if (path === '/login' && user) { if (new URLSearchParams(window.location.search).get('google') === 'success') { try { sessionStorage.setItem('heimdall-login-intro', 'pending'); } catch { /* Optional intro. */ } } window.location.replace('/dashboard'); return null; }
   return path === '/login' ? <Login /> : <DashboardEntry />;
