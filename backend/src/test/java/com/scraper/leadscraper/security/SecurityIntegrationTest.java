@@ -16,7 +16,7 @@ import java.nio.file.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.junit.jupiter.api.Assertions.*;
-@SpringBootTest(classes=com.scraper.leadscraper.LeadScrapperApplication.class,properties={"spring.config.import=","GOOGLE_CLIENT_ID=","GOOGLE_CLIENT_SECRET=","RAZORPAY_KEY_ID=","RAZORPAY_KEY_SECRET="})
+@SpringBootTest(classes=com.scraper.leadscraper.LeadScrapperApplication.class,properties={"spring.config.import=","GOOGLE_CLIENT_ID=","GOOGLE_CLIENT_SECRET=","RAZORPAY_KEY_ID=","RAZORPAY_KEY_SECRET=","RAZORPAY_WEBHOOK_SECRET=test-hook"})
 @AutoConfigureMockMvc
 class SecurityIntegrationTest {
  static Path dir;static{try{dir=Files.createTempDirectory("heimdall-security-");}catch(Exception e){throw new RuntimeException(e);}}
@@ -53,4 +53,8 @@ class SecurityIntegrationTest {
   mvc.perform(post("/api/auth/logout").session(session).header(next.path("headerName").asText(),next.path("token").asText())).andExpect(status().isNoContent());assertTrue(session.isInvalid());
  }
  @Test void anonymousCannotReadPrivateData()throws Exception{mvc.perform(get("/api/workspace/history")).andExpect(status().isUnauthorized());mvc.perform(get("/api/workspace/browser-verification")).andExpect(status().isNotFound());mvc.perform(get("/api/workspace/browser-verification/frame").param("challengeId","unknown")).andExpect(status().isNotFound());mvc.perform(get("/api/workspace/teams")).andExpect(status().isUnauthorized());}
+ @Test void onlySignedWebhookBypassesSessionAndCsrf()throws Exception{
+  mvc.perform(post("/api/billing/razorpay/webhook").contentType(MediaType.APPLICATION_JSON).content("{}")).andExpect(status().isBadRequest());
+  mvc.perform(post("/api/workspace/billing/order").contentType(MediaType.APPLICATION_JSON).content("{}")).andExpect(status().isForbidden());
+ }
 }

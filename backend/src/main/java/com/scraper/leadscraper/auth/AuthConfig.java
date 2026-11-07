@@ -57,10 +57,11 @@ public class AuthConfig {
         }
         return http
             .addFilterBefore(new com.scraper.leadscraper.security.ApiProtectionFilter(), org.springframework.security.web.csrf.CsrfFilter.class)
+            .csrf(c -> c.ignoringRequestMatchers("/api/billing/razorpay/webhook"))
             .requestCache(c -> c.disable())
             .headers(h -> h.referrerPolicy(p -> p.policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)))
             .securityContext(c -> c.securityContextRepository(repository))
-            .authorizeHttpRequests(a -> a.requestMatchers("/api/auth/google/config", "/api/auth/google/authorize/**", "/api/auth/google/callback", "/api/auth/csrf", "/api/auth/login", "/api/auth/register", "/api/auth/register/verify", "/api/auth/register/resend", "/error").permitAll().anyRequest().authenticated())
+            .authorizeHttpRequests(a -> a.requestMatchers("/api/billing/razorpay/webhook", "/api/auth/google/config", "/api/auth/google/authorize/**", "/api/auth/google/callback", "/api/auth/csrf", "/api/auth/login", "/api/auth/register", "/api/auth/register/verify", "/api/auth/register/resend", "/error").permitAll().anyRequest().authenticated())
             .exceptionHandling(e -> e.authenticationEntryPoint((request, response, exception) -> response.sendError(401)))
             .logout(l -> l.logoutUrl("/api/auth/logout").logoutSuccessHandler((request, response, authentication) -> response.setStatus(204)).invalidateHttpSession(true).deleteCookies("JSESSIONID"))
             .build();
