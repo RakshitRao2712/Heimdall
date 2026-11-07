@@ -1,3 +1,4 @@
+import { AnalyticsConsent } from './analytics';
 import { WorkspaceConnection } from './components/workspace-connection';
 import { SeoMetadata } from "./seo/metadata";
 import { SiteIntro } from './components/ui/site-intro';
@@ -33,4 +34,4 @@ function Route() {
   if (path === '/login' && user) { if (new URLSearchParams(window.location.search).get('google') === 'success') { try { sessionStorage.setItem('heimdall-login-intro', 'pending'); } catch { /* Optional intro. */ } } window.location.replace('/dashboard'); return null; }
   return path === '/login' ? <Login /> : <DashboardEntry />;
 }
-export default function App() { return <SessionProvider><SeoMetadata/><SiteIntro><Suspense fallback={<div className="route-loading" role="status">Loading Heimdall…</div>}><Route /></Suspense></SiteIntro></SessionProvider>; }
+export default function App() { return <SessionProvider><AnalyticsConsent/><SeoMetadata/><SiteIntro><Suspense fallback={<div className="route-loading" role="status">Loading Heimdall…</div>}><Route /></Suspense></SiteIntro></SessionProvider>; }

@@ -1,3 +1,4 @@
+import { trackEvent } from '@/analytics';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { authRequest } from '@/auth/session';
 
@@ -18,7 +19,7 @@ export function EmailVerification({ challenge, onChallenge, onVerified, onBack }
   async function verify(event: FormEvent) {
     event.preventDefault(); if (busy || code.length !== 6 || expired) return;
     setBusy(true); setError(''); setNotice('');
-    try { onVerified(await authRequest('register/verify', { challengeId: challenge.challengeId, code })); }
+    try { const user = await authRequest('register/verify', { challengeId: challenge.challengeId, code }); trackEvent('sign_up'); onVerified(user); }
     catch (e) { setError(e instanceof Error ? e.message : 'Could not verify this code. Please retry.'); input.current?.focus(); }
     finally { setBusy(false); }
   }

@@ -1,3 +1,4 @@
+import { trackEvent } from '@/analytics';
 import { BrowserVerification } from "./browser-verification";
 import { GoogleMapsAttribution } from "./google-maps-attribution";
 import { PremiumGate } from "./premium-access";
@@ -84,6 +85,7 @@ export function App1() {
       if (searchRequest.current !== controller || controller.signal.aborted) return;
       if (result.method !== searchMethod) throw new Error('Search provider mismatch.');
       setCompletedSearch(result);
+      if (result.method === 'maps' || result.method === 'foursquare') trackEvent('search_completed', result.method);
       if (result.method === 'yelp' || result.method === 'foursquare') {
         setDirectoryRuns(previous => ({ ...previous, [result.method]: result }));
         return `${result.leads.length} listings found.`;
