@@ -22,7 +22,7 @@ function DashboardEntry() {
 }
 function Route() {
   const { user, loading } = useSession(); const path = window.location.pathname;
-  if (import.meta.env.DEV && path === '/connection-preview') return <WorkspaceConnection />;
+  if (import.meta.env.DEV && path === '/connection-preview') return <WorkspaceConnection immediate />;
   if (['/contact', '/privacy', '/terms', '/refund'].includes(path)) return <PolicyPage path={path} />;
   if (path === '/brave-search-setup' || path === '/serpapi-setup') return <InfoPage path='/foursquare-setup' />;
   if (['/pricing', '/how-it-works', '/google-places-setup', '/foursquare-setup'].includes(path)) return <InfoPage path={path} />;
