@@ -28,9 +28,9 @@ function enableAnalytics() {
   // Google's gtag consumes an Arguments object on the data layer.
   w.gtag = function () { w.dataLayer!.push(arguments); };
   w.gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+  w.gtag('set', pageData());
   w.gtag('js', new Date());
-  w.gtag('config', measurementId, { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, cookie_prefix: 'heimdall', cookie_flags: 'SameSite=Lax;Secure', ...pageData() });
-  w.gtag('event', 'page_view', pageData());
+  w.gtag('config', measurementId, { send_page_view: true, allow_google_signals: false, allow_ad_personalization_signals: false, cookie_prefix: 'heimdall', cookie_flags: 'SameSite=Lax;Secure', ...pageData() });
   const script = document.createElement('script'); script.async = true; script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`; document.head.appendChild(script);
 }
 function disableAnalytics() {
