@@ -5,7 +5,8 @@ import { SignInPage } from '@/components/ui/sign-in';
 import { authRequest, useSession } from '@/auth/session';
 export default function Login() {
   const [create, setCreate] = useState(false); const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [notice, setNotice] = useState('');
-  const [googleEnabled, setGoogleEnabled] = useState(false);
+  const [googleStatus, setGoogleStatus] = useState<'loading' | 'enabled' | 'disabled' | 'error'>('loading');
+  const [googleAttempt, setGoogleAttempt] = useState(0);
   const { setUser } = useSession();
   const [challenge, setChallenge] = useState<EmailChallenge | null>(null);
   function signedIn(user: { email: string }) {
@@ -14,7 +15,8 @@ export default function Login() {
   }
   useEffect(() => {
     const controller = new AbortController();
-    fetch('/api/auth/google/config', { signal: controller.signal, credentials: 'same-origin' }).then(response => response.ok ? response.json() : null).then(config => setGoogleEnabled(config?.enabled === true)).catch(() => {});
+    setGoogleStatus('loading');
+    fetch('/api/auth/google/config', { signal: controller.signal, credentials: 'same-origin', cache: 'no-store' }).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(config => { if (typeof config?.enabled !== 'boolean') throw new Error(); setGoogleStatus(config.enabled ? 'enabled' : 'disabled'); }).catch(() => { if (!controller.signal.aborted) setGoogleStatus('error'); });
     const result = new URLSearchParams(window.location.search).get('google');
     if (result === 'error') { setError('Google sign-in could not be completed. Try again, or use your email and password.'); window.history.replaceState({}, '', '/login'); }
     if (result === 'success') {
@@ -22,7 +24,7 @@ export default function Login() {
       fetch('/api/auth/me', { signal: controller.signal, credentials: 'same-origin' }).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(signedIn).catch(() => { if (!controller.signal.aborted) setError('Your Google session could not be loaded. Please try again.'); });
     }
     return () => controller.abort();
-  }, []);
+  }, [googleAttempt]);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (busy) return;
     const form = event.currentTarget; const data = new FormData(form);
@@ -36,5 +38,5 @@ export default function Login() {
     finally { setBusy(false); }
   }
   if (challenge) return <div className="auth-page"><a className="auth-brand" href="/" aria-label="Heimdall home"><span className="auth-brand-identity"><img src="/images/heimdall-logo.svg" alt="" width="30" height="34"/><span>HEIMDALL</span></span><span>← Back to home</span></a><EmailVerification challenge={challenge} onChallenge={setChallenge} onVerified={signedIn} onBack={() => { setChallenge(null); setError(''); setNotice(''); }} /></div>;
-  return <div className="auth-page bg-background text-foreground">{busy && <WorkspaceConnection overlay />}<a className="auth-brand" href="/" aria-label="Heimdall home"><span className="auth-brand-identity"><img src="/images/heimdall-logo.svg" alt="" width="30" height="34"/><span>HEIMDALL</span></span><span>← Back to home</span></a><SignInPage title={create ? 'Start with Heimdall.' : 'Welcome to Heimdall.'} description={create ? 'Start with your email and a password of at least 10 characters. We’ll send a verification code before creating your account.' : 'Sign in to your lead workspace. Google Places and Foursquare discovery, together.'} heroImageSrc="https://cdn.21st.dev/assets/mirror/ec/ecff1664e7fc3185d0e947571f984ea5fa3de9580fb0e73a03cd9c9b3461cb09.jpg" busy={busy} error={error} notice={notice} createAccount={create} onGoogleSignIn={googleEnabled ? () => { window.location.assign('/api/auth/google/authorize/google'); } : undefined} onSignIn={submit} onResetPassword={() => setNotice('Self-service password reset is not available yet. Contact the operator of this Heimdall instance for account recovery.')} onCreateAccount={() => { setCreate(!create); setError(''); setNotice(''); }}/></div>;
+  return <div className="auth-page bg-background text-foreground">{busy && <WorkspaceConnection overlay />}<a className="auth-brand" href="/" aria-label="Heimdall home"><span className="auth-brand-identity"><img src="/images/heimdall-logo.svg" alt="" width="30" height="34"/><span>HEIMDALL</span></span><span>← Back to home</span></a><SignInPage title={create ? 'Start with Heimdall.' : 'Welcome to Heimdall.'} description={create ? 'Start with your email and a password of at least 10 characters. We’ll send a verification code before creating your account.' : 'Sign in to your lead workspace. Google Places and Foursquare discovery, together.'} heroImageSrc="https://cdn.21st.dev/assets/mirror/ec/ecff1664e7fc3185d0e947571f984ea5fa3de9580fb0e73a03cd9c9b3461cb09.jpg" busy={busy} error={error} notice={notice} createAccount={create} googleStatus={googleStatus} onGoogleRetry={() => setGoogleAttempt(value => value + 1)} onGoogleSignIn={googleStatus === 'enabled' ? () => { window.location.assign('/api/auth/google/authorize/google'); } : undefined} onSignIn={submit} onResetPassword={() => setNotice('Self-service password reset is not available yet. Contact the operator of this Heimdall instance for account recovery.')} onCreateAccount={() => { setCreate(!create); setError(''); setNotice(''); }}/></div>;
 }

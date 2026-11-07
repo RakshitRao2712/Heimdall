@@ -23,6 +23,8 @@ export interface Testimonial {
 }
 
 interface SignInPageProps {
+  googleStatus?: 'loading' | 'enabled' | 'disabled' | 'error';
+  onGoogleRetry?: () => void;
   busy?: boolean;
   error?: string;
   notice?: string;
@@ -66,6 +68,8 @@ export const SignInPage: React.FC<SignInPageProps> = ({
   testimonials = [],
   onSignIn,
   onGoogleSignIn,
+  googleStatus,
+  onGoogleRetry,
   onResetPassword,
   onCreateAccount,
 }) => {
@@ -120,9 +124,9 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               <span className="px-4 text-sm text-muted-foreground bg-background absolute">Or continue with</span>
             </div>
 
-            <button type="button" disabled={!onGoogleSignIn || busy} title={!onGoogleSignIn ? "Google sign-in is not configured yet" : undefined} onClick={onGoogleSignIn} className="auth-google-button animate-element animate-delay-800 w-full flex items-center justify-center gap-3 rounded-2xl py-4 transition-colors">
+            <button type="button" disabled={busy || googleStatus === 'loading' || (!onGoogleSignIn && !(googleStatus === 'error' && onGoogleRetry))} title={googleStatus === 'loading' ? "Connecting to the sign-in service" : googleStatus === 'error' ? "Could not reach the sign-in service. Click to retry." : !onGoogleSignIn ? "Google sign-in is currently unavailable" : undefined} onClick={googleStatus === 'error' ? onGoogleRetry : onGoogleSignIn} className="auth-google-button animate-element animate-delay-800 w-full flex items-center justify-center gap-3 rounded-2xl py-4 transition-colors">
                 <GoogleIcon />
-                Continue with Google{!onGoogleSignIn && " (coming soon)"}
+                {googleStatus === 'loading' ? 'Connecting to Google sign-in…' : googleStatus === 'error' ? 'Retry Google connection' : !onGoogleSignIn ? 'Google sign-in unavailable' : 'Continue with Google'}
             </button>
 
             <p className="animate-element animate-delay-900 text-center text-sm text-muted-foreground">
