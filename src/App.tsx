@@ -1,3 +1,5 @@
+import { MethodComparison } from '@/components/method-comparison';
+import { PageFAQ } from '@/components/page-faq';
 import { useHomepageFade } from '@/components/ui/homepage-fade';
 import { LifetimeOffer } from '@/components/lifetime-offer';
 import { useSession } from "@/auth/session";
@@ -49,7 +51,9 @@ export default function App() {
       </section>
       <Features />
       <div id="workflow" className="w-full"><InkOrbitFeatures theme="dark" /></div>
+      <MethodComparison />
       <LifetimeOffer />
+      <PageFAQ path="/" />
     </main>
     <CinematicFooter />
     </>

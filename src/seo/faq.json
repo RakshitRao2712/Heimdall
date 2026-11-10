@@ -1,0 +1,158 @@
+{
+  "groups": {
+    "basics": {
+      "label": "Getting started",
+      "items": [
+        {
+          "question": "What is Heimdall?",
+          "answer": "Heimdall is a local business discovery workspace for freelancers, web designers, and small teams. Search by business type and location, review available business details, and organize eligible leads.",
+          "href": "/how-it-works",
+          "linkLabel": "See how Heimdall works"
+        },
+        {
+          "question": "Which discovery method should I use?",
+          "answer": "Use Google Places to find operational businesses with no website listed in their Google record. Use Foursquare to discover businesses and filter available websites, phone numbers, and social profiles. Missing information does not prove a business has no website or contact details.",
+          "href": "/how-it-works",
+          "linkLabel": "Compare the workflows"
+        },
+        {
+          "question": "Do I need my own API keys?",
+          "answer": "Yes. Connect your own Google Places key or Foursquare Service API key for the method you want to use. Provider usage is billed to your own account separately from Heimdall Premium.",
+          "href": "/google-places-setup",
+          "linkLabel": "Set up your first API key"
+        }
+      ]
+    },
+    "pricing": {
+      "label": "Pricing & access",
+      "items": [
+        {
+          "question": "What does the ₹100 payment include?",
+          "answer": "₹100 is a one-time early-user payment for current Heimdall Premium features, including access to both discovery methods. Lifetime means the operating lifetime of the Heimdall product. API usage fees are not included.",
+          "href": "/pricing",
+          "linkLabel": "Review Premium access"
+        },
+        {
+          "question": "Can I search for leads without Premium?",
+          "answer": "Both discovery methods require Premium access. Creating an account does not include a paid provider API allowance; you also need your own key for the method you use.",
+          "href": "/pricing",
+          "linkLabel": "See pricing"
+        },
+        {
+          "question": "Are Google Places and Foursquare charges included?",
+          "answer": "No. Each provider bills your own account according to its current pricing and any applicable free allowance. Set provider usage limits and review billing before running searches.",
+          "href": "/foursquare-setup",
+          "linkLabel": "Read the Foursquare setup guide"
+        },
+        {
+          "question": "How do I request a refund?",
+          "answer": "Email support@heimdall.life from your account email with your payment ID, payment date, and reason. Approved Heimdall refunds are processed within 7 days of approval; bank credit timing can vary. Provider API charges are separate.",
+          "href": "/refund",
+          "linkLabel": "Read the refund policy"
+        }
+      ]
+    },
+    "google": {
+      "label": "Google Places",
+      "items": [
+        {
+          "question": "How do I connect Google Places?",
+          "answer": "Create a Google Cloud project, link billing, enable Places API (New), and create an API key. In Heimdall, open Scrape → Google Places and connect that key before searching by business type and location.",
+          "href": "/google-places-setup",
+          "linkLabel": "Follow the setup steps"
+        },
+        {
+          "question": "Why is my Google Places key not working?",
+          "answer": "Check that billing is active, Places API (New) is enabled, and API restrictions permit it. Requests come from the Heimdall backend, so browser-referrer restrictions do not match these requests. Check provider quota and error details too.",
+          "href": "/google-places-setup",
+          "linkLabel": "Troubleshoot Google Places"
+        },
+        {
+          "question": "Does no website listed mean the business has no website?",
+          "answer": "No. It means no website was listed in the returned Google Places record. The business may have a website elsewhere. Review the business before treating it as a potential customer.",
+          "href": "/how-it-works",
+          "linkLabel": "Understand result limitations"
+        }
+      ]
+    },
+    "foursquare": {
+      "label": "Foursquare",
+      "items": [
+        {
+          "question": "How do I connect Foursquare?",
+          "answer": "Create a Places project in the Foursquare developer console and generate a Service API key. Open Scrape → Foursquare Business Discovery in Heimdall and connect your key.",
+          "href": "/foursquare-setup",
+          "linkLabel": "Follow the Foursquare guide"
+        },
+        {
+          "question": "Why is my Foursquare key rejected?",
+          "answer": "Use a Service API key for the supported Places API, not a client ID or client secret. Check for accidental spaces, project access, provider billing or quota restrictions, and any error returned by Foursquare.",
+          "href": "/foursquare-setup",
+          "linkLabel": "Review key setup"
+        },
+        {
+          "question": "Will every Foursquare result have a phone number or social profile?",
+          "answer": "No. Fields depend on the information returned by Foursquare. Use the website, phone, and social filters to narrow the results; missing fields are not inferred or invented.",
+          "href": "/how-it-works",
+          "linkLabel": "Learn about results"
+        }
+      ]
+    },
+    "results": {
+      "label": "Results & teams",
+      "items": [
+        {
+          "question": "Why did I receive fewer leads than my target?",
+          "answer": "A target is an upper bound, not a guarantee. Availability, filters, duplicate records, provider limits, and errors can reduce the count. Google Places may try related searches; Foursquare makes one search request for up to the selected count.",
+          "href": "/how-it-works",
+          "linkLabel": "Read how targets work"
+        },
+        {
+          "question": "Can I change screens while a search runs?",
+          "answer": "Yes. You can move between dashboard screens while the search runs in the background. A completion notification shows the result count and lets you open the results.",
+          "href": "/how-it-works",
+          "linkLabel": "Explore the search workflow"
+        },
+        {
+          "question": "How do shared folders and team notes work?",
+          "answer": "Create a team or join one, then import an eligible lead folder. Members can view shared leads, mark them Done, and leave notes showing who wrote them. Only share data you are permitted to share.",
+          "href": "/how-it-works",
+          "linkLabel": "Learn about team workflows"
+        },
+        {
+          "question": "Can I use every result for marketing?",
+          "answer": "No. Public business information is not consent to receive marketing. Check source permissions and applicable outreach rules, verify details, and honor opt-outs before contacting anyone.",
+          "href": "/terms",
+          "linkLabel": "Read responsible-use terms"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "/": [
+      "basics",
+      "pricing",
+      "google",
+      "foursquare",
+      "results"
+    ],
+    "/how-it-works": [
+      "basics",
+      "results",
+      "google",
+      "foursquare"
+    ],
+    "/pricing": [
+      "pricing",
+      "basics"
+    ],
+    "/google-places-setup": [
+      "google",
+      "pricing"
+    ],
+    "/foursquare-setup": [
+      "foursquare",
+      "pricing"
+    ]
+  }
+}

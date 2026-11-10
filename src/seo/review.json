@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-10",
+  "label": "10 November 2026",
+  "sources": [
+    {"label":"Google Places setup and key restrictions","url":"https://developers.google.com/maps/documentation/places/web-service/get-api-key"},
+    {"label":"Google Maps global pricing by SKU","url":"https://developers.google.com/maps/billing-and-pricing/pricing"},
+    {"label":"Google Maps India pricing and eligibility","url":"https://developers.google.com/maps/billing-and-pricing/pricing-india"},
+    {"label":"Foursquare Service API key authentication","url":"https://docs.foursquare.com/fsq-developers-places/reference/authentication"},
+    {"label":"Foursquare published pricing changes","url":"https://docs.foursquare.com/developer/reference/upcoming-changes"}
+  ]
+}

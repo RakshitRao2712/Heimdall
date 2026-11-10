@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build && node scripts/seo-build.mjs",
+    "build": "tsc --noEmit && vite build && vite build --ssr src/seo/prerender.tsx --outDir .seo-render && node scripts/seo-build.mjs",
     "preview": "vite preview",
     "seo:check": "node scripts/seo-check.mjs",
     "security:check": "npm audit --omit=dev && python3 scripts/audit-backend.py"

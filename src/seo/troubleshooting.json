@@ -1,0 +1,81 @@
+{
+  "/google-places-setup": {
+    "provider": "Google Places",
+    "source": "https://developers.google.com/maps/documentation/places/web-service/get-api-key",
+    "items": [
+      {
+        "question": "Why is my Google Places API key rejected?",
+        "steps": [
+          "Open the Google Cloud project that owns the key and confirm Places API (New) is enabled.",
+          "Check that the project has an active billing account and the key permits Places API (New).",
+          "Heimdall sends requests from its backend. Browser HTTP-referrer restrictions do not fit this request path. For IP restrictions, ask support for the deployed backend outbound IPs; do not disable restrictions as a workaround.",
+          "Copy the key without spaces, reconnect it in Scrape → Google Places, and try again. A connected key is not proof that a provider search will succeed."
+        ]
+      },
+      {
+        "question": "How do I fix a Google quota or billing error?",
+        "steps": [
+          "Open Google Cloud billing for the project and check its payment status. Premium does not pay Google API fees.",
+          "Review Places API quotas and current usage in the same project. If you reached a quota, wait for its reset or decide whether to change it in Google Cloud.",
+          "Review provider pricing before raising a quota or retrying. One Heimdall Google search can make multiple billable requests."
+        ]
+      },
+      {
+        "question": "Why are there no results, or fewer than my target?",
+        "steps": [
+          "Try a clear query such as restaurants in Boston, Massachusetts, USA. Check the spelling and include the country if the city name is ambiguous.",
+          "Try a broader business category or nearby location. A target is a maximum, not a guaranteed result count.",
+          "Google Places keeps operational businesses without a website listed in the returned record, so many checked candidates may not qualify.",
+          "Review the completion message before retrying. Repeating searches may incur additional provider charges."
+        ]
+      },
+      {
+        "question": "What should I do if a search fails or times out?",
+        "steps": [
+          "Read the error shown in Heimdall and check your internet connection. If your session expired, sign in and reconnect your provider key.",
+          "Check your provider console for errors or service restrictions. Wait before retrying a temporary failure; avoid repeatedly starting the same search.",
+          "If it continues, email support@heimdall.life with the method, time, and error text. Never send your API key, password, or verification code."
+        ]
+      }
+    ]
+  },
+  "/foursquare-setup": {
+    "provider": "Foursquare",
+    "source": "https://docs.foursquare.com/fsq-developers-places/reference/authentication",
+    "items": [
+      {
+        "question": "Why is my Foursquare key rejected?",
+        "steps": [
+          "Open your Foursquare Places project and use its Service API key, not a client ID, client secret, or an old credential for another API.",
+          "Check that your project has access to the supported Places API and that its plan and billing permit the request. A rejection can mean a key or access problem, not just a typing error.",
+          "Paste only the key, without a Bearer prefix or surrounding spaces, into Scrape → Foursquare Business Discovery and reconnect."
+        ]
+      },
+      {
+        "question": "How do I fix a Foursquare request-limit or billing error?",
+        "steps": [
+          "Check the project usage, plan, and billing in the Foursquare console. Heimdall Premium does not cover these charges.",
+          "If the provider reports a rate or usage limit, wait for the applicable reset or review your plan. Do not repeatedly retry while limited.",
+          "Check the current provider allowance before changing your plan. Heimdall currently makes one Foursquare search request per run."
+        ]
+      },
+      {
+        "question": "Why are there no results, or fewer than my target?",
+        "steps": [
+          "Try a clear query such as restaurants in Boston, Massachusetts, USA. Check the spelling and include the country if the city name is ambiguous.",
+          "Try a broader business category or nearby location. A target is a maximum, not a guaranteed result count.",
+          "Clear the website, phone, and social filters to see whether listings were returned without those fields. Missing contact fields are not filled in automatically.",
+          "Review the completion message before retrying. Repeating searches may incur additional provider charges."
+        ]
+      },
+      {
+        "question": "What should I do if a search fails or times out?",
+        "steps": [
+          "Read the error shown in Heimdall and check your internet connection. If your session expired, sign in and reconnect your provider key.",
+          "Check your provider console for errors or service restrictions. Wait before retrying a temporary failure; avoid repeatedly starting the same search.",
+          "If it continues, email support@heimdall.life with the method, time, and error text. Never send your API key, password, or verification code."
+        ]
+      }
+    ]
+  }
+}

@@ -9,7 +9,7 @@ export function useHomepageFade() {
     const selectors = [
       '.first-hero .hero-nav-header', '.first-hero .hero',
       '.hero-font-pair > span', '.hero-description > p', '.hero-actions',
-      '.tunnel-demo h1', '.tunnel-demo h1 + p', '.tunnel-demo p:first-child',
+      '.tunnel-demo h2', '.tunnel-demo h2 + p', '.tunnel-demo p:first-child',
       '.features-intro h2', '.features-subheading', '#features [data-slot="card"]',
       '#workflow .ib-tag', '#workflow .ib-h2', '#workflow .ib-card',
       '.page .lifetime-card', '.page .lifetime-eyebrow', '.page .lifetime-copy h2',

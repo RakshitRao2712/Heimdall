@@ -6,3 +6,5 @@ dist/
 # Private local backend state and OS metadata
 .data/
 .DS_Store
+
+.seo-render/

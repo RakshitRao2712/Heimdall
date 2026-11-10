@@ -1,0 +1,12 @@
+{
+  "rows": [
+    {"label":"Best for","google":"Businesses without a website listed","foursquare":"Business and contact discovery"},
+    {"label":"Search by","google":"Business type and location","foursquare":"Business type and city"},
+    {"label":"Website details","google":"Keeps records with no website listed","foursquare":"Shows websites when available"},
+    {"label":"Contact details","google":"Business phone when available","foursquare":"Phone and social profiles when available"},
+    {"label":"Lead target","google":"10, 25, or 50 qualifying matches","foursquare":"Up to 10, 25, or 50 listings"},
+    {"label":"Search behavior","google":"May expand across pages and related queries","foursquare":"One provider search request per run"},
+    {"label":"API access","google":"Your Google Places API key","foursquare":"Your Foursquare Service API key"},
+    {"label":"Usage charges","google":"Billed separately by Google","foursquare":"Billed separately by Foursquare"}
+  ]
+}

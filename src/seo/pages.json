@@ -70,28 +70,6 @@
         "Save eligible results and work together",
         "Named files, CSV exports and team copies require permission under source terms and applicable law. Saved files and exports include returned business details; provider permissions remain a launch-review requirement."
       ]
-    ],
-    "faq": [
-      [
-        "What is Heimdall?",
-        "Heimdall is a local business lead discovery workspace. Search by business type and location, review public business contact information, and organize eligible results in shared lead folders."
-      ],
-      [
-        "What is the difference between Google Places and Foursquare?",
-        "Google Places finds operational businesses with no website listed in their Google record. Foursquare finds local businesses and shows websites, phone numbers, and social profiles when available."
-      ],
-      [
-        "Will I always get 50 leads?",
-        "No. You can choose 10, 25, or 50 as a target. Google Places may search related categories and areas. Foursquare requests up to the selected number in a single search. Either can return fewer matches."
-      ],
-      [
-        "What does ₹100 include?",
-        "The one-time payment covers current Premium features for the operating lifetime of Heimdall. Connect your own provider keys. Google Places and Foursquare bill API usage separately."
-      ],
-      [
-        "Can I use any result for marketing?",
-        "A public listing does not establish consent to contact a business. Check the provider terms and the rules for your outreach channel and recipient."
-      ]
     ]
   },
   "/google-places-setup": {

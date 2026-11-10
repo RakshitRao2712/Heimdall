@@ -1,4 +1,7 @@
-import seoPages from '@/seo/pages.json';
+import { ContentReview } from '@/components/content-review';
+import { MethodComparison } from '@/components/method-comparison';
+import { Troubleshooting } from '@/components/troubleshooting';
+import { PageFAQ } from '@/components/page-faq';
 import { PolicyLinks, SocialLinks } from "@/components/policy-links";
 import { LifetimeOffer } from '@/components/lifetime-offer';
 import TextLoop from '@/components/ui/text-loop';
@@ -36,7 +39,7 @@ export default function InfoPage({ path }: { path: string }) {
           <section className="info-card"><span className="info-step">03</span><h2>Create and restrict your key</h2><p>Create an API key in Credentials and restrict its API access to Places API (New). Requests come from the Heimdall server: IP restrictions must allow that server's outbound IP, rather than your browser's website referrer.</p><a href={setupUrl} target="_blank" rel="noreferrer">Follow Google's setup guide ↗</a></section>
           <section className="info-card"><span className="info-step">04</span><h2>Connect inside Heimdall</h2><p>Sign in, open Scrape → Google Places, paste your key into the API key field, and save it. Enter a business type and location, then run a search.</p><p>Your key stays in your server session and clears when you sign out or the session expires. Reconnect it when needed.</p><a className="info-cta" href={user ? '/dashboard?method=maps' : '/login'}>Connect Google Places <ArrowRight size={16} /></a></section>
         </div>
-        <aside className="info-note"><a href="/foursquare-setup">Set up Foursquare →</a><h2>Google Places free allowance</h2><p>Google’s global pricing includes 1,000 free Text Search Enterprise requests per month. Accounts eligible for India pricing have separate allowances. A Heimdall search can make several requests, and Google bills your own Cloud account for any charges.</p><h2>Having trouble connecting?</h2><p>Check that billing is active, Places API (New) is enabled, and your key restrictions allow the request. For quota errors, check your project's usage limits in Google Cloud.</p><a href={billingUrl} target="_blank" rel="noreferrer">Google usage, quotas and billing ↗</a></aside>
+        <aside className="info-note"><a href="/foursquare-setup">Set up Foursquare →</a><h2>Google Places free allowance</h2><p>Google’s global pricing includes 1,000 free Text Search Enterprise requests per month. Accounts eligible for India pricing have separate allowances. A Heimdall search can make several requests, and Google bills your own Cloud account for any charges.</p><a href={billingUrl} target="_blank" rel="noreferrer">Google usage, quotas and billing ↗</a></aside>
       </> : <>
         <div className="info-grid">
           <section className="info-card"><MapPin size={28} /><h2>Google Places</h2><p>Connect your own key, then search by business type and location. Find operational businesses without a listed website regardless of review count.</p><a href="/google-places-setup">Set up Google Places →</a></section>
@@ -44,15 +47,16 @@ export default function InfoPage({ path }: { path: string }) {
           <section className="info-card"><Check size={28} /><h2>Choose 10, 25, or 50 matches</h2><p>Your lead target counts unique matches, not the number of pages fetched. Google Places keeps operational businesses with no website listed in the returned record. That does not prove the business has no website elsewhere.</p></section>
           <section className="info-card"><Search size={28}/><h2>Keep searching across related queries</h2><p>Heimdall fetches additional pages, then tries related category and area variations when one query runs out. Google Places results are deduplicated by place ID across the run. Foursquare makes one search request.</p><p>Filters stay in place. Results may extend beyond the exact area or category you intended, so review relevance before outreach. Some businesses may have multiple domains or provider records.</p></section>
           <section className="info-card"><KeyRound size={28}/><h2>Understand API requests and cancellation</h2><p>Google Places may make multiple requests while looking for matches. Foursquare makes one request per search. The provider bills any usage charges to your account.</p><p>A Google Places search may stop early if it runs out of query variations, reaches its internal request limit, or encounters a provider error. You can cancel a search, though an in-flight request may finish.</p></section>
-          <section className="info-card"><Check size={28}/><h2>Review before contacting anyone</h2><p>Live counters show candidates checked, provider requests, and matches. The final summary explains why the run stopped. Extracted phone entries can be duplicated, malformed, or unrelated; directory and social pages can appear.</p><p>These are unverified prospecting matches, not verified contacts or permission to send marketing. Check the business, location, number, and applicable outreach rules yourself.</p></section>
+          <section className="info-card"><Check size={28}/><h2>Review before contacting anyone</h2><p>Live counters show candidates checked, provider requests, and matches. The final summary explains why the run stopped. Returned business details can be incomplete, duplicated, or outdated. Review website, phone, and social fields when available.</p><p>These are unverified prospecting matches, not verified contacts or permission to send marketing. Check the business, location, number, and applicable outreach rules yourself.</p></section>
           <section className="info-card"><FolderOpen size={28} /><h2>Build your lead library</h2><p>Save an eligible completed search to Leads, name the file, and revisit it later. Saved files retain the returned business details, and CSV exports contain the saved contact information. Only retain, export, or share information where the source terms and applicable law permit it. Deleting a private lead file does not remove separate team copies or the search history.</p><a className="info-cta" href={start}>Start discovering <ArrowRight size={16} /></a></section>
         </div>
         <aside className="info-note"><h2>Source permissions matter</h2><p>Heimdall is an independent tool, not endorsed by Google, Foursquare, or the businesses listed. Using your own API key does not override provider terms. Google storage, export and sharing restrictions require provider/legal review before public launch. Foursquare results are shown for the current visit.</p><a href="/terms">Read usage terms →</a> · <a href="/privacy">Privacy and data handling →</a></aside>
-        <section className="workflow-faq" aria-labelledby="workflow-faq-heading"><h2 id="workflow-faq-heading">Lead search questions</h2>
-          {seoPages['/how-it-works'].faq.map(([question, answer]) => (
-            <details key={question}><summary>{question}</summary><p>{answer}</p></details>
-          ))}</section>
+
       </>}
+      {path === '/how-it-works' && <MethodComparison />}
+      <Troubleshooting path={path} />
+      <PageFAQ path={path} />
+      <ContentReview />
     </main>
     <footer className="info-footer"><a href="/">Heimdall</a><nav aria-label="Footer">{publicLinks.map(l => <a key={l.href} href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>)}</nav><PolicyLinks/><SocialLinks/></footer>
   </div>;

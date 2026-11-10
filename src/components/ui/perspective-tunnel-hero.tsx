@@ -203,11 +203,11 @@ export default function PerspectiveTunnelHero() {
                 <p className="text-xs font-mono uppercase tracking-[0.4em] text-indigo-600 dark:text-indigo-400 mb-4">
                     Two ways to discover
                 </p>
-                <h1 className="text-6xl sm:text-8xl md:text-[112px] font-bold tracking-tighter leading-[0.9] bg-gradient-to-b from-neutral-950 via-neutral-800 to-neutral-400 dark:from-white dark:via-white dark:to-white/40 bg-clip-text text-transparent">
+                <h2 className="text-6xl sm:text-8xl md:text-[112px] font-bold tracking-tighter leading-[0.9] bg-gradient-to-b from-neutral-950 via-neutral-800 to-neutral-400 dark:from-white dark:via-white dark:to-white/40 bg-clip-text text-transparent">
                     FIND YOUR
                     <br />
                     NEXT LEAD.
-                </h1>
+                </h2>
                 <p className="mt-4 max-w-[36ch] text-sm sm:text-base font-light text-neutral-600 dark:text-neutral-400">
                     Find businesses on Google Places or discover business websites, phones, and social profiles with Foursquare.
                 </p>

@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import {readFile,access} from 'node:fs/promises';
 const pages=JSON.parse(await readFile('src/seo/pages.json','utf8'));
+const faqContent=JSON.parse(await readFile('src/seo/faq.json','utf8'));
+const escapeHtml=value=>value.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+const helpContent=JSON.parse(await readFile('src/seo/troubleshooting.json','utf8'));
+const review=JSON.parse(await readFile('src/seo/review.json','utf8'));
 const titles=new Set();const descriptions=new Set();let origin='';
 for(const [path,page] of Object.entries(pages)){
  const html=await readFile(`dist${path==='/'?'':path}/index.html`,'utf8');
@@ -11,9 +15,11 @@ for(const [path,page] of Object.entries(pages)){
  assert(!descriptions.has(page.description),`${path}: duplicate description`);descriptions.add(page.description);
  assert(page.title.length<=65&&page.description.length<=165,`${path}: metadata too long`);
  assert(html.includes('<html lang="en"'),`${path}: document language`);
- for(const [question] of page.faq??[])assert(html.includes(`<summary>${question}</summary>`),`${path}: missing initial FAQ question`);
+ for(const group of faqContent.pages[path]??[])for(const item of faqContent.groups[group].items){assert(html.includes(`<summary>${escapeHtml(item.question)}</summary>`),`${path}: missing initial FAQ question`);assert(html.includes(escapeHtml(item.answer)),`${path}: missing FAQ answer`);assert(html.includes(`href="${item.href}"`),`${path}: missing FAQ guide link`);}
+ if(helpContent[path])for(const item of helpContent[path].items){assert(html.includes(escapeHtml(item.question)),`${path}: missing troubleshooting question`);for(const step of item.steps)assert(html.includes(escapeHtml(step)),`${path}: missing troubleshooting step`);}
+ if(['/pricing','/how-it-works','/google-places-setup','/foursquare-setup'].includes(path)){assert(html.toLowerCase().includes(`datetime="${review.date}"`),`${path}: missing review date`);for(const source of review.sources)assert(html.includes(source.url),`${path}: missing official source`);}
  const canonical=html.match(/<link rel="canonical" href="([^"]+)"/);
- if(canonical){const url=new URL(canonical[1]);origin=url.origin;assert.equal(url.pathname,path);assert(!url.search&&!url.hash);assert(html.includes('index,follow,max-image-preview:large'));assert(html.includes('og:image'));assert(html.includes('twitter:card'));const schema=JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)[1]);assert(schema['@graph'].some(v=>v['@type']==='WebPage'));assert(!schema['@graph'].some(v=>v.aggregateRating||v.review),'No invented reviews');}
+ if(canonical){const url=new URL(canonical[1]);origin=url.origin;assert.equal(url.pathname,path);assert(!url.search&&!url.hash);assert(html.includes('index,follow,max-image-preview:large'));assert(html.includes('og:image'));assert(html.includes('twitter:card'));const schema=JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)[1]);assert(schema['@graph'].some(v=>v['@type']==='WebPage'));if(['/', '/pricing', '/how-it-works'].includes(path)){const app=schema['@graph'].find(v=>v['@type']==='SoftwareApplication');assert(app&&app.offers.price==='100'&&app.offers.priceCurrency==='INR',`${path}: product offer schema`);}assert(!schema['@graph'].some(v=>v.aggregateRating||v.review),'No invented reviews');}
  else assert(html.includes('noindex,follow'),`${path}: unconfigured sites must not index`);
  for(const link of html.matchAll(/href="(\/[^"?#]*)/g)){const target=link[1];if(target.startsWith('/assets/')||target.startsWith('/images/'))await access('dist'+target);else assert(pages[target]||['/login','/dashboard'].includes(target),`${path}: unresolved internal link ${target}`);}
 }
