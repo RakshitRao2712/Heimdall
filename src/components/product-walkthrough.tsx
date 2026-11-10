@@ -1,0 +1,2 @@
+import walkthrough from '@/seo/walkthrough.json';
+export function ProductWalkthrough(){return <section className="setup-help" id="product-walkthrough"><h2>{walkthrough.title}</h2><p>{walkthrough.intro}</p><div className="info-grid">{walkthrough.steps.map((step,index)=><section className="info-card" key={step.title}><span className="info-step">0{index+1}</span><h3>{step.title}</h3><p>{step.text}</p></section>)}</div><a href="/google-places-setup">Google Places setup ↗</a> · <a href="/foursquare-setup">Foursquare setup ↗</a></section>}

@@ -1,7 +1,9 @@
+import brand from '@/seo/brand.json';
 import { supportEmail } from '@/components/policy-links';
 import ImmersiveFullscreenNav from '@/components/ui/immersive-full-screen-nav';
 
 export const publicLinks = [
+  { label: 'About', href: '/about' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'How It Works', href: '/how-it-works' },
   { label: 'Google Places Setup', href: '/google-places-setup' },
@@ -13,7 +15,7 @@ export function SiteNav() {
     navConfig={{ brand: 'Heimdall', brandHref: '/', overlayBg: '#101014', clipOrigin: 'left', headerClassName: 'hero-nav-header' }}
     navContent={{
       agencyName: 'Heimdall',
-      tagline: 'Find local businesses. Discover website opportunities. Connect with your next customer.',
+      tagline: brand.description,
       location: 'Google Places + Foursquare',
       links: publicLinks,
       images: [

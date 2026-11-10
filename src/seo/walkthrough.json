@@ -1,0 +1,10 @@
+{
+  "title":"From search to review",
+  "intro":"An illustrative walkthrough using restaurants in Boston. This explains the workflow; it is not a live search result or a customer case study.",
+  "steps":[
+    {"title":"Choose your source","text":"Choose Google Places for operational businesses with no website listed in their returned record. Choose Foursquare for business listings with available websites, phones, and social profiles."},
+    {"title":"Enter a focused query","text":"Enter restaurants in Boston, Massachusetts, USA and choose a target such as 10 leads. Connect your own provider key and review its billing before starting. The target is not a guaranteed result count."},
+    {"title":"Review the returned details","text":"Check that the business type and location match your intent. In Foursquare, try the website, phone, and social filters. A missing field means the provider did not return that information, not that it does not exist."},
+    {"title":"Plan your next action","text":"Verify the business and contact details before outreach. Use saving or team-sharing actions only where available and permitted by source terms. A public listing is not marketing consent."}
+  ]
+}

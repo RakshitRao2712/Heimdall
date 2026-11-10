@@ -1,13 +1,15 @@
 # Heimdall
 
-A React + TypeScript frontend built with Vite, Tailwind CSS, Framer Motion, and GSAP, with a Spring Boot backend in `backend/`.
+Heimdall is a local business discovery workspace. Search Google Places and Foursquare by business type and location, review available details, and organize eligible leads with your team.
 
-The black landing page includes:
+Website: https://heimdall.life · Support: support@heimdall.life
 
-- An animated Tilted Grid Hero with ten supplied R2 images.
-- An immersive fullscreen navigation with a clip-path reveal, keyboard focus trap, and Escape-to-close.
-- A wheel-driven Perspective Tunnel Hero with pointer parallax.
-- A responsive feature-card section.
+- Google Places: find operational businesses without a website listed in their returned record.
+- Foursquare: review available business websites, phone numbers, and social profiles.
+- Premium: ₹100 once for the product operating lifetime; provider API charges are separate.
+- Use your own provider keys. Results are not guaranteed and source permissions apply.
+
+Built with React, TypeScript, Vite, and a Spring Boot backend in `backend/`.
 
 ## Local development
 

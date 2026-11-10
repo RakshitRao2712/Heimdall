@@ -1,3 +1,4 @@
+import AboutPage from './pages/AboutPage';
 import { AnalyticsConsent } from './analytics';
 import { WorkspaceConnection } from './components/workspace-connection';
 import { SeoMetadata } from "./seo/metadata";
@@ -24,6 +25,7 @@ function DashboardEntry() {
 function Route() {
   const { user, loading } = useSession(); const path = window.location.pathname.replace(/\/+$/, '') || '/';
   if (import.meta.env.DEV && path === '/connection-preview') return <WorkspaceConnection immediate />;
+  if (path === '/about') return <AboutPage />;
   if (['/contact', '/privacy', '/terms', '/refund'].includes(path)) return <PolicyPage path={path} />;
   if (path === '/brave-search-setup' || path === '/serpapi-setup') return <InfoPage path='/foursquare-setup' />;
   if (['/pricing', '/how-it-works', '/google-places-setup', '/foursquare-setup'].includes(path)) return <InfoPage path={path} />;

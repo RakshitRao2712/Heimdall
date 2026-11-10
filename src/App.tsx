@@ -1,3 +1,4 @@
+import brand from '@/seo/brand.json';
 import { MethodComparison } from '@/components/method-comparison';
 import { PageFAQ } from '@/components/page-faq';
 import { useHomepageFade } from '@/components/ui/homepage-fade';
@@ -37,7 +38,7 @@ export default function App() {
         <div className="hero-content">
           <div className="hero-title"><h1 className="hero-font-pair"><span className="hero-script">Your next</span><span className="hero-anton">customer,</span><span className="hero-heading-tail">waiting to be found.</span></h1></div>
           <div className="hero-description">
-            <p>Find businesses without a listed website through Google Places, or discover business websites, phone numbers, and social profiles through Foursquare. Organize eligible leads and work with your team.</p>
+            <p>{brand.description}</p>
             <div className="hero-actions">
             <ShinyButton onClick={() => window.location.assign(user ? '/dashboard' : '/login')}>{loading ? 'Get started' : user ? 'Dashboard' : 'Get started'}</ShinyButton>
               <a className="hero-how-link" href="/how-it-works">How it works?</a>

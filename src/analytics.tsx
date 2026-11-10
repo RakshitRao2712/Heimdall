@@ -1,3 +1,4 @@
+import { safeAiReferrer } from './seo/ai-referral';
 import { useEffect, useState } from 'react';
 
 // Measurement IDs identify a public stream; they are not API credentials.
@@ -10,13 +11,13 @@ const routes: Record<string, string> = {
   '/': 'Heimdall home', '/pricing': 'Heimdall pricing', '/how-it-works': 'How Heimdall works',
   '/google-places-setup': 'Google Places setup', '/foursquare-setup': 'Foursquare setup',
   '/contact': 'Contact Heimdall', '/privacy': 'Heimdall privacy', '/terms': 'Heimdall terms',
-  '/refund': 'Heimdall refunds', '/login': 'Heimdall sign in', '/dashboard': 'Heimdall workspace',
+  '/about': 'About Heimdall', '/refund': 'Heimdall refunds', '/login': 'Heimdall sign in', '/dashboard': 'Heimdall workspace',
 };
 function readConsent(): Consent { try { const value = localStorage.getItem(consentKey); return value === 'accepted' || value === 'rejected' ? value : null; } catch { return null; } }
 function pageData() {
   const path = window.location.pathname.replace(/\/+$/, '') || '/';
   // Never transmit query strings, hashes, unknown paths, or DOM-derived page titles.
-  return { page_location: `https://heimdall.life${routes[path] ? path : '/404'}`, page_title: routes[path] || 'Page not found', page_referrer: '' };
+  return { page_location: `https://heimdall.life${routes[path] ? path : '/404'}`, page_title: routes[path] || 'Page not found', page_referrer: safeAiReferrer(document.referrer) };
 }
 let started = false;
 function enableAnalytics() {

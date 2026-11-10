@@ -193,5 +193,11 @@
         "Foursquare publishes 500 free Pro calls. Your provider bills your own account for usage charges."
       ]
     ]
+  },
+  "/about": {
+    "title": "About Heimdall | Local Business Discovery Workspace",
+    "description": "Learn about Heimdall, operated by Rakshit Rao, and its Google Places and Foursquare business discovery tools for freelancers and small teams.",
+    "heading": "About Heimdall",
+    "sections": []
   }
 }

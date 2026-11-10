@@ -1,3 +1,4 @@
+import { ProductWalkthrough } from '@/components/product-walkthrough';
 import { ContentReview } from '@/components/content-review';
 import { MethodComparison } from '@/components/method-comparison';
 import { Troubleshooting } from '@/components/troubleshooting';
@@ -53,7 +54,7 @@ export default function InfoPage({ path }: { path: string }) {
         <aside className="info-note"><h2>Source permissions matter</h2><p>Heimdall is an independent tool, not endorsed by Google, Foursquare, or the businesses listed. Using your own API key does not override provider terms. Google storage, export and sharing restrictions require provider/legal review before public launch. Foursquare results are shown for the current visit.</p><a href="/terms">Read usage terms →</a> · <a href="/privacy">Privacy and data handling →</a></aside>
 
       </>}
-      {path === '/how-it-works' && <MethodComparison />}
+      {path === '/how-it-works' && <><MethodComparison /><ProductWalkthrough /></>}
       <Troubleshooting path={path} />
       <PageFAQ path={path} />
       <ContentReview />
