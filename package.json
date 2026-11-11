@@ -8,7 +8,9 @@
     "build": "tsc --noEmit && vite build && vite build --ssr src/seo/prerender.tsx --outDir .seo-render && node scripts/seo-build.mjs",
     "preview": "vite preview",
     "seo:check": "node scripts/seo-check.mjs",
-    "security:check": "npm audit --omit=dev && python3 scripts/audit-backend.py"
+    "security:check": "npm audit --omit=dev && python3 scripts/audit-backend.py",
+    "indexnow:submit": "node scripts/indexnow-submit.mjs",
+    "seo:live": "node scripts/seo-live.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

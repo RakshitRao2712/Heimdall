@@ -1,3 +1,4 @@
+import { DeferredImage } from '@/components/deferred-image';
 import TextLoop from '@/components/ui/text-loop'
 import { Card, CardContent } from '@/components/ui/card'
 import { Shield, Users } from 'lucide-react'
@@ -162,19 +163,19 @@ export function Features() {
                                         <div className="relative flex w-[calc(50%+0.875rem)] items-center justify-end gap-2">
                                             <span className="block h-fit rounded border px-2 py-1 text-xs shadow-sm">Business</span>
                                             <div className="ring-background size-7 ring-4">
-                                                <img className="size-full rounded-full" src="https://cdn.21st.dev/assets/mirror/7f/7fc8766f3e4ba5e17744490c7137d3df2ffe93c5920a7f1bb062da3eafc579fa.png" alt="" />
+                                                <DeferredImage loading="lazy" decoding="async" width="48" height="48" className="size-full rounded-full" src="https://cdn.21st.dev/assets/mirror/7f/7fc8766f3e4ba5e17744490c7137d3df2ffe93c5920a7f1bb062da3eafc579fa.png" alt="" />
                                             </div>
                                         </div>
                                         <div className="relative ml-[calc(50%-1rem)] flex items-center gap-2">
                                             <div className="ring-background size-8 ring-4">
-                                                <img className="size-full rounded-full" src="https://cdn.21st.dev/assets/mirror/ce/ce1f33fc0a315956f2f302c924c96de81976ac8af8b37fc6912dd4089daa8ceb.png" alt="" />
+                                                <DeferredImage loading="lazy" decoding="async" width="48" height="48" className="size-full rounded-full" src="https://cdn.21st.dev/assets/mirror/ce/ce1f33fc0a315956f2f302c924c96de81976ac8af8b37fc6912dd4089daa8ceb.png" alt="" />
                                             </div>
                                             <span className="block h-fit rounded border px-2 py-1 text-xs shadow-sm">Website</span>
                                         </div>
                                         <div className="relative flex w-[calc(50%+0.875rem)] items-center justify-end gap-2">
                                             <span className="block h-fit rounded border px-2 py-1 text-xs shadow-sm">Contact</span>
                                             <div className="ring-background size-7 ring-4">
-                                                <img className="size-full rounded-full" src="https://cdn.21st.dev/assets/mirror/0d/0d8330fb0fe691dbbda72406d32f05099bbaf215c8ed2423fee8cca6371b9b44.jpg" alt="" />
+                                                <DeferredImage loading="lazy" decoding="async" width="48" height="48" className="size-full rounded-full" src="https://cdn.21st.dev/assets/mirror/0d/0d8330fb0fe691dbbda72406d32f05099bbaf215c8ed2423fee8cca6371b9b44.jpg" alt="" />
                                             </div>
                                         </div>
                                     </div>

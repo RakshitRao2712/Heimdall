@@ -7,6 +7,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 const Onboarding = lazy(() => import('./pages/Onboarding'));
 const PolicyPage = lazy(() => import('./pages/PolicyPage'));
 const InfoPage = lazy(() => import('./pages/InfoPage'));
+const DiscoveryPage = lazy(() => import('./pages/DiscoveryPage'));
 const Home = lazy(() => import('./App'));
 const Login = lazy(() => import('./pages/Login'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -25,6 +26,7 @@ function DashboardEntry() {
 function Route() {
   const { user, loading } = useSession(); const path = window.location.pathname.replace(/\/+$/, '') || '/';
   if (import.meta.env.DEV && path === '/connection-preview') return <WorkspaceConnection immediate />;
+  if (['/google-places','/foursquare','/for-freelancers','/for-web-designers','/for-agencies','/guides','/guides/first-search'].includes(path)) return <DiscoveryPage path={path}/>;
   if (path === '/about') return <AboutPage />;
   if (['/contact', '/privacy', '/terms', '/refund'].includes(path)) return <PolicyPage path={path} />;
   if (path === '/brave-search-setup' || path === '/serpapi-setup') return <InfoPage path='/foursquare-setup' />;

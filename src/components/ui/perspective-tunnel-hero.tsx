@@ -1,3 +1,4 @@
+import { DeferredImage } from '@/components/deferred-image';
 "use client";
 
 import {
@@ -12,15 +13,15 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 const IMAGES = [
-    { src: "/images/discovery/cafe.jpg", title: "Neighborhood Café" },
-    { src: "/images/discovery/bakery.jpg", title: "Artisan Bakery" },
-    { src: "/images/discovery/restaurant.jpg", title: "Independent Restaurant" },
-    { src: "/images/discovery/flowers.jpg", title: "Local Florist" },
-    { src: "/images/discovery/coffee.jpg", title: "Specialty Coffee" },
-    { src: "/images/discovery/dining.jpg", title: "Dining Room" },
-    { src: "/images/discovery/counter.jpg", title: "Café Counter" },
-    { src: "/images/discovery/studio.jpg", title: "Creative Studio" },
-    { src: "/images/discovery/market.jpg", title: "Fresh Market" },
+    { src: "/images/discovery/cafe.webp", title: "Neighborhood Café" },
+    { src: "/images/discovery/bakery.webp", title: "Artisan Bakery" },
+    { src: "/images/discovery/restaurant.webp", title: "Independent Restaurant" },
+    { src: "/images/discovery/flowers.webp", title: "Local Florist" },
+    { src: "/images/discovery/coffee.webp", title: "Specialty Coffee" },
+    { src: "/images/discovery/dining.webp", title: "Dining Room" },
+    { src: "/images/discovery/counter.webp", title: "Café Counter" },
+    { src: "/images/discovery/studio.webp", title: "Creative Studio" },
+    { src: "/images/discovery/market.webp", title: "Fresh Market" },
 ];
 
 
@@ -126,7 +127,7 @@ function TunnelCard({ card, progress, pointer, total, stage }: TunnelCardProps) 
             className="pointer-events-auto absolute left-1/2 top-1/2 aspect-[4/5] will-change-transform select-none cursor-pointer"
         >
             <div className="group relative h-full w-full overflow-hidden rounded-2xl bg-neutral-200 dark:bg-neutral-900 shadow-2xl shadow-neutral-950/20 dark:shadow-black/90 ring-1 ring-black/10 dark:ring-white/15 transition-all duration-500 hover:ring-indigo-500/70 dark:hover:ring-indigo-400/70 hover:shadow-indigo-500/25">
-                <img
+                <DeferredImage
                     src={card.item.src}
                     alt={card.item.title}
                     draggable={false}

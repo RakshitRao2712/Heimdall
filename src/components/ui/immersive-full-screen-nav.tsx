@@ -683,7 +683,7 @@ function CustomNavbar({
                 style={{ opacity: 0, transform: `scale(${IMAGE_INITIAL_SCALE})` }}
                 className="nav-panel-image relative overflow-hidden rounded-xl"
               >
-                <img src={src} alt={`Overlay image ${index + 1}`} className="absolute inset-0 h-full w-full object-cover transition duration-500 hover:scale-105 motion-reduce:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100" />
+                <img src={isOpen ? src : undefined} loading="lazy" decoding="async" alt={`Overlay image ${index + 1}`} className="absolute inset-0 h-full w-full object-cover transition duration-500 hover:scale-105 motion-reduce:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100" />
               </div>
             ))}
           </div>

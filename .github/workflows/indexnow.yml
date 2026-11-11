@@ -1,0 +1,23 @@
+name: Notify search engines after production deployment
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'scripts/seo-build.mjs'
+      - 'scripts/indexnow-submit.mjs'
+      - '.github/workflows/indexnow.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/indexnow-submit.mjs --wait

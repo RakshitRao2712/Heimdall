@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 // Strips per tile. Each is a few degrees of arc, too little to read as a
 // facet; fewer starts to show corners along the top and bottom edges. A
 // tight curve wraps a tile round a wide arc, so it needs this many.
-const SLICES = 16;
+const SLICES = 10;
 
 // Camera distance from the screen, as a multiple of the cylinder's radius.
 // Just past the axis, so the ends come right up to the lens and swell; much
@@ -139,6 +139,13 @@ export function TiltedGridHero({
   className,
   ...props
 }: React.ComponentProps<"div"> & TiltedGridHeroProps) {
+  const [compact, setCompact] = React.useState(true);
+  React.useEffect(() => {
+    const query = window.matchMedia('(max-width: 767px), (prefers-reduced-motion: reduce)');
+    const update = () => setCompact(query.matches);
+    update(); query.addEventListener('change', update);
+  return () => query.removeEventListener('change', update);
+  }, []);
   const ref = React.useRef<HTMLDivElement>(null);
   const id = React.useId().replace(/[^a-zA-Z0-9]/g, "");
   const orbit = `tgh-o-${id}`;
@@ -172,13 +179,13 @@ export function TiltedGridHero({
     });
     ro.observe(el);
     return () => ro.disconnect();
-  }, [tileHeight, aspectRatio, gap, bend]);
+  }, [tileHeight, aspectRatio, gap, bend, compact]);
 
   // Fetch every image up front. A tile picks up its next one just before
   // it comes back into view, too late to start loading it then.
   React.useEffect(() => {
-    for (const { src } of images) new Image().src = src;
-  }, [images]);
+    for (const { src } of (compact ? images.slice(0, 3) : images)) new Image().src = src;
+  }, [images, compact]);
 
   const { columns, sweep, unit, limit } =
     layout ?? measure(1200, 560, tileHeight, aspectRatio, gap, bend);
@@ -216,6 +223,11 @@ export function TiltedGridHero({
   const mask = `linear-gradient(90deg,transparent,#000 ${fade}%,#000 ${
     100 - fade
   }%,transparent)`;
+
+    if (compact) return <div {...props} className={cn('relative overflow-hidden compact-grid-hero', className)}>
+    <div className="compact-hero-art" aria-hidden="true">{images.slice(0,3).map((image,index)=><img key={image.src} src={image.src.startsWith("/images/discovery/") ? image.src.replace(".webp", "-480.webp") : image.src} width="640" height="420" fetchPriority={index === 1 ? "high" : "auto"} decoding="async" alt="" style={{transform:`rotate(${(index-1)*9}deg)`}}/>)}</div>
+    {children}
+  </div>;
 
   return (
     <div

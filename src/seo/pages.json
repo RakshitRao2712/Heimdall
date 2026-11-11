@@ -199,5 +199,162 @@
     "description": "Learn about Heimdall, operated by Rakshit Rao, and its Google Places and Foursquare business discovery tools for freelancers and small teams.",
     "heading": "About Heimdall",
     "sections": []
+  },
+  "/google-places": {
+    "title": "Google Places Lead Discovery | Heimdall",
+    "description": "Discover operational businesses without a listed website using Google Places. Review available details and choose a lead target with your own API key.",
+    "heading": "Find businesses without listed websites",
+    "sections": [
+      [
+        "Start with a business type and city",
+        "Enter a query such as restaurants in Boston. Heimdall searches Google Places and keeps operational listings that do not include a website in the returned record. A missing field does not prove the business has no website elsewhere."
+      ],
+      [
+        "Set a realistic target",
+        "Choose 10, 25, or 50 unique matches. The search can page through results and try related categories and areas, deduplicating by place ID. It stops at the target, cancellation, provider failure, an internal request limit, or exhausted variations. Results are not guaranteed."
+      ],
+      [
+        "Review before outreach",
+        "Check business relevance, location, and available contact details. Public listings are not consent to marketing. Retention, export and team sharing depend on provider permissions; API access alone does not grant those rights."
+      ],
+      [
+        "Bring your own key",
+        "Connect a Places API (New) key from your Google Cloud project. Your provider usage is billed separately from Heimdall Premium."
+      ]
+    ]
+  },
+  "/foursquare": {
+    "title": "Foursquare Business Discovery | Heimdall",
+    "description": "Find local businesses with Foursquare in Heimdall. Filter available websites, phones and social profiles, using your own Foursquare Places API key.",
+    "heading": "Discover business contacts with Foursquare",
+    "sections": [
+      [
+        "Search a niche and location",
+        "Search businesses by category and city. Heimdall requests up to your selected target of 10, 25, or 50 listings in one Foursquare search. Coverage varies by location and category."
+      ],
+      [
+        "Filter the fields you need",
+        "Use website, phone, and social filters to focus the returned listings. Not every business includes every field, and a filter can reduce the visible result count."
+      ],
+      [
+        "Review the original business",
+        "Open an available website or social profile to confirm relevance before contacting anyone. Contact details are unverified. Follow provider terms and applicable outreach rules."
+      ],
+      [
+        "Control your provider account",
+        "Use your own Foursquare Places key. Provider charges and allowances belong to your account and are separate from Heimdall’s price."
+      ]
+    ]
+  },
+  "/for-freelancers": {
+    "title": "Local Business Leads for Freelancers | Heimdall",
+    "description": "Build a focused local prospect list for your freelance services. Discover businesses, review available details, and organize eligible leads with Heimdall.",
+    "heading": "A focused prospecting workflow for freelancers",
+    "sections": [
+      [
+        "Choose one service and one niche",
+        "Start with a specific offer, such as website design for independent cafés. Search one city at a time so you can review relevance rather than collecting a broad untargeted list."
+      ],
+      [
+        "Find a reason to reach out",
+        "Google Places can identify listings without a website field. Foursquare can surface available websites and social profiles. Check the business yourself; do not assume a missing listing field means it needs your services."
+      ],
+      [
+        "Keep useful context",
+        "Where source permissions allow, organize eligible leads in a named folder. Record your own research and next step, then avoid contacting the same business twice."
+      ],
+      [
+        "Make outreach relevant",
+        "Use a lawful channel, explain a specific useful idea, and honor opt-outs. Heimdall does not send outreach or guarantee clients."
+      ]
+    ]
+  },
+  "/for-web-designers": {
+    "title": "Business Discovery for Web Designers | Heimdall",
+    "description": "Find local businesses to research for web design services. Compare Google Places and Foursquare signals and organize a thoughtful prospecting workflow.",
+    "heading": "Research your next web design opportunity",
+    "sections": [
+      [
+        "Look beyond the listing",
+        "A Google Places record without a website is a research signal. Search the business name separately before concluding it has no site."
+      ],
+      [
+        "Review existing websites",
+        "Use Foursquare’s available website field to inspect businesses in your target niche. Evaluate mobile usability, accessibility and clarity yourself; Heimdall does not automatically audit website quality."
+      ],
+      [
+        "Prepare a concrete suggestion",
+        "Write a short observation based on what you actually reviewed. Avoid telling a business its site is broken or outdated without evidence."
+      ],
+      [
+        "Track your own progress",
+        "Organize eligible results and record notes with your team where permitted. Keep provider data permissions and outreach rules in mind."
+      ]
+    ]
+  },
+  "/for-agencies": {
+    "title": "Local Business Prospecting for Agencies | Heimdall",
+    "description": "Coordinate local business research with your agency team. Discover businesses, organize eligible lead folders, add shared notes and track completion.",
+    "heading": "Keep your agency’s prospect research together",
+    "sections": [
+      [
+        "Define a clear research brief",
+        "Choose a niche, city, and service offer before searching. Agree on what makes a business relevant and which provider fields your team needs."
+      ],
+      [
+        "Compare discovery methods",
+        "Use Google Places for operational listings without a website field, or Foursquare for available business websites, phone numbers and social profiles. Both require your own provider key."
+      ],
+      [
+        "Coordinate eligible folders",
+        "Create or join a team and import a folder only when source terms allow sharing. Members can add attributed notes and mark leads Done so the team can see progress."
+      ],
+      [
+        "Keep quality checks human",
+        "Verify details, assign a next action in notes, and check for duplicate outreach. Heimdall is a research workspace, not an automated outreach or revenue guarantee."
+      ]
+    ]
+  },
+  "/guides": {
+    "title": "Heimdall Guides | Search, Filters, Folders and Teams",
+    "description": "Practical Heimdall guides for connecting API keys, searching local businesses, reviewing results, and collaborating responsibly with your team.",
+    "heading": "Learn the local discovery workflow",
+    "sections": [
+      [
+        "Connect your provider",
+        "Follow the Google Places or Foursquare setup guide before your first search. Keep keys private and review provider billing."
+      ],
+      [
+        "Search and review",
+        "Use the illustrated walkthrough to understand query entry, lead targets and result filters. The screenshots show the actual interface with illustrative input, not guaranteed search results."
+      ],
+      [
+        "Organize and collaborate",
+        "Use eligible folders and shared team notes only where your provider permits saving and sharing. Read the workflow guide for the sequence."
+      ]
+    ]
+  },
+  "/guides/first-search": {
+    "title": "Your First Business Search in Heimdall | Illustrated Guide",
+    "description": "Follow an illustrated Heimdall search walkthrough: connect a provider key, enter a niche and city, choose a target, and review available results.",
+    "heading": "Run your first business search",
+    "sections": [
+      [
+        "1. Connect your own provider key",
+        "Sign in, open Scrape, and choose Google Places or Foursquare. Connect the appropriate key. Never include the key in screenshots, notes or public posts."
+      ],
+      [
+        "2. Enter your niche and location",
+        "Write a focused query such as restaurants in Boston. Choose 10 matches for a small first run. Google Places may expand queries; Foursquare makes one search request."
+      ],
+      [
+        "3. Follow progress and review results",
+        "Wait for completion or cancel if needed. Review the final count and stop reason. A target is an upper bound, not a promise of that number of matches."
+      ],
+      [
+        "4. Filter and check details",
+        "For Foursquare, filter by available website, phone or social profile. Verify business relevance and contact details yourself before outreach. Save or share only where source permissions allow."
+      ]
+    ]
   }
 }

@@ -1,1 +1,3 @@
-https://www.heimdall.life/* https://heimdall.life/:splat 301
+/brave-search-setup /foursquare-setup 301
+/serpapi-setup /foursquare-setup 301
+/favicon.ico /images/heimdall-logo.svg 301

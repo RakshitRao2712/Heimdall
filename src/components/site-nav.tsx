@@ -3,6 +3,7 @@ import { supportEmail, linkedinUrl } from '@/components/policy-links';
 import ImmersiveFullscreenNav from '@/components/ui/immersive-full-screen-nav';
 
 export const publicLinks = [
+  { label: 'Guides', href: '/guides' },
   { label: 'About', href: '/about' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'How It Works', href: '/how-it-works' },

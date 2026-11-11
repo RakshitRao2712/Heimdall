@@ -1,3 +1,4 @@
+import { DiscoveryLinks } from './DiscoveryPage';
 import { ProductWalkthrough } from '@/components/product-walkthrough';
 import { ContentReview } from '@/components/content-review';
 import { MethodComparison } from '@/components/method-comparison';
@@ -57,7 +58,7 @@ export default function InfoPage({ path }: { path: string }) {
       {path === '/how-it-works' && <><MethodComparison /><ProductWalkthrough /></>}
       <Troubleshooting path={path} />
       <PageFAQ path={path} />
-      <ContentReview />
+      <section className="info-note"><h2>Explore discovery guides</h2><DiscoveryLinks/></section><ContentReview />
     </main>
     <footer className="info-footer"><a href="/">Heimdall</a><nav aria-label="Footer">{publicLinks.map(l => <a key={l.href} href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>)}</nav><PolicyLinks/><SocialLinks/></footer>
   </div>;
