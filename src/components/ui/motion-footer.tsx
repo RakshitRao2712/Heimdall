@@ -359,7 +359,7 @@ export function CinematicFooter() {
             </div>
           </div>
 
-          <p className="footer-billing-disclosure">₹100 covers Heimdall Premium access only. Google Places and Foursquare API fees are billed separately by each provider according to your usage.</p>
+          <p className="footer-billing-disclosure">Heimdall access is free. Google Places and Foursquare API fees are billed separately by each provider according to your usage.</p>
           {/* 3. Bottom Bar / Credits */}
           <div className="relative z-20 w-full pb-8 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
             

@@ -17,7 +17,7 @@
         },
         {
           "question": "Do I need my own API keys?",
-          "answer": "Yes. Connect your own Google Places key or Foursquare Service API key for the method you want to use. Provider usage is billed to your own account separately from Heimdall Premium.",
+          "answer": "Yes. Connect your own Google Places key or Foursquare Service API key for the method you want to use. Provider usage is billed to your own account separately from free Heimdall access.",
           "href": "/google-places-setup",
           "linkLabel": "Set up your first API key"
         }
@@ -27,14 +27,14 @@
       "label": "Pricing & access",
       "items": [
         {
-          "question": "What does the ₹100 payment include?",
-          "answer": "₹100 is a one-time early-user payment for current Heimdall Premium features, including access to both discovery methods. Lifetime means the operating lifetime of the Heimdall product. API usage fees are not included.",
+          "question": "Is Heimdall free to use?",
+          "answer": "Yes. Heimdall access is free, including both discovery methods, named lead files, eligible exports, and team collaboration. You need your own provider API key; Google Places and Foursquare bill API usage separately.",
           "href": "/pricing",
-          "linkLabel": "Review Premium access"
+          "linkLabel": "Review free access"
         },
         {
-          "question": "Can I search for leads without Premium?",
-          "answer": "Both discovery methods require Premium access. Creating an account does not include a paid provider API allowance; you also need your own key for the method you use.",
+          "question": "Do I need to purchase a plan to search?",
+          "answer": "No Heimdall purchase is required. Create an account and connect your own API key for the method you want to use. Free access does not include a paid provider API allowance.",
           "href": "/pricing",
           "linkLabel": "See pricing"
         },

@@ -15,7 +15,7 @@
       {
         "question": "How do I fix a Google quota or billing error?",
         "steps": [
-          "Open Google Cloud billing for the project and check its payment status. Premium does not pay Google API fees.",
+          "Open Google Cloud billing for the project and check its payment status. Heimdall does not pay Google API fees.",
           "Review Places API quotas and current usage in the same project. If you reached a quota, wait for its reset or decide whether to change it in Google Cloud.",
           "Review provider pricing before raising a quota or retrying. One Heimdall Google search can make multiple billable requests."
         ]
@@ -54,7 +54,7 @@
       {
         "question": "How do I fix a Foursquare request-limit or billing error?",
         "steps": [
-          "Check the project usage, plan, and billing in the Foursquare console. Heimdall Premium does not cover these charges.",
+          "Check the project usage, plan, and billing in the Foursquare console. Free Heimdall access does not cover these charges.",
           "If the provider reports a rate or usage limit, wait for the applicable reset or review your plan. Do not repeatedly retry while limited.",
           "Check the current provider allowance before changing your plan. Heimdall currently makes one Foursquare search request per run."
         ]

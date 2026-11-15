@@ -46,7 +46,7 @@
 .hero-how-link:hover{color:#fff}.hero-how-link:focus-visible{outline:2px solid #fff;outline-offset:6px;border-radius:3px}
 
 /* Shared textured grid, visible continuously beneath every page section. */
-:root{--heimdall-grid:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);--heimdall-texture:linear-gradient(to top right,rgba(0,0,0,.85) 0%,rgba(0,0,0,.35) 48%,rgba(255,255,255,.10) 100%),url('/images/heimdall-grunge.webp')}
+:root{--heimdall-grid:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);--heimdall-texture:linear-gradient(to top right,rgba(0,0,0,.85) 0%,rgba(0,0,0,.72) 48%,rgba(0,0,0,.48) 72%,rgba(255,255,255,.10) 100%),url('/images/heimdall-paper.webp')}
 body{background-color:#080808;background-image:var(--heimdall-grid),var(--heimdall-texture);background-size:64px 64px,64px 64px,cover,cover;background-position:center top;background-attachment:fixed}
 .page,.first-hero,.hero,.tunnel-demo,#how-it-works>div>div,#features{background-color:transparent!important}
 .ib-root[data-theme="dark"]{--ib-page:transparent;--ib-paper:transparent;background:transparent!important}
@@ -173,3 +173,78 @@ body{background-color:#080808;background-image:var(--heimdall-grid),var(--heimda
 
 .site-intro-compact{display:grid;place-items:center}
 @media(max-width:767px){#features,#workflow{content-visibility:auto;contain-intrinsic-size:auto 900px}}
+
+/* Keep the comparison copy closer to the left page gutter. */
+.page>.method-comparison{max-width:1440px;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr)}
+.lifetime-detail .provider-source-links{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px}
+.lifetime-detail .provider-source-links .lifetime-workflow{margin:0 0 0 auto;color:#eee}
+.product-video-section{width:100%;max-width:1440px;margin:0 auto;padding:60px 32px 80px}
+.product-video-frame{position:relative;overflow:hidden;border-radius:20px;background:#080808;aspect-ratio:1920/900}
+.product-video-frame video{display:block;width:100%;height:100%;object-fit:contain}
+.product-video-toggle{position:absolute;right:18px;bottom:18px;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1px solid #ffffff40;background:#101010b8;color:white;backdrop-filter:blur(10px);cursor:pointer;transition:background .2s,transform .2s}
+.product-video-toggle:hover{background:#333;transform:scale(1.05)}
+.product-video-toggle:focus-visible{outline:2px solid white;outline-offset:4px}
+@media(max-width:900px){.page>.method-comparison{grid-template-columns:1fr}}
+@media(max-width:600px){.product-video-section{padding:30px 16px 50px}.product-video-frame{border-radius:12px}.product-video-toggle{right:10px;bottom:10px;width:36px;height:36px}.lifetime-detail .provider-source-links .lifetime-workflow{margin-left:0}}
+.product-video-audio{right:72px}
+@media(max-width:600px){.product-video-audio{right:54px}}
+
+/* Balanced links and paired comparison heading. */
+.lifetime-detail .provider-source-links{justify-content:space-between;column-gap:20px;row-gap:12px}
+.lifetime-detail .provider-source-links .lifetime-workflow{margin:0}
+.comparison-copy h2{width:fit-content;max-width:100%;align-items:center;text-align:center}
+.comparison-copy h2>span{align-self:center}
+@media(max-width:600px){.lifetime-detail .provider-source-links{justify-content:flex-start;gap:14px 22px}}
+
+.heimdall-tear-footer{width:100%;position:relative;z-index:10}
+.heimdall-tear-footer .tpf{font-style:normal}
+.heimdall-tear-footer .tpf-logo img{display:block;object-fit:contain}
+.heimdall-tear-footer .tpf-logo img{filter:none}
+/* Tighter pricing rhythm and a seamless transition into the tear footer. */
+.lifetime-detail .provider-source-links{justify-content:flex-start;column-gap:24px;row-gap:10px}
+.lifetime-copy>p{margin:12px 0}
+.lifetime-detail{margin-top:22px;padding-top:20px}
+.page>.heimdall-faq{padding-bottom:36px}
+.heimdall-tear-footer{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 90px);mask-image:linear-gradient(to bottom,transparent 0,#000 90px)}
+@media(max-width:640px){.page>.heimdall-faq{padding-bottom:24px}.heimdall-tear-footer{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 60px);mask-image:linear-gradient(to bottom,transparent 0,#000 60px)}}
+
+/* The content scrolls over the footer, revealing it underneath. */
+.page.homepage-surface{position:relative;z-index:10;background-color:#080808!important;background-image:var(--heimdall-grid),var(--heimdall-texture);background-size:64px 64px,64px 64px,cover,cover;background-position:center top;background-attachment:fixed}
+.heimdall-tear-footer{position:sticky;bottom:0;z-index:0}
+@media(max-height:620px){.heimdall-tear-footer{position:relative}}
+
+/* Quiet, grouped navigation for public guides and menu pages. */
+.public-page-footer{max-width:1096px;margin:0 auto;padding:48px 0 24px;border-top:1px solid #ffffff18;display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:40px;color:#a5a5ad;font-size:13px}
+.public-footer-brand>a{display:flex;align-items:center;gap:10px;font-size:20px;color:#f5f5f5;text-decoration:none}.public-footer-brand p{margin:16px 0 20px;font-size:13px;line-height:1.7}.public-page-footer nav{display:flex;flex-direction:column;align-items:flex-start;gap:14px}.public-page-footer h2{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#f5f5f5;margin:0 0 8px}.public-page-footer a{text-decoration:none;color:inherit;transition:color .2s}.public-page-footer a:hover{color:#fff}.public-footer-bottom{grid-column:1/-1;border-top:1px solid #ffffff10;padding-top:24px;display:flex;justify-content:space-between;gap:16px;font-size:11px}
+.info-note:has(.discovery-links){border-left:0;background:transparent;padding:0;margin-top:56px}.discovery-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 28px}.discovery-links a{border:0;border-bottom:1px solid #ffffff12;border-radius:0;padding:14px 0;font-size:13px;text-decoration:none;justify-content:space-between}.discovery-links a:hover{background:transparent;color:white}.content-review nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 28px;margin-top:18px}.content-review nav a{font-size:11px;line-height:1.6}
+@media(max-width:1160px){.public-page-footer{margin:0 32px}}@media(max-width:700px){.public-page-footer{margin:0 20px;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 24px;padding-top:32px}.public-footer-brand{grid-column:1/-1}.public-footer-bottom{flex-direction:column}.discovery-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}.content-review nav{grid-template-columns:1fr}}
+
+/* Preserve the original research callout and rounded resource links. */
+.info-note.research-links{margin-top:32px;padding:24px 36px;border-left:2px solid #e80082;background:#10101470}
+.research-links .discovery-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.research-links .discovery-links a{display:inline-flex;justify-content:initial;gap:12px;padding:12px 18px;border:1px solid #ffffff25;border-radius:999px;color:#eee;font-size:14px;text-decoration:underline;text-underline-offset:4px}
+.research-links .discovery-links a:hover{background:#ffffff12}
+.menu-footer{width:100%;background:#0c0c0de8;font-style:normal}.menu-footer [data-slot="footer-inner"]{padding-left:32px;padding-right:32px}.menu-footer [data-slot="footer-brand"]>span{font-size:20px}.menu-footer [data-slot="footer-nav"] a{text-decoration:none}.menu-footer [data-slot="footer-column"]>a{font-size:12px;letter-spacing:.025em}.menu-footer [data-slot="footer-column"] li a{font-size:13px;line-height:1.8}.menu-footer [data-slot="footer-meta"] a{text-decoration:none}.menu-footer .public-socials{margin-top:8px}@media(max-width:640px){.menu-footer [data-slot="footer-inner"]{padding-left:20px;padding-right:20px}}
+
+/* Frosted glass keeps the shared texture visible through menu-page footers. */
+.menu-footer{isolation:isolate;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.065),rgba(255,255,255,.018) 48%,rgba(255,255,255,.035));backdrop-filter:blur(24px) saturate(115%);-webkit-backdrop-filter:blur(24px) saturate(115%);border:1px solid rgba(255,255,255,.14);border-bottom:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 -12px 48px rgba(0,0,0,.12)}
+.menu-footer::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(110deg,rgba(255,255,255,.04),transparent 45%);border-radius:inherit}
+.menu-footer [data-slot="footer-inner"]>div[aria-hidden]{display:none}
+.menu-footer [data-slot="footer-meta"]{border-color:rgba(255,255,255,.12)}
+.menu-footer [data-slot="footer-nav"] a:hover,.menu-footer [data-slot="footer-meta"] a:hover{color:#fff;text-shadow:0 0 16px rgba(255,255,255,.18)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.menu-footer{background:rgba(18,18,20,.94)}}
+
+.setup-help-header{text-align:center;margin:0 auto 40px;max-width:720px}.setup-help .setup-help-header h2{display:flex;align-items:center;justify-content:center;gap:18px;margin:0;font-size:clamp(32px,4vw,48px);letter-spacing:-.04em;line-height:1.15}.setup-help-header img{object-fit:contain;flex-shrink:0}.setup-help .setup-help-header p{font-size:13px;line-height:1.8;color:#9999a3;margin:18px auto 0;max-width:490px}.setup-help .help-card-number,.info-steps .info-step{display:block;font-family:Anton,Impact,sans-serif;font-style:normal;font-size:clamp(48px,5vw,70px);font-weight:400;line-height:1;color:#e7e7eb;letter-spacing:-.03em;margin-bottom:26px}.setup-help .info-card h3,.info-steps .info-card h2{font-size:clamp(24px,2.6vw,32px);line-height:1.25;letter-spacing:-.035em;margin:0 0 24px}.setup-help .info-card ol{padding-left:20px}.setup-help .info-card ol li{display:list-item;padding-left:6px;margin:18px 0;line-height:1.85}.setup-help .info-card ol li::marker{color:#7d7d88;font-size:12px}.info-steps .info-card{padding:36px}.setup-help-header+ .info-grid{margin-top:0}@media(max-width:640px){.setup-help-header{margin-bottom:28px}.setup-help .setup-help-header h2{gap:12px}.setup-help-header img{width:34px;height:34px}.info-steps .info-card{padding:26px}.setup-help .help-card-number,.info-steps .info-step{margin-bottom:20px}}
+.how-it-works-page .workflow-card-number,.how-it-works-page #product-walkthrough .info-step{display:block;font-family:Anton,Impact,sans-serif;font-style:normal;font-size:clamp(48px,5vw,70px);line-height:1;font-weight:400;letter-spacing:-.03em;color:#e7e7eb;margin-bottom:26px}.how-it-works-page>.info-main>.info-grid>.info-card h2,.how-it-works-page #product-walkthrough .info-card h3{font-size:clamp(24px,2.6vw,32px);line-height:1.25;letter-spacing:-.035em;margin:0 0 24px}
+.info-card .info-cta{transition:background .2s,color .2s,border-color .2s}.info-card .info-cta:hover,.info-card .info-cta:focus-visible{background:#fff;color:#080808;border-color:#fff}
+.info-main>.workspace-entry{display:inline-flex;align-items:center;gap:14px;margin-top:28px;padding:12px 24px;border:1px solid #ffffff30;border-radius:999px;background:#ffffff09;color:white;text-decoration:none;font-size:14px;transition:background .2s,color .2s}.info-main>.workspace-entry:hover{background:#fff;color:#080808}
+
+.workspace-entry-action{margin-top:28px;display:flex;align-items:center}
+
+/* Subtle corner numbering across public information and workflow cards. */
+.numbered-info-card,.info-steps .info-card,.setup-help .info-card,.how-it-works-page>.info-main>.info-grid>.info-card{position:relative;isolation:isolate;overflow:hidden;padding-bottom:72px}
+.numbered-info-card .card-watermark,.info-steps .info-step,.setup-help .help-card-number,.how-it-works-page .workflow-card-number,.how-it-works-page #product-walkthrough .info-step{position:absolute;right:24px;bottom:-9px;z-index:-1;display:block;margin:0;font-family:Anton,Impact,sans-serif;font-style:normal;font-weight:400;font-size:clamp(90px,10vw,138px);line-height:1;letter-spacing:-.04em;color:rgba(255,255,255,.055);pointer-events:none;user-select:none}
+.numbered-info-card h2{font-size:clamp(24px,2.6vw,32px);line-height:1.25;letter-spacing:-.035em;margin:0 0 24px}
+@media(max-width:640px){.numbered-info-card,.info-steps .info-card,.setup-help .info-card,.how-it-works-page>.info-main>.info-grid>.info-card{padding-bottom:64px}.numbered-info-card .card-watermark,.info-steps .info-step,.setup-help .help-card-number,.how-it-works-page .workflow-card-number,.how-it-works-page #product-walkthrough .info-step{right:18px}}
+
+.numbered-info-card .card-watermark,.info-steps .info-step,.setup-help .help-card-number,.how-it-works-page .workflow-card-number,.how-it-works-page #product-walkthrough .info-step{letter-spacing:.035em;font-kerning:none;font-variant-numeric:tabular-nums;color:rgba(255,255,255,.13)}

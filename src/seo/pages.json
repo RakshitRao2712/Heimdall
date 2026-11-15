@@ -17,27 +17,27 @@
         "Save named lead files, export CSV results, and share folders with your team. Mark leads complete and leave notes with author attribution."
       ],
       [
-        "₹100 Premium lifetime access",
-        "One payment unlocks both discovery methods for the operating lifetime of Heimdall. Google Places and Foursquare API fees are not included: Each API provider bills your account separately according to usage."
+        "Free Heimdall access",
+        "Both discovery methods are free to access. Google Places and Foursquare API fees are not included: Each API provider bills your account separately according to usage."
       ]
     ]
   },
   "/pricing": {
-    "title": "Heimdall Pricing | ₹100 Premium Lifetime Access",
-    "description": "Heimdall Premium is ₹100 once for the product’s operating lifetime. Google Places and Foursquare API usage fees are separate. Review terms and refunds.",
-    "heading": "One payment. Full access.",
+    "title": "Heimdall Pricing | Free Access, Separate API Fees",
+    "description": "Heimdall is free to use. Access Google Places and Foursquare discovery with your own API keys. Each provider bills API usage separately.",
+    "heading": "Free access. Full potential.",
     "sections": [
       [
-        "₹100 once for Premium",
-        "Premium includes Google Places and Foursquare discovery, named lead files, CSV exports, and team collaboration. Lifetime means the operating lifetime of the product; availability and a lead count are not guaranteed."
+        "Free access to Heimdall",
+        "Free access includes Google Places and Foursquare discovery, named lead files, eligible CSV exports, and team collaboration. Availability and a lead count are not guaranteed."
       ],
       [
         "API usage is separate",
-        "Use your own Google Places and Foursquare keys. Each provider bills your account separately under its current pricing. ₹100 does not include either provider’s usage fees."
+        "Use your own Google Places and Foursquare keys. Each provider bills your account separately under its current pricing. Free Heimdall access does not include either provider’s usage fees."
       ],
       [
         "Refunds and support",
-        "Contact support about your purchase. Approved refunds are processed within 7 days; bank credit timing can vary."
+        "Contact support about any previous purchase. Approved refunds are processed within 7 days; bank credit timing can vary."
       ]
     ]
   },
@@ -48,7 +48,7 @@
     "sections": [
       [
         "Connect your own provider key",
-        "Use Google Places for operational businesses without a listed website, or Foursquare to find business websites, phones, and social profiles. Provider fees are separate from ₹100."
+        "Use Google Places for operational businesses without a listed website, or Foursquare to find business websites, phones, and social profiles. Provider fees are separate; Heimdall access is free."
       ],
       [
         "Choose a lead target",
@@ -91,7 +91,7 @@
       ],
       [
         "Monitor usage and billing",
-        "Google Places usage is billed separately by Google according to your usage. The ₹100 Heimdall purchase does not cover Google Places and Foursquare API fees."
+        "Google Places usage is billed separately by Google according to your usage. Free Heimdall access does not cover Google Places and Foursquare API fees."
       ],
       [
         "Provider policy review",
@@ -105,7 +105,7 @@
   },
   "/contact": {
     "title": "Contact Heimdall | Account, Payment & Product Support",
-    "description": "Contact Heimdall for help with your account, lead discovery, Premium payments, refunds, or privacy requests.",
+    "description": "Contact Heimdall for help with your account, lead discovery, past payments, refunds, or privacy requests.",
     "heading": "Let’s talk.",
     "sections": [
       [
@@ -134,17 +134,17 @@
     ]
   },
   "/terms": {
-    "title": "Heimdall Terms & Conditions | Premium Access & Usage",
-    "description": "Read Heimdall’s terms for Premium lifetime access, responsible lead discovery, third-party usage fees, service availability, payments, and refunds.",
+    "title": "Heimdall Terms & Conditions | Free Access & Usage",
+    "description": "Read Heimdall’s terms for free access, responsible lead discovery, separate provider API fees, service availability, and support.",
     "heading": "A clear agreement.",
     "sections": [
       [
-        "Premium access",
-        "₹100 buys Premium access for the operating lifetime of the Heimdall product. Access starts after verification of a captured payment."
+        "Free access",
+        "Heimdall access is free. Sign in and connect your own provider API key to use either discovery method. No Heimdall purchase is required."
       ],
       [
         "Separate API fees",
-        "Google Places and Foursquare bill your own provider account separately. ₹100 covers Heimdall access only and excludes these usage charges."
+        "Google Places and Foursquare bill your own provider account separately. Heimdall access is free and does not cover these usage charges."
       ],
       [
         "Responsible use",
@@ -219,7 +219,7 @@
       ],
       [
         "Bring your own key",
-        "Connect a Places API (New) key from your Google Cloud project. Your provider usage is billed separately from Heimdall Premium."
+        "Connect a Places API (New) key from your Google Cloud project. Your provider usage is billed separately from Heimdall access."
       ]
     ]
   },

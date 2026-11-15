@@ -1,18 +1,9 @@
-import { trackEvent } from '@/analytics';
-import { useEffect, useState } from 'react';
-import { useSession, workspaceMutation } from '@/auth/session';
-type Payment = { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string };
-let checkoutScript: Promise<void> | undefined;
-function loadCheckout() { return checkoutScript ??= new Promise<void>((resolve,reject) => { const script=document.createElement('script');script.src='https://checkout.razorpay.com/v1/checkout.js';script.onload=()=>resolve();script.onerror=()=>{checkoutScript=undefined;reject(new Error('Could not load checkout. Please retry.'));};document.head.appendChild(script); }); }
-export function usePremium() {
- const { user }=useSession();const [premium,setPremium]=useState(false);const [testMode,setTestMode]=useState(false);const [loading,setLoading]=useState(true);
- useEffect(()=>{let active=true;const refresh=()=>{if(!user){setPremium(false);setLoading(false);return;}setLoading(true);fetch('/api/workspace/billing',{credentials:'same-origin',cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(v=>{if(active){setPremium(v.premium===true);setTestMode(v.testMode===true);}}).catch(()=>{if(active)setPremium(false);}).finally(()=>{if(active)setLoading(false);});};refresh();window.addEventListener('heimdall-purchase-updated',refresh);window.addEventListener('focus',refresh);return()=>{active=false;window.removeEventListener('heimdall-purchase-updated',refresh);window.removeEventListener('focus',refresh);};},[user?.email]);
- return {premium,loading,testMode};
+import type { ReactNode } from 'react';
+import { useSession } from '@/auth/session';
+
+// Heimdall access is free. Provider API billing remains separate.
+export function PurchaseButton() {
+  const { user } = useSession();
+  return <div className="premium-purchase"><a className="lifetime-button" href={user ? '/dashboard' : '/login'}>{user ? 'Open dashboard' : 'Get started for free'}</a><p className="purchase-billing-disclosure">Google Places and Foursquare API usage is billed separately to your own provider account. Heimdall does not cover API fees. <a href="/terms">Terms</a></p></div>;
 }
-export function PremiumBadge(){const {premium}=usePremium();return premium?<span className="premium-badge">Premium</span>:null;}
-export function PurchaseButton(){const {user}=useSession();const {premium,loading,testMode}=usePremium();const [busy,setBusy]=useState(false);const [error,setError]=useState('');const [pending,setPending]=useState<Payment|null>(null);
- async function verify(payment:Payment){try{const status=await workspaceMutation<{premium:boolean;testMode:boolean}>('billing/verify','POST',payment);if(status.premium&&!status.testMode)trackEvent('premium_activated');setPending(null);window.dispatchEvent(new Event('heimdall-purchase-updated'));}catch(e){setPending(payment);setError(e instanceof Error?e.message:'Could not verify payment.');}finally{setBusy(false);}}
- async function buy(){if(!user){window.location.assign('/login');return;}setBusy(true);setError('');try{if(pending){await verify(pending);return;}await loadCheckout();const order=await workspaceMutation<{key:string;orderId:string;amount:number;currency:string}>('billing/order','POST',{});const Razorpay=(window as unknown as {Razorpay:new(options:Record<string,unknown>)=>{open:()=>void}}).Razorpay;new Razorpay({key:order.key,order_id:order.orderId,amount:order.amount,currency:order.currency,name:'Heimdall',description:order.key.startsWith('rzp_test_')?'TEST · Premium lifetime access':'Premium lifetime access',theme:{color:'#ff499f'},handler:(payment:Payment)=>{void verify(payment);},modal:{ondismiss:()=>setBusy(false)}}).open();}catch(e){setError(e instanceof Error?e.message:'Checkout unavailable.');setBusy(false);}}
- return <div className="premium-purchase"><button className={premium ? "lifetime-button lifetime-button--active" : "lifetime-button"} disabled={busy||loading||premium} onClick={()=>void buy()}>{premium?'Premium active':busy?'Please wait…':pending?'Retry payment verification':'Get Premium · ₹100 lifetime'}</button><p className="purchase-billing-disclosure">₹100 excludes Google Places and Foursquare API fees. Each provider bills your API usage separately. <a href="/terms">Terms</a> · <a href="/refund">Refunds</a></p>{testMode&&<p>Test mode · No real money is charged. Test purchases do not unlock live access.</p>}{error&&<p role="alert">{error}</p>}</div>;
-}
-export function PremiumGate({children}:{children:React.ReactNode}){const {premium,loading}=usePremium();if(loading)return <p className="workspace-muted">Checking access…</p>;return premium?<>{children}</>:<section className="premium-gate"><span className="premium-badge">Premium</span><h2>Unlock all discovery methods</h2><p>Get lifetime access to Google Places and Foursquare searches for ₹100. Google Places and Foursquare usage are billed separately by their providers.</p><PurchaseButton/></section>;}
+export function PremiumGate({ children }: { children: ReactNode }) { return <>{children}</>; }
