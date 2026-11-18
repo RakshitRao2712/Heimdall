@@ -33,7 +33,7 @@ function Route() {
   if (['/pricing', '/how-it-works', '/google-places-setup', '/foursquare-setup'].includes(path)) return <InfoPage path={path} />;
   if (path === '/') return <Home />;
   if (path !== '/login' && path !== '/dashboard') return <main className="info-main"><h1>Page not found</h1><p>This page does not exist.</p><a href="/">Back to Heimdall</a></main>;
-  if (loading) return <WorkspaceConnection />;
+  if (loading && path !== '/login') return <WorkspaceConnection />;
   if (path === '/dashboard' && !user) { window.location.replace('/login'); return null; }
   if (path === '/login' && user) { if (new URLSearchParams(window.location.search).get('google') === 'success') { try { sessionStorage.setItem('heimdall-login-intro', 'pending'); } catch { /* Optional intro. */ } } window.location.replace('/dashboard'); return null; }
   return path === '/login' ? <Login /> : <DashboardEntry />;

@@ -1,3 +1,4 @@
+import { readinessRequest } from './readiness';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 export type AccountProfile = { firstName: string; lastName: string; username: string; website: string; completed: boolean };
 export type User = { email: string };
@@ -11,12 +12,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<AccountProfile | null>(null);
   const [profileError, setProfileError] = useState('');
   const [profileAttempt, setProfileAttempt] = useState(0);
-  useEffect(() => { const controller = new AbortController(); fetch('/api/auth/me', { credentials: 'same-origin', signal: controller.signal }).then(async r => { if (r.ok) setUser(await r.json()); }).catch(() => {}).finally(() => { if (!controller.signal.aborted) setLoading(false); }); return () => controller.abort(); }, []);
+  useEffect(() => { const controller = new AbortController(); readinessRequest('/api/auth/me', controller.signal).then(async r => { if (r.ok) setUser(await r.json()); }).catch(() => {}).finally(() => { if (!controller.signal.aborted) setLoading(false); }); return () => controller.abort(); }, []);
   useEffect(() => {
     setProfile(null); setProfileError('');
     if (!user) return;
     const controller = new AbortController();
-    fetch('/api/workspace/profile', { credentials: 'same-origin', cache: 'no-store', signal: controller.signal })
+    readinessRequest('/api/workspace/profile', controller.signal)
       .then(async response => {
         if (!response.ok) throw new Error('Cannot load your profile. Please retry.');
         const value = await response.json();
@@ -29,7 +30,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 }
 export const useSession = () => useContext(Session);
 export async function authRequest(path: string, data?: unknown) {
-  const csrf = await fetch('/api/auth/csrf', { credentials: 'same-origin', cache: 'no-store' });
+  const csrf = await readinessRequest('/api/auth/csrf');
   if (!csrf.ok) throw new Error('Cannot connect to Heimdall. Check that the backend is running.');
   const { token, headerName } = await csrf.json();
   const response = await fetch(`/api/auth/${path}`, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', [headerName]: token }, body: data ? JSON.stringify(data) : undefined });

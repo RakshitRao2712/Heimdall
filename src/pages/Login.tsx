@@ -1,3 +1,4 @@
+import { readinessRequest } from '@/auth/readiness';
 import { WorkspaceConnection } from '@/components/workspace-connection';
 import { EmailVerification, type EmailChallenge } from '@/components/ui/email-verification';
 import { useEffect, useState, type FormEvent } from 'react';
@@ -16,12 +17,12 @@ export default function Login() {
   useEffect(() => {
     const controller = new AbortController();
     setGoogleStatus('loading');
-    fetch('/api/auth/google/config', { signal: controller.signal, credentials: 'same-origin', cache: 'no-store' }).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(config => { if (typeof config?.enabled !== 'boolean') throw new Error(); setGoogleStatus(config.enabled ? 'enabled' : 'disabled'); }).catch(() => { if (!controller.signal.aborted) setGoogleStatus('error'); });
+    readinessRequest('/api/auth/google/config', controller.signal).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(config => { if (typeof config?.enabled !== 'boolean') throw new Error(); setGoogleStatus(config.enabled ? 'enabled' : 'disabled'); }).catch(() => { if (!controller.signal.aborted) setGoogleStatus('error'); });
     const result = new URLSearchParams(window.location.search).get('google');
     if (result === 'error') { setError('Google sign-in could not be completed. Try again, or use your email and password.'); window.history.replaceState({}, '', '/login'); }
     if (result === 'success') {
       window.history.replaceState({}, '', '/login');
-      fetch('/api/auth/me', { signal: controller.signal, credentials: 'same-origin' }).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(signedIn).catch(() => { if (!controller.signal.aborted) setError('Your Google session could not be loaded. Please try again.'); });
+      readinessRequest('/api/auth/me', controller.signal).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(signedIn).catch(() => { if (!controller.signal.aborted) setError('Your Google session could not be loaded. Please try again.'); });
     }
     return () => controller.abort();
   }, [googleAttempt]);
