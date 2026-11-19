@@ -1,5 +1,5 @@
-// Keep browser sessions on the frontend origin. Provider credentials stay on Render.
-const backendOrigin = 'https://heimdall-staging-wskj.onrender.com';
+// Keep browser sessions on the frontend origin. Provider credentials stay on the backend.
+const backendOrigin = 'https://backend.heimdall.life';
 const wakePaths = new Set(['/api/auth/me', '/api/auth/csrf', '/api/auth/google/config', '/api/workspace/profile']);
 
 export async function onRequest({ request }) {

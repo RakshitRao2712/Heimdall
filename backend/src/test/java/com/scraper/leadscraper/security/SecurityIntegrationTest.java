@@ -32,7 +32,7 @@ class SecurityIntegrationTest {
   mvc.perform(post("/api/auth/logout").session(session)).andExpect(status().isForbidden());mvc.perform(post("/api/workspace/browser-verification/input").session(session).contentType(MediaType.APPLICATION_JSON).content("{}")).andExpect(status().isNotFound());
   mvc.perform(post("/api/auth/logout").session(session).header(token.path("headerName").asText(),token.path("token").asText())).andExpect(status().isForbidden());
   var fresh=mvc.perform(get("/api/auth/csrf").session(session)).andReturn();var next=json.readTree(fresh.getResponse().getContentAsString());
-  for(String method:java.util.List.of("maps","foursquare"))mvc.perform(post("/api/workspace/search/"+method).session(session).header(next.path("headerName").asText(),next.path("token").asText()).param("query","salons")).andExpect(status().isPaymentRequired());
+  for(String method:java.util.List.of("maps","foursquare"))mvc.perform(post("/api/workspace/search/"+method).session(session).header(next.path("headerName").asText(),next.path("token").asText()).param("query","salons")).andExpect(status().isPreconditionRequired());
   for (String provider : java.util.List.of("places", "foursquare")) {
    String path = "/api/workspace/" + provider + "-key";
    String credential = "synthetic-key-12345678901234567890";

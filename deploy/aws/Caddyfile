@@ -1,0 +1,15 @@
+backend.heimdall.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options nosniff
+        X-Robots-Tag "noindex, noarchive"
+        X-Heimdall-Backend "aws"
+    }
+    handle /api/* {
+        reverse_proxy 127.0.0.1:8080
+    }
+    handle {
+        respond "Not found" 404
+    }
+}
