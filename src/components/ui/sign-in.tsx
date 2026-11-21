@@ -143,7 +143,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
 
       {/* Right column: cinematic brand visual */}
       {(heroVideoSrc || heroImageSrc) && (
-        <section className="hidden md:block flex-1 relative p-4">
+        <section className="auth-visual-column hidden md:block flex-1 min-w-0 relative p-4">
           <div className="auth-hero-panel animate-slide-right animate-delay-300 absolute inset-4 rounded-3xl">
             {heroVideoSrc ? <LoginHeroVideo src={heroVideoSrc} poster={heroVideoPoster} /> : <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroImageSrc})` }} />}
           </div>
