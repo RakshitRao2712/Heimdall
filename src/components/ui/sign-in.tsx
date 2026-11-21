@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LoginHeroVideo } from './login-hero-video';
 import { Eye, EyeOff } from 'lucide-react';
 
 // --- HELPER COMPONENTS (ICONS) ---
@@ -32,6 +33,8 @@ interface SignInPageProps {
   title?: React.ReactNode;
   description?: React.ReactNode;
   heroImageSrc?: string;
+  heroVideoSrc?: string;
+  heroVideoPoster?: string;
   testimonials?: Testimonial[];
   onSignIn?: (event: React.FormEvent<HTMLFormElement>) => void;
   onGoogleSignIn?: () => void;
@@ -65,6 +68,8 @@ export const SignInPage: React.FC<SignInPageProps> = ({
   title = <span className="font-light text-foreground tracking-tighter">Welcome</span>,
   description = "Access your account and continue your journey with us",
   heroImageSrc,
+  heroVideoSrc,
+  heroVideoPoster,
   testimonials = [],
   onSignIn,
   onGoogleSignIn,
@@ -136,10 +141,12 @@ export const SignInPage: React.FC<SignInPageProps> = ({
         </div>
       </section>
 
-      {/* Right column: hero image + testimonials */}
-      {heroImageSrc && (
+      {/* Right column: cinematic brand visual */}
+      {(heroVideoSrc || heroImageSrc) && (
         <section className="hidden md:block flex-1 relative p-4">
-          <div className="animate-slide-right animate-delay-300 absolute inset-4 rounded-3xl bg-cover bg-center" style={{ backgroundImage: `url(${heroImageSrc})` }}></div>
+          <div className="auth-hero-panel animate-slide-right animate-delay-300 absolute inset-4 rounded-3xl">
+            {heroVideoSrc ? <LoginHeroVideo src={heroVideoSrc} poster={heroVideoPoster} /> : <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroImageSrc})` }} />}
+          </div>
           {testimonials.length > 0 && (
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 px-8 w-full justify-center">
               <TestimonialCard testimonial={testimonials[0]} delay="animate-delay-1000" />

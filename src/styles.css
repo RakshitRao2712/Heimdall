@@ -248,3 +248,8 @@ body{background-color:#080808;background-image:var(--heimdall-grid),var(--heimda
 @media(max-width:640px){.numbered-info-card,.info-steps .info-card,.setup-help .info-card,.how-it-works-page>.info-main>.info-grid>.info-card{padding-bottom:64px}.numbered-info-card .card-watermark,.info-steps .info-step,.setup-help .help-card-number,.how-it-works-page .workflow-card-number,.how-it-works-page #product-walkthrough .info-step{right:18px}}
 
 .numbered-info-card .card-watermark,.info-steps .info-step,.setup-help .help-card-number,.how-it-works-page .workflow-card-number,.how-it-works-page #product-walkthrough .info-step{letter-spacing:.035em;font-kerning:none;font-variant-numeric:tabular-nums;color:rgba(255,255,255,.13)}
+
+.auth-hero-panel{overflow:hidden;isolation:isolate;background:#030303;border:1px solid #ffffff14;box-shadow:0 20px 80px #0005}
+.auth-hero-panel::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#0003,transparent 25%,transparent 70%,#0006);box-shadow:inset 0 0 70px #0005}
+.auth-hero-video{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+@media(min-width:768px) and (max-width:1100px){.auth-hero-video{object-fit:contain}}
