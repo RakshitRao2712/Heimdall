@@ -10,6 +10,18 @@ import static org.mockito.Mockito.*;
 class SearchTargetsTest {
  @SuppressWarnings("unchecked") HttpResponse<String> response(String body){var r=mock(HttpResponse.class);when(r.statusCode()).thenReturn(200);when(r.body()).thenReturn(body);return r;}
  String places(int from,int count,String token){var items=new ArrayList<String>();for(int i=from;i<from+count;i++)items.add("{\"id\":\"p"+i+"\",\"businessStatus\":\"OPERATIONAL\",\"displayName\":{\"text\":\"Business "+i+"\"}}");return "{\"places\":["+String.join(",",items)+"],\"nextPageToken\":\""+token+"\"}";}
+ @Test void savedLeadsAreSkippedBeforeTargetAndSearchContinuesToNewPage() throws Exception {
+  var c=mock(HttpClient.class);
+  doReturn(response(places(0,20,"next")),response(places(20,20,""))).when(c).send(any(HttpRequest.class),any(HttpResponse.BodyHandler.class));
+  var result=new ScraperService(new ObjectMapper(),c).searchUntilTarget("cafes","key",10,2,()->false,p->{},p->Integer.parseInt(p.id().substring(1))<20);
+  assertEquals(10,result.leads().size());assertEquals("p20",result.leads().getFirst().id());
+  assertEquals(2,result.progress().requests());assertEquals(10,result.progress().found());
+ }
+ @Test void exclusionsRespectRequestBudgetWhenAllCandidatesAreKnown() throws Exception {
+  var c=mock(HttpClient.class);doReturn(response(places(0,20,"next"))).when(c).send(any(HttpRequest.class),any(HttpResponse.BodyHandler.class));
+  var result=new ScraperService(new ObjectMapper(),c).searchUntilTarget("cafes","key",10,1,()->false,p->{},p->true);
+  assertTrue(result.leads().isEmpty());assertEquals(0,result.progress().found());assertEquals(1,result.progress().requests());
+ }
  @Test void mapsPaginatesDeduplicatesAndStopsAtFifty()throws Exception {
   var c=mock(HttpClient.class);doReturn(response(places(0,20,"a")),response(places(15,20,"b")),response(places(35,20,""))).when(c).send(any(HttpRequest.class),any(HttpResponse.BodyHandler.class));
   var s=new ScraperService(new ObjectMapper(),c);var result=s.search("barbers","key",50,p->{});

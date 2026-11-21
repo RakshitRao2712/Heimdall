@@ -38,12 +38,15 @@ public class ScraperService {
         return search(query, apiKey, 10, p -> {}).leads();
     }
     public SearchProgress.Outcome<PlaceResponse.Place> search(String query, String apiKey, int target, java.util.function.Consumer<SearchProgress> progress) {
-        return searchInternal(query,apiKey,target,3,false,()->false,progress);
+        return searchInternal(query,apiKey,target,3,false,()->false,progress,p -> false);
     }
     public SearchProgress.Outcome<PlaceResponse.Place> searchUntilTarget(String query,String apiKey,int target,int maxRequests,java.util.function.BooleanSupplier cancelled,java.util.function.Consumer<SearchProgress> progress) {
-        return searchInternal(query,apiKey,target,maxRequests,true,cancelled,progress);
+        return searchUntilTarget(query,apiKey,target,maxRequests,cancelled,progress,p -> false);
     }
-    private SearchProgress.Outcome<PlaceResponse.Place> searchInternal(String query,String apiKey,int target,int maxRequests,boolean expand,java.util.function.BooleanSupplier cancelled,java.util.function.Consumer<SearchProgress> progress) {
+    public SearchProgress.Outcome<PlaceResponse.Place> searchUntilTarget(String query,String apiKey,int target,int maxRequests,java.util.function.BooleanSupplier cancelled,java.util.function.Consumer<SearchProgress> progress,java.util.function.Predicate<PlaceResponse.Place> excluded) {
+        return searchInternal(query,apiKey,target,maxRequests,true,cancelled,progress,excluded);
+    }
+    private SearchProgress.Outcome<PlaceResponse.Place> searchInternal(String query,String apiKey,int target,int maxRequests,boolean expand,java.util.function.BooleanSupplier cancelled,java.util.function.Consumer<SearchProgress> progress,java.util.function.Predicate<PlaceResponse.Place> excluded) {
         if(maxRequests<1||maxRequests>100)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Choose a request budget between 1 and 100");
         if (query == null || query.isBlank() || query.length() > 500 || !List.of(10,25,50).contains(target)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Supply a query and a target of 10, 25, or 50");
         if (apiKey == null || apiKey.isBlank()) throw new ResponseStatusException(HttpStatus.PRECONDITION_REQUIRED, "Add your Google Places API key before searching.");
@@ -70,6 +73,7 @@ public class ScraperService {
                     var place=objectMapper.treeToValue(node,PlaceResponse.Place.class);
                     if ((place.websiteUri()==null||place.websiteUri().isBlank()) && "OPERATIONAL".equals(place.businessStatus()) && (maxReviewsForNewBusiness<0||place.userRatingCount()==null||place.userRatingCount()<=maxReviewsForNewBusiness)) {
                         String id=node.path("id").asText(); if(id.isBlank()) id=((place.displayName()==null?"":place.displayName().text())+"|"+place.formattedAddress()+"|"+place.nationalPhoneNumber()).toLowerCase(java.util.Locale.ROOT);
+                        if (excluded.test(place)) continue;
                         leads.putIfAbsent(id,place); if(leads.size()>=target) break;
                     }
                 }

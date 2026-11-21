@@ -23,7 +23,10 @@ public class SearchHistory {
     }
 
     @com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)
-    public record Lead(String name, String website, List<String> phones, String address, String year, Integer reviews, List<String> socials) {
+    public record Lead(String name, String website, List<String> phones, String address, String year, Integer reviews, List<String> socials, String providerId) {
+        public Lead(String name,String website,List<String> phones,String address,String year,Integer reviews,List<String> socials) {
+            this(name,website,phones,address,year,reviews,socials,null);
+        }
         public Lead(String name, String website, List<String> phones, String address, String year, Integer reviews) {
             this(name, website, phones, address, year, reviews, List.of());
         }

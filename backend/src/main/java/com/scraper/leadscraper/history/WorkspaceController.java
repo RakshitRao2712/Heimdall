@@ -13,6 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/workspace")
 public class WorkspaceController {
+    @org.springframework.beans.factory.annotation.Autowired private LeadExclusions exclusions;
     private final SearchHistory history;
     private final ScraperService maps;
     private final GoogleSearchScraperService copyright;
@@ -38,16 +39,32 @@ public class WorkspaceController {
     public SearchHistory.Run mapsTarget(@RequestParam String query,@RequestParam(defaultValue="10") int target,Principal user,HttpSession session) {
         return execute("maps",query,user,session,()-> {
             var result=maps.search(query,PlacesKeyController.requireKey(session),target,p->session.setAttribute(PROGRESS,p));
-            var leads=result.leads().stream().map(p->new SearchHistory.Lead(p.displayName()==null?"Unnamed business":p.displayName().text(),p.websiteUri(),p.nationalPhoneNumber()==null?List.<String>of():List.of(p.nationalPhoneNumber()),p.formattedAddress(),"",p.userRatingCount())).toList();
+            var leads=result.leads().stream().map(WorkspaceController::asLead).toList();
             return new com.scraper.leadscraper.service.SearchProgress.Outcome<>(leads,result.progress());
         });
     }
-    @PostMapping("/search/maps") public SearchHistory.Run mapsUntilTarget(@RequestParam String query,@RequestParam(defaultValue="10") int target,@RequestParam(defaultValue="50") int maxRequests,Principal user,HttpSession session) {
+    public SearchHistory.Run mapsUntilTarget(@RequestParam String query,@RequestParam(defaultValue="10") int target,@RequestParam(defaultValue="50") int maxRequests,Principal user,HttpSession session) {
         return execute("maps",query,user,session,()-> {
             var result=maps.searchUntilTarget(query,PlacesKeyController.requireKey(session),target,maxRequests,()->cancelled(session),p->session.setAttribute(PROGRESS,p));
-            var leads=result.leads().stream().map(p->new SearchHistory.Lead(p.displayName()==null?"Unnamed business":p.displayName().text(),p.websiteUri(),p.nationalPhoneNumber()==null?List.<String>of():List.of(p.nationalPhoneNumber()),p.formattedAddress(),"",p.userRatingCount())).toList();
+            var leads=result.leads().stream().map(WorkspaceController::asLead).toList();
             return new com.scraper.leadscraper.service.SearchProgress.Outcome<>(leads,result.progress());
         });
+    }
+    @PostMapping("/search/maps")
+    public SearchHistory.Run mapsExcluding(@RequestParam String query,@RequestParam(defaultValue="10") int target,
+            @RequestParam(defaultValue="50") int maxRequests,@RequestParam(required=false) List<String> excludeFileIds,
+            Principal user,HttpSession session) {
+        var excluded = exclusions.fromFiles(user.getName(), excludeFileIds);
+        if (excludeFileIds == null || excludeFileIds.isEmpty()) return mapsUntilTarget(query,target,maxRequests,user,session);
+        return execute("maps",query,user,session,()-> {
+            var result=maps.searchUntilTarget(query,PlacesKeyController.requireKey(session),target,maxRequests,
+                    ()->cancelled(session),p->session.setAttribute(PROGRESS,p),p->excluded.test(asLead(p)));
+            return new com.scraper.leadscraper.service.SearchProgress.Outcome<>(result.leads().stream().map(WorkspaceController::asLead).toList(),result.progress());
+        });
+    }
+    private static SearchHistory.Lead asLead(com.scraper.leadscraper.dto.PlaceResponse.Place p) {
+        return new SearchHistory.Lead(p.displayName()==null?"Unnamed business":p.displayName().text(),p.websiteUri(),
+                p.nationalPhoneNumber()==null?List.of():List.of(p.nationalPhoneNumber()),p.formattedAddress(),"",p.userRatingCount(),List.of(),p.id()==null?null:"google:"+p.id());
     }
     private boolean cancelled(HttpSession session) { Object value=session.getAttribute(PROGRESS+".cancel");return value instanceof java.util.concurrent.atomic.AtomicBoolean flag&&flag.get(); }
     @PostMapping("/search/cancel") public Map<String,Boolean> cancel(HttpSession session) {Object value=session.getAttribute(PROGRESS+".cancel");if(value instanceof java.util.concurrent.atomic.AtomicBoolean flag)flag.set(true);return Map.of("cancelled",true);}
@@ -80,12 +97,21 @@ public class WorkspaceController {
                         progress -> session.setAttribute(PROGRESS, progress)));
     }
 
-    @PostMapping("/search/foursquare")
     public SearchHistory.Run foursquare(@RequestParam String query, @RequestParam(defaultValue = "50") int target, Principal user, HttpSession session) {
         String key = com.scraper.leadscraper.auth.FoursquareKeyController.requireKey(session);
         return execute("foursquare", query, user, session, () ->
                 com.scraper.leadscraper.service.FoursquareDiscovery.search(query, key, target, () -> cancelled(session),
                         progress -> session.setAttribute(PROGRESS, progress)));
+    }
+
+    @PostMapping("/search/foursquare")
+    public SearchHistory.Run foursquareExcluding(@RequestParam String query,@RequestParam(defaultValue="50") int target,
+            @RequestParam(required=false) List<String> excludeFileIds,Principal user,HttpSession session) {
+        var excluded = exclusions.fromFiles(user.getName(), excludeFileIds);
+        if (excludeFileIds == null || excludeFileIds.isEmpty()) return foursquare(query,target,user,session);
+        String key = com.scraper.leadscraper.auth.FoursquareKeyController.requireKey(session);
+        return execute("foursquare",query,user,session,()->com.scraper.leadscraper.service.FoursquareDiscovery.search(
+                query,key,target,()->cancelled(session),p->session.setAttribute(PROGRESS,p),excluded));
     }
 
     private SearchHistory.Run execute(String method,String query,Principal user,HttpSession session,java.util.function.Supplier<com.scraper.leadscraper.service.SearchProgress.Outcome<SearchHistory.Lead>> operation) {

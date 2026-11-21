@@ -21,6 +21,14 @@ public final class FoursquareDiscovery {
 
     public static SearchProgress.Outcome<SearchHistory.Lead> search(String query, String key, int target,
             BooleanSupplier cancelled, Consumer<SearchProgress> progress) {
+        return searchInternal(query,key,target,cancelled,progress,lead -> false,target,CLIENT);
+    }
+    public static SearchProgress.Outcome<SearchHistory.Lead> search(String query,String key,int target,
+            BooleanSupplier cancelled,Consumer<SearchProgress> progress,Predicate<SearchHistory.Lead> excluded) {
+        return searchInternal(query,key,target,cancelled,progress,excluded,LIMIT,CLIENT);
+    }
+    static SearchProgress.Outcome<SearchHistory.Lead> searchInternal(String query,String key,int target,
+            BooleanSupplier cancelled,Consumer<SearchProgress> progress,Predicate<SearchHistory.Lead> excluded,int candidateLimit,HttpClient client) {
         if (target < 1 || target > LIMIT) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Choose a lead target between 1 and 50.");
         }
@@ -30,7 +38,7 @@ public final class FoursquareDiscovery {
         }
         if (cancelled.getAsBoolean()) return finish(target, List.of(), 0, 0, "Search cancelled.", progress);
         var uri = URI.create("https://places-api.foursquare.com/places/search?query=" + encode(parts[0])
-                + "&near=" + encode(parts[1]) + "&limit=" + target
+                + "&near=" + encode(parts[1]) + "&limit=" + candidateLimit
                 + "&fields=fsq_place_id,name,location,tel,website,social_media");
         var request = HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(20))
                 .header("Authorization", "Bearer " + key)
@@ -38,7 +46,7 @@ public final class FoursquareDiscovery {
                 .header("Accept", "application/json").build();
         progress.accept(new SearchProgress(target, 0, 1, 0, "searching", "Reading Foursquare listings."));
         try {
-            var response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (cancelled.getAsBoolean()) return finish(target, List.of(), 0, 1, "Search cancelled.", progress);
             switch (response.statusCode()) {
                 case 200 -> { }
@@ -59,12 +67,14 @@ public final class FoursquareDiscovery {
                 addProfile(links, "https://www.facebook.com/", social.path("facebook_id").asText(""));
                 addProfile(links, "https://www.instagram.com/", social.path("instagram").asText(""));
                 addProfile(links, "https://x.com/", social.path("twitter").asText(""));
-                leads.putIfAbsent(id, new SearchHistory.Lead(name, row.path("website").asText(""),
+                var lead = new SearchHistory.Lead(name, row.path("website").asText(""),
                         phone.isBlank() ? List.of() : List.of(phone),
-                        row.path("location").path("formatted_address").asText(""), "", null, links));
+                        row.path("location").path("formatted_address").asText(""), "", null, links);
+                if (!excluded.test(lead)) leads.putIfAbsent(id,lead);
+                if (leads.size() >= target) break;
             }
             return finish(target, List.copyOf(leads.values()), rows.size(), 1,
-                    leads.size() >= target ? "Lead target reached." : "Foursquare search complete.", progress);
+                    leads.size() >= target ? "Lead target reached." : "Foursquare search complete; matching leads from selected files were skipped, if any.", progress);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return finish(target, List.of(), 0, 1, "Search interrupted.", progress);

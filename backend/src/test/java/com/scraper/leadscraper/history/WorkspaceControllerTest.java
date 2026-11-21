@@ -17,6 +17,29 @@ import static org.mockito.Mockito.*;
 class WorkspaceControllerTest {
     private MockHttpSession braveSession() { var session = new MockHttpSession(); new BraveKeyController().save(new BraveKeyController.KeyInput("test-brave-key-1234567890123456"), session); return session; }
     @TempDir Path directory;
+    @Test void exclusionsAreAppliedBeforeSavingAndOtherAccountsCannotSelectFiles() {
+        var maps=mock(ScraperService.class);
+        var history=new SearchHistory(directory.resolve("history").toString(),new ObjectMapper());
+        var files=new LeadFiles(directory.resolve("files").toString(),new ObjectMapper(),history);
+        var saved=history.save("alice","maps","cafes",1,List.of(new SearchHistory.Lead("Known","",List.of("1234567890"),"Seattle","",null)));
+        var file=files.create("alice","Known cafes",saved.id());
+        var controller=new WorkspaceController(history,maps,mock(GoogleSearchScraperService.class));
+        org.springframework.test.util.ReflectionTestUtils.setField(controller,"exclusions",new LeadExclusions(files));
+        var session=new MockHttpSession();new PlacesKeyController().save(new ProviderKeyInput("test-api-key-1234567890123456"),session);
+        var place=new PlaceResponse.Place(new PlaceResponse.Place.DisplayName("Fresh"),null,"Seattle","9876543210","OPERATIONAL",2,"fresh-id");
+        when(maps.searchUntilTarget(anyString(),anyString(),eq(10),eq(1),any(),any(),any())).thenAnswer(invocation -> {
+            java.util.function.Predicate<PlaceResponse.Place> excluded=invocation.getArgument(6);
+            assertTrue(excluded.test(new PlaceResponse.Place(new PlaceResponse.Place.DisplayName("Known"),null,"Seattle","1234567890","OPERATIONAL",2)));
+            assertFalse(excluded.test(place));
+            return new com.scraper.leadscraper.service.SearchProgress.Outcome<>(List.of(place),new com.scraper.leadscraper.service.SearchProgress(10,2,1,1,"complete","Exhausted"));
+        });
+        var result=controller.mapsExcluding("cafes",10,1,List.of(file.id()),()->"alice",session);
+        assertEquals("google:fresh-id",result.leads().getFirst().providerId());
+        assertEquals("Fresh",history.list("alice").getFirst().leads().getFirst().name());
+        assertThrows(org.springframework.web.server.ResponseStatusException.class,()->controller.mapsExcluding("cafes",10,1,List.of(file.id()),()->"bob",session));
+        verify(maps,times(1)).searchUntilTarget(anyString(),anyString(),eq(10),eq(1),any(),any(),any());
+        assertTrue(history.list("bob").isEmpty());
+    }
     @Test void bothSearchMethodsSaveNormalizedResultsUnderAuthenticatedAccount() {
         var maps = mock(ScraperService.class); var copyright = mock(GoogleSearchScraperService.class);
         var history = new SearchHistory(directory.toString(), new ObjectMapper());

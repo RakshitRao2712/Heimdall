@@ -1,3 +1,4 @@
+import { LeadExclusionPicker } from './lead-exclusion-picker';
 import { trackEvent } from '@/analytics';
 import { BrowserVerification } from "./browser-verification";
 import { GoogleMapsAttribution } from "./google-maps-attribution";
@@ -38,6 +39,7 @@ async function api(path: string, signal?: AbortSignal) {
   return response.json() as Promise<unknown>;
 }
 export function App1() {
+  const [excludeFileIds, setExcludeFileIds] = useState<string[]>([]);
   const [completedSearch, setCompletedSearch] = useState<Run | null>(null);
   const [saveRun, setSaveRun] = useState<SavedRun | null>(null); const [savedFileId, setSavedFileId] = useState<string | undefined>();
   const reducedMotion = useReducedMotion();
@@ -80,6 +82,7 @@ export function App1() {
     const term = (orbQuery ?? query[method]).trim(); setCompletedSearch(null); setSearchProgress(undefined); setPending({ method, query: term, started: Date.now() }); setElapsed(0); setError(''); setNotice(''); setFilter(''); setPhoneOnly(false);
     try {
       const params = new URLSearchParams({ query: term, target: String(target) }); if (method !== 'maps' && !directorySearch) { params.set('minYear',String(minYear)); params.set('maxYear',String(maxYear)); }
+      excludeFileIds.forEach(id => params.append('excludeFileIds', id));
       const result = await workspaceMutation<Run>(`search/${method}?${params}`, 'POST', undefined, controller.signal);
       if (!validRun(result)) throw new Error('Unexpected search response. Check that the updated backend is running.');
       if (searchRequest.current !== controller || controller.signal.aborted) return;
@@ -124,6 +127,7 @@ export function App1() {
       </section>}
 
 
+      <LeadExclusionPicker selected={excludeFileIds} onChange={setExcludeFileIds} disabled={!!pending}/>
       {pending&&searchProgress&&<p className="search-progress" role="status">{searchProgress.found}{!directorySearch && ` / ${searchProgress.target}`} {directorySearch ? "listings" : "leads"} · {searchProgress.checked} candidates checked · {searchProgress.requests} {method === 'browser' ? 'Google pages' : 'API requests'} · {searchProgress.reason}</p>}
       <div className={`places-orb-search places-orb-search--${method}`}><MorphOrb accessoryWidth={method === 'yelp' ? 0 : method === 'maps' || directorySearch ? 114 : 248} inputAccessory={method === 'yelp' ? undefined : <div className="search-side-controls"><label className="search-lead-target"><span>Target</span><select aria-label="Lead target" value={target} disabled={!!pending} onChange={e=>setTarget(Number(e.target.value))}>{[10,25,50].map(n=><option key={n} value={n}>{n} leads</option>)}</select><ChevronRight size={12} aria-hidden="true"/></label>{method!=='maps'&&!directorySearch&&<div className="search-copyright-range"><span>Copyright</span><div><input aria-label="Copyright start year" type="number" min={1900} max={maxYear} value={minYear} disabled={!!pending} onChange={e=>setMinYear(Number(e.target.value))}/><ArrowRight size={13} aria-hidden="true"/><input aria-label="Copyright end year" type="number" min={minYear} max={new Date().getFullYear()} value={maxYear} disabled={!!pending} onChange={e=>setMaxYear(Number(e.target.value))}/></div></div>}</div>} onCancel={cancel} key={method} suggestions={directorySearch ? ['Restaurants in Boston', 'Restaurants in Pune', 'Cafes in Seattle'] : method === 'maps' ? placesSuggestions : copyrightSuggestions} disabled={keyBusy || !!pending} validate={() => { if(method!=='maps'&&!directorySearch&&(minYear<1900||maxYear>new Date().getFullYear()||minYear>maxYear)){setError('Choose a valid copyright year range.');return false;} if (keyLoading && method !== 'browser') { setKeyError('Your API key status is still loading. Please try again in a moment.'); return false; } if (!keyConfigured && method !== 'browser') { setKeyError(`Connect your ${providerName} API key above before searching.`); document.getElementById('places-api-key')?.focus(); return false; } return true; }} minThinkMs={600} onSubmit={async text => { setQuery(previous => ({ ...previous, [method]: text })); return await search(undefined, text) ?? 'Search could not complete. Check the message above and try again.' }}/></div>
       <BrowserVerification active={pending?.method === 'browser' && method === 'browser'} onCancel={cancel}/>

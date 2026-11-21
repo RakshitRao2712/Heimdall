@@ -272,3 +272,13 @@ body{background-color:#080808;background-image:var(--heimdall-grid),var(--heimda
 @media(max-width:1050px){.homepage-nav{grid-template-columns:1fr auto;height:auto;min-height:80px;row-gap:10px;padding-top:16px;padding-bottom:12px}.homepage-navigation{grid-row:2;grid-column:1/-1;justify-self:center}.homepage-nav .nav-header-actions{grid-column:2;grid-row:1}.homepage-surface .first-hero{padding-top:145px}}
 @media(max-width:480px){.homepage-nav{padding-inline:16px;column-gap:10px}.homepage-nav .nav-brand{font-size:11px;gap:8px}.homepage-navigation-list{gap:0}.homepage-navigation .homepage-navigation-link{font-size:12px;padding:10px 8px}.homepage-nav .nav-start-button{padding:10px 15px;font-size:11px}}
 @media(prefers-reduced-motion:reduce){.homepage-navigation *, .homepage-setup-positioner, .homepage-setup-popup{transition:none!important}}
+
+.lead-exclusion-picker{max-width:900px;margin:22px auto;border:1px solid #ffffff20;border-radius:16px;background:#ffffff04;color:#e8e5e8}
+.lead-exclusion-picker summary{display:flex;align-items:center;gap:10px;padding:17px 20px;cursor:pointer;list-style:none;font-size:14px}
+.lead-exclusion-picker summary::-webkit-details-marker{display:none}
+.lead-exclusion-picker summary::after{content:'+';margin-left:auto;font-size:20px;color:#aaa}
+.lead-exclusion-picker[open] summary::after{content:'−'}
+.lead-exclusion-picker summary:focus-visible{outline:2px solid #ff499f;border-radius:16px}
+.lead-exclusion-body{padding:0 20px 18px}.lead-exclusion-body p{color:#aaa;font-size:13px;line-height:1.6;margin:0 0 14px}
+.lead-exclusion-toolbar{display:flex;gap:8px;margin-bottom:12px}.lead-exclusion-toolbar>input{min-width:0;flex:1;background:#ffffff06;border:1px solid #ffffff20;border-radius:8px;padding:10px 12px;color:#eee}
+.lead-exclusion-options{max-height:240px;overflow:auto;display:grid;gap:6px;margin-bottom:14px}.lead-exclusion-options label{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:#ffffff04;cursor:pointer;font-size:14px}.lead-exclusion-options label:has(input:checked){background:#ff499f0d;outline:1px solid #ff499f40}.lead-exclusion-options input{accent-color:#ff499f;width:16px;height:16px}.lead-exclusion-options small{display:block;color:#999;font-size:12px;margin-top:4px}.lead-exclusion-body .lead-exclusion-note{margin-bottom:0;font-size:12px}

@@ -9,6 +9,10 @@ public class LeadFilesController {
     public record Rename(String name) { }
     private final LeadFiles files;
     public LeadFilesController(LeadFiles files){this.files=files;}
+    public record Option(String id,String name,String method,int leadCount) { }
+    @GetMapping("/options") public List<Option> options(Principal user) {
+        return files.list(user.getName()).stream().map(file -> new Option(file.id(),file.name(),file.method(),file.leads().size())).toList();
+    }
     @GetMapping public List<LeadFiles.File> list(Principal user){return files.list(user.getName());}
     @PostMapping public LeadFiles.File create(@RequestBody Create input,Principal user){return files.create(user.getName(),input.name(),input.runId());}
     @PatchMapping("/{id}") public LeadFiles.File rename(@PathVariable String id,@RequestBody Rename input,Principal user){return files.rename(user.getName(),id,input.name());}
