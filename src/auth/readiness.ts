@@ -12,7 +12,9 @@ export async function readinessRequest(path: string, signal?: AbortSignal): Prom
       await response.body?.cancel();
     } catch (error) {
       signal?.throwIfAborted();
-      if (Date.now() >= deadline) throw error;
+      if (Date.now() >= deadline) throw new Error(['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
+        ? 'Cannot reach the local backend. Start it on port 8080, then try signing in again.'
+        : 'Cannot connect to Heimdall right now. Please try again shortly.');
     }
     await new Promise<void>((resolve, reject) => {
       const abort = () => { clearTimeout(timer); reject(signal?.reason); };
