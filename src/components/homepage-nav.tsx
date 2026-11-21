@@ -32,12 +32,12 @@ export function HomepageNav() {
             <NavigationMenuTrigger className="homepage-navigation-link">Setup</NavigationMenuTrigger>
             <NavigationMenuContent className="homepage-setup-content">
               <NavigationMenuLink className="homepage-setup-link" href="/google-places-setup">
-                <span>Google Places Setup</span>
-                <small>Connect your Google Places API key</small>
+                <img src="/images/google-logo.svg" width="28" height="28" alt="" />
+                <span className="homepage-setup-copy"><span>Google Places Setup</span></span>
               </NavigationMenuLink>
               <NavigationMenuLink className="homepage-setup-link" href="/foursquare-setup">
-                <span>Foursquare Setup</span>
-                <small>Connect your Foursquare API key</small>
+                <img src="/images/foursquare-logo-white.svg" width="28" height="28" alt="" />
+                <span className="homepage-setup-copy"><span>Foursquare Setup</span></span>
               </NavigationMenuLink>
             </NavigationMenuContent>
           </NavigationMenuItem>
