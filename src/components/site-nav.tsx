@@ -1,3 +1,4 @@
+import { HomepageNav } from '@/components/homepage-nav';
 import brand from '@/seo/brand.json';
 import { supportEmail, linkedinUrl } from '@/components/policy-links';
 import ImmersiveFullscreenNav from '@/components/ui/immersive-full-screen-nav';
@@ -11,7 +12,8 @@ export const publicLinks = [
   { label: 'Foursquare Setup', href: '/foursquare-setup' },
 ];
 
-export function SiteNav() {
+export function SiteNav({ homepage = false }: { homepage?: boolean }) {
+  if (homepage) return <HomepageNav />;
   return <ImmersiveFullscreenNav
     navConfig={{ brand: 'Heimdall', brandHref: '/', overlayBg: '#101014', clipOrigin: 'left', headerClassName: 'hero-nav-header' }}
     navContent={{

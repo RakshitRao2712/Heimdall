@@ -253,3 +253,21 @@ body{background-color:#080808;background-image:var(--heimdall-grid),var(--heimda
 .auth-hero-panel::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#0003,transparent 25%,transparent 70%,#0006);box-shadow:inset 0 0 70px #0005}
 .auth-hero-video{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
 @media(min-width:768px) and (max-width:1100px){.auth-visual-column{display:flex;align-items:center;justify-content:center}.auth-visual-column .auth-hero-panel{position:relative;inset:auto;width:100%;height:auto;aspect-ratio:4/5}.auth-page section:first-child{min-width:0}}
+
+/* Homepage navigation: centered links and one setup menu. */
+.homepage-nav{position:absolute;inset:0 0 auto;z-index:70;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;max-width:1464px;height:80px;margin-inline:auto;padding-inline:clamp(24px,3vw,48px)}
+.homepage-nav .nav-brand{display:flex;align-items:center;gap:12px;color:#fff;font-size:14px;font-weight:650;letter-spacing:.12em;text-decoration:none;width:max-content}
+.homepage-nav .nav-header-actions{justify-self:end}
+.homepage-navigation-list{margin:0;padding:0;gap:4px}
+.homepage-navigation .homepage-navigation-link{display:inline-flex;align-items:center;justify-content:center;flex-direction:row;gap:3px;height:40px;padding:10px 13px;border:0;border-radius:8px;background:transparent;color:#ddd;font-family:inherit;font-size:14px;font-weight:500;white-space:nowrap;text-decoration:none;cursor:pointer;transition:background .2s,color .2s}
+.homepage-navigation .homepage-navigation-link:hover,.homepage-navigation .homepage-navigation-link[data-popup-open]{background:#ffffff0d;color:#fff}
+.homepage-nav :is(a,button):focus-visible,.homepage-setup-link:focus-visible{outline:2px solid #ff499f;outline-offset:4px}
+.homepage-setup-positioner{z-index:100}
+.homepage-setup-popup{background:rgba(19,19,23,.96);backdrop-filter:blur(20px);border:1px solid #ffffff24;box-shadow:0 20px 60px #0008;border-radius:14px;color:#fff}
+.homepage-setup-content{width:290px;min-width:0;padding:8px}
+.homepage-setup-link{padding:14px;border-radius:8px;text-decoration:none;color:#eee;gap:5px}
+.homepage-setup-link:hover,.homepage-setup-link:focus{background:#ffffff0a;color:#fff}
+.homepage-setup-link small{font-size:12px;color:#999;line-height:1.5}
+@media(max-width:1050px){.homepage-nav{grid-template-columns:1fr auto;height:auto;min-height:80px;row-gap:10px;padding-top:16px;padding-bottom:12px}.homepage-navigation{grid-row:2;grid-column:1/-1;justify-self:center}.homepage-nav .nav-header-actions{grid-column:2;grid-row:1}.homepage-surface .first-hero{padding-top:145px}}
+@media(max-width:480px){.homepage-nav{padding-inline:16px;column-gap:10px}.homepage-nav .nav-brand{font-size:11px;gap:8px}.homepage-navigation-list{gap:0}.homepage-navigation .homepage-navigation-link{font-size:12px;padding:10px 8px}.homepage-nav .nav-start-button{padding:10px 15px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){.homepage-navigation *, .homepage-setup-positioner, .homepage-setup-popup{transition:none!important}}
