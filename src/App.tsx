@@ -32,7 +32,7 @@ export default function App() {
     <>
     <main className="page homepage-surface relative z-10 bg-background">
       <section id="home" className="first-hero">
-      <SiteNav homepage />
+      <SiteNav />
       <TiltedGridHero images={IMAGES} className="hero">
         <div className="hero-content">
           <div className="hero-title"><h1 className="hero-font-pair"><span className="hero-script">Your next</span><span className="hero-anton">customer,</span><span className="hero-heading-tail">waiting to be found.</span></h1></div>
